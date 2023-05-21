@@ -450,8 +450,9 @@
         \item We have a set of \emph{variables}.
         \item Each variable has a finite \emph{domain}.
         \item We have \emph{constraints} between variables.
-        \item Give each variable a value from its domain, satisfying all constraints.
-        \item Solve using intelligent backtracking search.
+        \item Give each variable a value from its domain, satisfying all constraints (and maybe
+            maximise some objective).
+        \item Solve using inference and intelligent backtracking search.
     \end{itemize}
 \end{frame}
 
@@ -459,7 +460,7 @@
     \begin{itemize}
         \item These problems are NP-hard, hard to approximate, etc.
         \item We can solve maximum clique on larger graphs than all-pairs shortest path.
-        \item We have some scientific explanations, but no theoretical ones.
+        \item We don't have a deep understanding as to why.
     \end{itemize}
 \end{frame}
 
@@ -2061,8 +2062,7 @@ Verification succeeded.
             \end{itemize}
         \item <2-> Not being either proof logged or formally verified should be considered socially
             unacceptable.
-        \item <3-> Perhaps proof logging can provide some insight into the complete failure of theoretical
-            computer science as a scientific theory?
+        \item <3-> Perhaps studying proof logs can help explain why solvers work so well?
     \end{itemize}
 \end{frame}
 
