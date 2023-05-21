@@ -229,6 +229,11 @@
 \makeatother
 
 \newcommand{\notedge}{\not\sim}
+\newcommand*{\rom}[1]{\emph{\romannumeral #1 \relax}}
+\newcommand{\neighbourhood}{\operatorname{N}}
+\newcommand{\vertexset}{\operatorname{V}}
+\newcommand{\degree}{\operatorname{deg}}
+
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Nplus}{\mathbb{N}^{+}}
@@ -325,7 +330,7 @@
     \end{frame}
 }
 
-\section{Practical Subgraph-Finding Algorithms}
+\section{Practical Subgraph-Finding}
 
 \begin{frame}{Subgraph Isomorphism}
     \only<1-2>{
@@ -1864,6 +1869,301 @@ Verification succeeded.
   \end{itemize}
 \end{frame}
 
+\begin{frame}[t]{What About Subgraph Isomorphism?}
+Each pattern vertex gets a target vertex: \begin{align*}
+    \sum_{t \in \vertexset(T)} x_{p{,}t}  & = 1 && p \in \vertexset(P)
+\end{align*}\pause
+Each target vertex may be used at most once:\begin{align*}
+    \sum_{p \in \vertexset(P)} -x_{p{,}t} & \ge -1 && t \in \vertexset(T)
+\end{align*}\pause
+Adjacency constraints, if $p$ is mapped to $t$, then $p$'s neighbours must
+be mapped to $t$'s neighbours: \begin{align*}
+    \overline{x}_{p{,}t} + \sum_{u \in \neighbourhood(t)} x_{q{,}u} & \ge 1 && p \in \vertexset(P),~q \in \neighbourhood(p),~t \in \vertexset(T)
+\end{align*}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in Cutting Planes}
+A pattern vertex $p$ of degree $\degree(p)$ can never be mapped to a target vertex $t$ of degree
+$\degree(p)-1$ or lower in any subgraph isomorphism. \\
+\medskip
+    Observe $\neighbourhood(\textcolor{uofgcobalt}{p}) = \{ \textcolor{uofglawn}{q}, \textcolor{uofglawn}{r}, \textcolor{uofglawn}{s} \}$ and $\neighbourhood(\textcolor{uofgcobalt}{t}) = \{ \textcolor{uofgthistle}{u}, \textcolor{uofgthistle}{v} \}$.\\
+\medskip
+    We wish to derive $\overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} \ge 1$.
+\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=center, text depth=0.5cm, xshift=3.8cm, yshift=2.3cm]
+    at (current page.center) {
+        \begin{minipage}[t]{0.3\paperwidth}\raggedright
+            \begin{tikzpicture}
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NO) {o};
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NP) {p};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NQ) {q};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NR) {r};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NS) {s};
+                \draw (NO) -- (NQ);
+                \draw (NP) -- (NQ);
+                \draw (NP) -- (NR);
+                \draw (NP) -- (NS);
+                \draw (NQ) -- (NR);
+                \draw (NR) -- (NS);
+
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NT) {t};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NU) {u};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NV) {v};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NX) {x};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NY) {y};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NZ) {z};
+                \draw (NT) -- (NU);
+                \draw (NT) -- (NV);
+                \draw (NU) -- (NV);
+                \draw (NU) -- (NX);
+                \draw (NU) -- (NY);
+                \draw (NV) -- (NY);
+                \draw (NX) -- (NY);
+                \draw (NY) -- (NZ);
+                \draw (NV) -- (NZ);
+            \end{tikzpicture}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in Cutting Planes}
+    We have the three adjacency constraints,
+\begin{align*}
+    \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{v}} & \ge 1 \\
+    \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{v}} & \ge 1 \\
+    \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{v}} & \ge 1
+\end{align*}
+Their sum is
+\begin{align*}
+    3 \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{v}}
+    + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{v}}
+    + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{v}} & \ge 3
+\end{align*}
+\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=center, text depth=0.5cm, xshift=3.8cm, yshift=2.3cm]
+    at (current page.center) {
+        \begin{minipage}[t]{0.3\paperwidth}\raggedright
+            \begin{tikzpicture}
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NO) {o};
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NP) {p};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NQ) {q};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NR) {r};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NS) {s};
+                \draw (NO) -- (NQ);
+                \draw (NP) -- (NQ);
+                \draw (NP) -- (NR);
+                \draw (NP) -- (NS);
+                \draw (NQ) -- (NR);
+                \draw (NR) -- (NS);
+
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NT) {t};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NU) {u};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NV) {v};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NX) {x};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NY) {y};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NZ) {z};
+                \draw (NT) -- (NU);
+                \draw (NT) -- (NV);
+                \draw (NU) -- (NV);
+                \draw (NU) -- (NX);
+                \draw (NU) -- (NY);
+                \draw (NV) -- (NY);
+                \draw (NX) -- (NY);
+                \draw (NY) -- (NZ);
+                \draw (NV) -- (NZ);
+            \end{tikzpicture}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in Cutting Planes}
+Continuing with the sum
+\begin{align*}
+    3 \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{v}}
+    + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{v}}
+    + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{v}} & \ge 3
+\end{align*}
+    Due to injectivity,\begin{align*}
+        &-x_{o{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{u}} \ge -1 \\
+        &-x_{o{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{v}} \ge -1
+    \end{align*}
+    Add all these together, getting \[
+        3 \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + -x_{o{,}\textcolor{uofgthistle}{u}} + -x_{o{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{v}} \ge 1\]
+\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=center, text depth=0.5cm, xshift=3.8cm, yshift=2.3cm]
+    at (current page.center) {
+        \begin{minipage}[t]{0.3\paperwidth}\raggedright
+            \begin{tikzpicture}
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NO) {o};
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NP) {p};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NQ) {q};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NR) {r};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NS) {s};
+                \draw (NO) -- (NQ);
+                \draw (NP) -- (NQ);
+                \draw (NP) -- (NR);
+                \draw (NP) -- (NS);
+                \draw (NQ) -- (NR);
+                \draw (NR) -- (NS);
+
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NT) {t};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NU) {u};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NV) {v};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NX) {x};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NY) {y};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NZ) {z};
+                \draw (NT) -- (NU);
+                \draw (NT) -- (NV);
+                \draw (NU) -- (NV);
+                \draw (NU) -- (NX);
+                \draw (NU) -- (NY);
+                \draw (NV) -- (NY);
+                \draw (NX) -- (NY);
+                \draw (NY) -- (NZ);
+                \draw (NV) -- (NZ);
+            \end{tikzpicture}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in Cutting Planes}
+    We're more or less there. We have: \[
+        3 \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + -x_{o{,}\textcolor{uofgthistle}{u}} + -x_{o{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{v}} \ge 1\]
+
+    Add the literal axioms $x_{o{,}\textcolor{uofgthistle}{u}} \ge 0$, $x_{o{,}\textcolor{uofgthistle}{v}} \ge 0$, $x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{u}} \ge 0$ and $x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{v}} \ge 0$ to get \[
+        3 \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} \ge 1\]
+Divide by 3 to get the desired \[
+    \overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} \ge 1\]
+\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=center, text depth=0.5cm, xshift=3.8cm, yshift=2.3cm]
+    at (current page.center) {
+        \begin{minipage}[t]{0.3\paperwidth}\raggedright
+            \begin{tikzpicture}
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NO) {o};
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NP) {p};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NQ) {q};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NR) {r};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NS) {s};
+                \draw (NO) -- (NQ);
+                \draw (NP) -- (NQ);
+                \draw (NP) -- (NR);
+                \draw (NP) -- (NS);
+                \draw (NQ) -- (NR);
+                \draw (NR) -- (NS);
+
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NT) {t};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NU) {u};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NV) {v};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NX) {x};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NY) {y};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NZ) {z};
+                \draw (NT) -- (NU);
+                \draw (NT) -- (NV);
+                \draw (NU) -- (NV);
+                \draw (NU) -- (NX);
+                \draw (NU) -- (NY);
+                \draw (NV) -- (NY);
+                \draw (NX) -- (NY);
+                \draw (NY) -- (NZ);
+                \draw (NV) -- (NZ);
+            \end{tikzpicture}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in VeriPB}
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7\catcode`_=8}]
+p \textcolor{uofglawn}{18}$_{\textcolor{uofgheather}{p{\sim}t{:}q}}$ \textcolor{uofglawn}{19}$_{\textcolor{uofgheather}{p{\sim}t{:}r}}$ + \textcolor{uofglawn}{20}$_{\textcolor{uofgheather}{p{\sim}t{:}s}}$ +   \textcolor{uofgcobalt}{* sum adjacency constraints}
+  \textcolor{uofglawn}{12}$_{\textcolor{uofgheather}{inj(u)}}$ + \textcolor{uofglawn}{13}$_{\textcolor{uofgheather}{inj(v)}}$ +        \,\,\textcolor{uofgcobalt}{* sum injectivity constraints}
+  xo\textunderscore{}u + xo\textunderscore{}v +            \textcolor{uofgcobalt}{* cancel stray xo\textunderscore{}*}
+  xp\textunderscore{}u + xp\textunderscore{}v +            \textcolor{uofgcobalt}{* cancel stray xp\textunderscore{}*}
+  \textcolor{uofgpumpkin}{3} d                      \textcolor{uofgcobalt}{* divide, and we're done}
+\end{Verbatim}
+
+\medskip
+
+Or we can ask VeriPB to do the last bit of simplification automatically:
+
+\medskip
+
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7\catcode`_=8}]
+p \textcolor{uofglawn}{18}$_{\textcolor{uofgheather}{p{\sim}t{:}q}}$ \textcolor{uofglawn}{19}$_{\textcolor{uofgheather}{p{\sim}t{:}r}}$ + \textcolor{uofglawn}{20}$_{\textcolor{uofgheather}{p{\sim}t{:}s}}$ +   \textcolor{uofgcobalt}{* sum adjacency constraints}
+  \textcolor{uofglawn}{12}$_{\textcolor{uofgheather}{inj(u)}}$ + \textcolor{uofglawn}{13}$_{\textcolor{uofgheather}{inj(v)}}$ +        \,\,\textcolor{uofgcobalt}{* sum injectivity constraints}
+j \textcolor{uofgpillarbox}{-1} 1 ~xp\textunderscore{}t >= 1 ;        \textcolor{uofgcobalt}{* desired conclusion is implied}
+\end{Verbatim}
+%%% Just experimenting above, Ciaran --- feel free to change back -JN
+%   * and simplify the above%
+%
+\end{frame}
+
+\begin{frame}{Other Forms of Reasoning}
+We can also log all of the other things state of the art subgraph solvers do:
+\begin{itemize}
+    \item Injectivity reasoning and filtering.
+    \item Distance filtering.
+    \item Neighbourhood degree sequences.
+    \item Path filtering.
+    \item Supplemental graphs.
+\end{itemize}
+    \medskip
+\uncover<2->{
+Proof steps are ``efficient'' using cutting planes.
+    \begin{itemize}
+        \item The length of the proof steps are no worse than the time complexity of the reasoning algorithms.
+        \item Most proof steps require only trivial additional computations.
+    \end{itemize}}
+\end{frame}
+
+\section{Stronger Proofs}
+
 \begin{frame}{Extension Variables}
   Suppose we want new, fresh variable
   $a$ encoding
@@ -1970,6 +2270,7 @@ Verification succeeded.
     \begin{itemize}\item Every neighbour of 2b is also a neighbour of 2.
     \end{itemize}
 \end{frame}
+
 
 \section{Challenges}
 
