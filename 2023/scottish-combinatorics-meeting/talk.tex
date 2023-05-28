@@ -21,6 +21,7 @@
 \usepackage{mathtools}
 \usepackage{pifont}
 \usepackage{marvosym}
+\usepackage{cancel}
 
 \RequirePackage[tt=false, type1=true]{libertine}
 \RequirePackage[varqu]{zi4}
@@ -92,8 +93,11 @@
 
         \node [anchor=west, xshift=0.2cm] at (current page.west |- logos) {
             \begin{minipage}{0.65\paperwidth}\raggedright
-                {\usebeamerfont{title}\usebeamercolor[white]{}\inserttitle}\\[0.5cm]
-                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}
+                {\usebeamerfont{title}\usebeamercolor[white]{}\inserttitle}\\[0.1cm]
+                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}\\[0.1cm]
+                {\usebeamerfont{author}\usebeamercolor[white]{}\tiny With numerous co-conspirators, including Bart Bogaerts, Jan Elffers, \\
+                Stephan Gocht, Ross McBride, Matthew McIlree, Jakob Nordstr{\"o}m, \\
+                Andy Oertel, Patrick Prosser, and James Trimble \\[0cm]}
             \end{minipage}
         };
     \end{tikzpicture}
@@ -295,14 +299,6 @@
 \newcommand{\colorred}[1]{\textcolor{uofgpillarbox}{#1}}
 \newcommand{\colorgreen}[1]{\textcolor{uofglawn}{#1}}
 
-% For highlighting in examples 
-%   \newcommand<>{\alertred}[1]{{\color#2{red}#1}}
-\newcommand<>{\alertred}[1]{{\color#2{uofgthistle}#1}}
-%% Default alert is red (thistle is closest): -BB 
-\renewcommand<>{\alert}[1]{{\color#2{uofgthistle}#1}}
-%   \newcommand<>{\alertblue}[1]{{\color#2[rgb]{0,0,0.7}#1}}
-\newcommand<>{\alertblue}[1]{{\color#2{uofgcobalt}#1}}
-
 \newcommand{\limpl}{\rightarrow}
 \newcommand{\lequiv}{\leftrightarrow}
 \renewcommand{\lequiv}{\,\Leftrightarrow\,}
@@ -310,8 +306,12 @@
 \newcommand{\set}[1]{\{ #1 \}}
 \newcommand{\setsize}[1]{{\left|#1\right|}}
 
-\newcommand\veripbid[1]{\alertred{#1}}
-\newcommand\veripbConstraint[1]{\alertblue{#1}}
+\newcommand\veripbid[1]{\textcolor{uofglavendar}{#1}}
+\newcommand\veripbConstraint[1]{\textcolor{uofgcobalt}{#1}}
+
+\newcommand<>{\propfalse}[1]{{\alt#2{\textcolor{uofgpillarbox}{\cancel{#1}}}{#1}}}
+\newcommand<>{\propfalsenox}[1]{{\alt#2{\textcolor{uofgpillarbox}{#1}}{#1}}}
+\newcommand<>{\proptrue}[1]{{\color#2{uofgcobalt}#1}}
 
 % }}}
 
@@ -476,6 +476,7 @@
             \begin{itemize}
                 \item <2-> Only uncovers superficial bugs.
                 \item <2-> Empirically unsuccessful, even if people try really hard.
+                \item <2-> Even if you're sure, why should anyone believe you?
             \end{itemize}
         \item <3-> Formal methods?
             \begin{itemize}
@@ -562,7 +563,7 @@
   
   \begin{itemize}
   \item
-    \alertblue{Variable} $\varx$: 
+      \textcolor{uofgcobalt}{Variable} $\varx$: 
     takes value 
 %       $1$ (\textbf{true})
     \textbf{true} ($=\!1$)
@@ -573,7 +574,7 @@
     \medskip
 
   \item
-    \alertblue{Literal} 
+      \textcolor{uofgcobalt}{Literal} 
 %       $\lita$:  
     $\litell$:  
     variable 
@@ -590,7 +591,7 @@
     \medskip
     
   \item
-    \alertblue{Clause}
+      \textcolor{uofgcobalt}{Clause}
     $\clc = \litell_1 \lor \cdots \lor \litell_{\clwidth}$:
     disjunction of literals \\
     (Consider 
@@ -603,7 +604,7 @@
     \medskip
     
   \item
-    \alertred{%
+      \textcolor{uofgcobalt}{%
       Conjunctive normal form (CNF)
 %         CNF 
       formula}
@@ -613,7 +614,7 @@
 %        \bigskip
 %        
 %      \item
-%        \alertred{\kcnfform{}}:  
+%        \propfalse{\kcnfform{}}:  
 %        CNF formula with clauses of size $\leq \clwidth$ \\
 %        (assume $\clwidth$ fixed)    
 %    
@@ -741,23 +742,23 @@
   \begin{equation*}%
     \cdclformulaleftadjust
     ( 
-    \alertred<3->{p} \lor 
-    \alertblue<4->{\overline{u}}
+    \propfalse<3->{p} \lor 
+    \proptrue<4->{\overline{u}}
     )
     \landwsp 
-    ( \alertred<3->{q}
+    ( \propfalse<3->{q}
     \lor
-    \alertblue<5->{r} 
+    \proptrue<5->{r} 
     )
     \landwsp 
     (
-    \alertred<5->{\overline{r}}
+    \propfalse<5->{\overline{r}}
     \lor 
-    \alertblue<6->{w} 
+    \proptrue<6->{w} 
     )
     \landwsp
     ( 
-    \alertred<4->{u}
+    \propfalse<4->{u}
     \lor x \lor y )
     \landwsp
     ( x \lor \overline{y} \lor z )
@@ -769,9 +770,9 @@
     ( \overline{x} \lor \overline{z} )
     \landwsp
     ( 
-    \alertblue<3->{\overline{p}} 
+    \proptrue<3->{\overline{p}} 
     \lor
-    \alertblue<4->{\overline{u}}
+    \proptrue<4->{\overline{u}}
     )
   \end{equation*}
   \endgroup
@@ -839,9 +840,9 @@
 %%%
     \cdclformulaleftadjust
     ( 
-    \alertblue<5-5>{p}
+    \proptrue<5-5>{p}
     \lor 
-    \alertred<4-5>{\overline{u}}
+    \propfalse<4-5>{\overline{u}}
     )
     \landwsp 
     ( 
@@ -857,50 +858,50 @@
     )
     \landwsp
     ( 
-    \alertblue<4-5>{u} 
+    \proptrue<4-5>{u} 
     \lor 
-    \only<1-8>{\alertred<2-8>{x}} 
-    \only<9->{\alertblue<9-10>{x}} 
+    \only<1-8>{\propfalse<2-8>{x}} 
+    \only<9->{\proptrue<9-10>{x}} 
     \lor 
-    \only<1-5>{\alertred<3-5>{y}} 
-    \only<6->{\alertblue<6-7>{y}} 
+    \only<1-5>{\propfalse<3-5>{y}} 
+    \only<6->{\proptrue<6-7>{y}} 
     )
     \landwsp
     ( 
-    \only<1-8>{\alertred<2-8>{x}}
-    \only<9->{\alertblue<9-10>{x}}  
+    \only<1-8>{\propfalse<2-8>{x}}
+    \only<9->{\proptrue<9-10>{x}}  
     \lor 
-    \only<1-5>{\alertblue<3-5>{\overline{y}}}
-    \only<6->{\alertred<6-7>{\overline{y}}} 
+    \only<1-5>{\proptrue<3-5>{\overline{y}}}
+    \only<6->{\propfalse<6-7>{\overline{y}}} 
     \lor 
-    \alertblue<7,10>{z} 
+    \proptrue<7,10>{z} 
     )
     \landwsp 
     ( 
-    \only<1-8>{\alertblue<2-8>{\overline{x}}}
-    \only<9->{\alertred<9-10>{\overline{x}}}  
+    \only<1-8>{\proptrue<2-8>{\overline{x}}}
+    \only<9->{\propfalse<9-10>{\overline{x}}}  
     \lor 
-    \alertblue<7,10>{z} 
+    \proptrue<7,10>{z} 
     )
     \landwsp 
     ( 
-    \only<1-5>{\alertblue<3-5>{\overline{y}}}
-    \only<6->{\alertred<6-7>{\overline{y}}} 
-    \alertred<7>{\lor}
-    \alertred<7,10>{\overline{z}}
+    \only<1-5>{\proptrue<3-5>{\overline{y}}}
+    \only<6->{\propfalse<6-7>{\overline{y}}} 
+    \propfalse<7>{\lor}
+    \propfalse<7,10>{\overline{z}}
     )
     \landwsp 
     ( 
-    \only<1-8>{\alertblue<2-8>{\overline{x}}}
-    \only<9->{\alertred<9-10>{\overline{x}}}  
-    \alertred<10>{\lor} 
-    \alertred<7,10>{\overline{z}}
+    \only<1-8>{\proptrue<2-8>{\overline{x}}}
+    \only<9->{\propfalse<9-10>{\overline{x}}}  
+    \propfalse<10>{\lor} 
+    \propfalse<7,10>{\overline{z}}
     )
     \landwsp
     (
-    \alertred<5-5>{\overline{p}}
-    \alertred<5-5>{\lor} 
-    \alertred<4-5>{\overline{u}}
+    \propfalse<5-5>{\overline{p}}
+    \propfalse<5-5>{\lor} 
+    \propfalse<4-5>{\overline{u}}
     )
 %%%
 %%% FORMULA WITHOUT HIGHLIGHTING
@@ -1017,9 +1018,9 @@ $1$  % $x$
   \begin{equation*}%
     \cdclformulaleftadjust
     (
-    \alertblue<11>{p} 
+    \proptrue<11>{p} 
     \lor 
-    \alertblue<3-5>{\alertred<10-11>{\overline{u}}} 
+    \proptrue<3-5>{\propfalse<10-11>{\overline{u}}} 
     ) 
     \landwsp
     {( q \lor r )}
@@ -1027,43 +1028,43 @@ $1$  % $x$
     {( \overline{r} \lor w )}
     \landwsp
     (
-    \alertblue<10-11>{\alertred<3-5>{u}} 
+    \proptrue<10-11>{\propfalse<3-5>{u}} 
     \lor  
-    \alertblue<6-7>{\alertred<3-5,9-11>{x}} 
+    \proptrue<6-7>{\propfalse<3-5,9-11>{x}} 
     \lor 
-    \alertblue<4-5>{y} 
+    \proptrue<4-5>{y} 
     )
     \landwsp
     ( 
-    \alertblue<6-7>{\alertred<3-5,9-11>{x}} 
+    \proptrue<6-7>{\propfalse<3-5,9-11>{x}} 
     \lor 
-    \alertred<4-5>{\overline{y}} 
+    \propfalse<4-5>{\overline{y}} 
     \lor 
-    \alertblue<5,7>{z}
+    \proptrue<5,7>{z}
     )  
     \landwsp
     (
-    \alertblue<3-5,9-11>{\alertred<6-7>{\overline{x}}}
+    \proptrue<3-5,9-11>{\propfalse<6-7>{\overline{x}}}
     \lor
-    \alertblue<5,7>{z} 
+    \proptrue<5,7>{z} 
     )
     \landwsp
     (
-    \alertred<4-5>{\overline{y}} 
-    \alertred<5>{\lor} 
-    \alertred<5,7>{\overline{z}}
+    \propfalse<4-5>{\overline{y}} 
+    \propfalse<5>{\lor} 
+    \propfalse<5,7>{\overline{z}}
     ) 
     \landwsp
     (
-    \alertblue<3-5,9-11>{\alertred<6-7>{\overline{x}}}
-    \alertred<7>{\lor} 
-    \alertred<5,7>{\overline{z}} 
+    \proptrue<3-5,9-11>{\propfalse<6-7>{\overline{x}}}
+    \propfalse<7>{\lor} 
+    \propfalse<5,7>{\overline{z}} 
     )
     \landwsp
     (
-    \alertred<11>{\overline{p}} 
-    \alertred<11>{\lor}
-    \alertblue<3-5>{\alertred<10-11>{\overline{u}}} 
+    \propfalse<11>{\overline{p}} 
+    \propfalse<11>{\lor}
+    \proptrue<3-5>{\propfalse<10-11>{\overline{u}}} 
     )
   \end{equation*}
   \endgroup
@@ -1073,12 +1074,12 @@ $1$  % $x$
   clauses
   \begin{enumerate}
   \item 
-    \alertred<3-5>{$\alertblue<10-11>{u} \lor
-      \alertblue<6-7>{\alertred<9-11>{x}}$}
+    \propfalsenox<3-5>{$\proptrue<10-11>{u} \lor
+      \proptrue<6-7>{\propfalsenox<9-11>{x}}$}
   \item 
-    \alertred<6-7>{\alertblue<9-11>{$\olnot{x}$}}
+    \propfalsenox<6-7>{\proptrue<9-11>{$\olnot{x}$}}
   \item 
-      \alertred<8-11>{$\emptycl$}
+      \propfalsenox<8-11>{$\emptycl$}
   \end{enumerate}
 \end{frame}
 
@@ -2301,7 +2302,7 @@ Proof steps are ``efficient'' using cutting planes.
             \begin{itemize}
                 \item <2-> Up to a polynomial factor\ldots
             \end{itemize}
-        \item <3-> Dominance is apparently even stronger.
+        \item <3-> Except dominance is apparently even stronger?
     \end{itemize}
 \end{frame}
 
