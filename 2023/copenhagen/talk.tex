@@ -1878,14 +1878,15 @@ Hint: Failed to show '1 ~x10 1 ~x11 >= 1' by reverse unit propagation.
 \end{frame}
 
 \begin{frame}{Recovering At-Most-One Constraints}
+    \vspace*{-0.3em}
     At-most-one constraints do not follow from reverse unit propagation.
     \\ \medskip
-    Practically infeasible to list
-    every colour class we \emph{might} use in the pseudo-Boolean input.
+    Infeasible to list
+    every colour class we \emph{might} use in the input.
     \\ \medskip
-    But  %% -JN
-    we can use cutting planes to recover colour classes lazily!
-    \uncover<2->{
+    \uncover<2->{But  %% -JN
+    we can use cutting planes to recover colour classes lazily!}
+    \uncover<3->{
     \begin{align*}
         (\overline{x}_1 + \overline{x}_6 \ge 1)
 %   \,\times\,2 
@@ -1912,7 +1913,7 @@ Hint: Failed to show '1 ~x10 1 ~x11 >= 1' by reverse unit propagation.
 \ge 2 \\
  && \text{i.e.}~ & x_1 + x_6 + x_9 \le 1
     \end{align*}}
-    \uncover<3->{
+    \uncover<4->{
     This generalises for arbitrarily large colour classes.
     \begin{itemize}
         \item Each non-edge is used exactly once, $v (v - 1)$ additions.
