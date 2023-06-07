@@ -1767,6 +1767,239 @@ p cnf 8 9
     \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile,t]{A VeriPB Proof for a CP Problem}%
+\vspace*{-1.5em}\begin{columns}[t]%
+\column{0.25\textwidth}\small%
+\begin{align*}
+    &A \in \{1\ldots 5\} \\
+    &B \in \{1\ldots 2\} \\
+    &C \in \{2\ldots 3\} \\
+    &D \in \{2\ldots 3\} \\
+    &\operatorname{AllDiff}(A, B, C, D) \\
+    &A + B + C \le 9 \\
+    &\operatorname{minimise} 2A + 3D
+\end{align*}
+\column{0.7\textwidth}%
+\begin{onlyenv}<1>\tiny%
+\begin{Verbatim}
+Problem p;
+auto va = p.create_integer_variable(1_i, 5_i, "a");
+auto vb = p.create_integer_variable(1_i, 2_i, "b");
+auto vc = p.create_integer_variable(2_i, 3_i, "c");
+auto vd = p.create_integer_variable(2_i, 3_i, "d");
+p.post(AllDifferent({va, vb, vc, vd}));
+p.post(LinearLessEqual{Linear{{1_i, va}, {1_i, vb}, {1_i, vc}}, 9_i});
+
+auto obj = p.create_integer_variable(0_i, 10000_i, "obj");
+p.post(LinearEquality{Linear{{2_i, va}, {3_i, vd}, {-1_i, obj}}, 0_i});
+p.minimise(obj);
+
+cout << solve_with(p,
+    SolveCallbacks{
+        .solution = [&](const CurrentState & s) -> bool {
+            cout << "a = " << s(va) << " b = " << s(vb) << " c = " << s(vc)
+                << " d = " << s(vd) << " obj = " << s(obj) << endl;
+            return true;
+        },
+    },
+    ProofOptions{"tutorial.opb", "tutorial.veripb"});
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<2>%
+\begin{Verbatim}
+$ ./build/tutorial_proof
+a = 4 b = 1 c = 2 d = 3 obj = 17
+a = 4 b = 1 c = 3 d = 2 obj = 14
+propagators: 3
+recursions: 5
+failures: 1
+propagations: 20 7 0
+max depth:  2
+solutions: 2
+solve time: 0.001696s
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<3>\tiny%
+\begin{Verbatim}
+* #variable= 38 #constraint= 48
+min: 1 xObj_b_0 2 xObj_b_1 4 xObj_b_2 8 xObj_b_3 16 xObj_b_4 32 xObj_b_5
+    64 xObj_b_6 128 xObj_b_7 256 xObj_b_8 512 xObj_b_9 1024 xObj_b_10
+    2048 xObj_b_11 4096 xObj_b_12 8192 xObj_b_13 ;
+* variable xA_a 1 .. 5 bits encoding
+1 xA_b_0 2 xA_b_1 4 xA_b_2 >= 1 ;
+-1 xA_b_0 -2 xA_b_1 -4 xA_b_2 >= -5 ;
+* variable xB_b 1 .. 2 bits encoding
+1 xB_b_0 2 xB_b_1 >= 1 ;
+-1 xB_b_0 -2 xB_b_1 >= -2 ;
+* variable xC_c 2 .. 3 bits encoding
+1 xC_b_0 2 xC_b_1 >= 2 ;
+-1 xC_b_0 -2 xC_b_1 >= -3 ;
+* variable xD_d 2 .. 3 bits encoding
+1 xD_b_0 2 xD_b_1 >= 2 ;
+-1 xD_b_0 -2 xD_b_1 >= -3 ;
+* variable xObj_obj 0 .. 10000 bits encoding
+1 xObj_b_0 2 xObj_b_1 4 xObj_b_2 8 xObj_b_3 16 xObj_b_4 32 xObj_b_5
+    64 xObj_b_6 128 xObj_b_7 256 xObj_b_8 512 xObj_b_9 1024 xObj_b_10
+    2048 xObj_b_11 4096 xObj_b_12 8192 xObj_b_13 >= 0 ;
+-1 xObj_b_0 -2 xObj_b_1 -4 xObj_b_2 -8 xObj_b_3 -16 xObj_b_4 -32 xObj_b_5
+    -64 xObj_b_6 -128 xObj_b_7 -256 xObj_b_8 -512 xObj_b_9 -1024 xObj_b_10
+    -2048 xObj_b_11 -4096 xObj_b_12 -8192 xObj_b_13 >= -10000 ;
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<4>\tiny%
+\begin{Verbatim}
+* constraint all different on A, B, C, D
+-1 xA_eq_1 -1 xB_eq_1 >= -1 ;
+-1 xA_eq_2 -1 xB_eq_2 -1 xC_eq_2 -1 xD_eq_2 >= -1 ;
+-1 xA_eq_3 -1 xC_eq_3 -1 xD_eq_3 >= -1 ;
+
+* need xA_ge_2
+1 xA_b_0 2 xA_b_1 4 xA_b_2 2 ~xA_ge_2 >= 2 ;
+-1 xA_b_0 -2 xA_b_1 -4 xA_b_2 6 xA_ge_2 >= -1 ;
+* need lower bound xA_eq_1
+1 ~xA_ge_2 1 ~xA_eq_1 >= 1 ;
+-1 ~xA_ge_2 1 xA_eq_1 >= 0 ;
+* need xB_ge_2
+1 xB_b_0 2 xB_b_1 2 ~xB_ge_2 >= 2 ;
+-1 xB_b_0 -2 xB_b_1 2 xB_ge_2 >= -1 ;
+* need lower bound xB_eq_1
+1 ~xB_ge_2 1 ~xB_eq_1 >= 1 ;
+-1 ~xB_ge_2 1 xB_eq_1 >= 0 ;
+* need xA_ge_3
+1 xA_b_0 2 xA_b_1 4 xA_b_2 3 ~xA_ge_3 >= 3 ;
+-1 xA_b_0 -2 xA_b_1 -4 xA_b_2 5 xA_ge_3 >= -2 ;
+-1 xA_ge_3 1 xA_ge_2 >= 0 ;
+* need xA_eq_2
+1 xA_ge_2 1 ~xA_ge_3 2 ~xA_eq_2 >= 2 ;
+-1 xA_ge_2 -1 ~xA_ge_3 1 xA_eq_2 >= -1 ;
+* and so on...
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<5>\tiny%
+\begin{Verbatim}
+* constraint linear inequality 1*A 1*B 1*C <= 9
+-1 xA_b_0 -2 xA_b_1 -4 xA_b_2 -1 xB_b_0 -2 xB_b_1 -1 xC_b_0 -2 xC_b_1 >= -9 ;
+
+* constraint linear equality 2*A 3*D -1*Obj = 0
+2 xA_b_0 4 xA_b_1 8 xA_b_2 3 xD_b_0 6 xD_b_1
+    -1 xObj_b_0 -2 xObj_b_1 -4 xObj_b_2 -8 xObj_b_3 -16 xObj_b_4
+    -32 xObj_b_5 -64 xObj_b_6 -128 xObj_b_7 -256 xObj_b_8
+    -512 xObj_b_9 -1024 xObj_b_10 -2048 xObj_b_11 -4096 xObj_b_12
+    -8192 xObj_b_13 >= 0 ;
+-2 xA_b_0 -4 xA_b_1 -8 xA_b_2 -3 xD_b_0 -6 xD_b_1 1
+    xObj_b_0 2 xObj_b_1 4 xObj_b_2 8 xObj_b_3 16 xObj_b_4
+    32 xObj_b_5 64 xObj_b_6 128 xObj_b_7 256 xObj_b_8
+    512 xObj_b_9 1024 xObj_b_10 2048 xObj_b_11 4096 xObj_b_12
+    8192 xObj_b_13 >= 0 ;
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<6>\tiny%
+\begin{Verbatim}
+pseudo-Boolean proof version 1.2
+f 48 0
+
+* all-different
+u 1 xC_eq_2 1 xC_eq_3 >= 1 ;
+u 1 xD_eq_2 1 xD_eq_3 >= 1 ;
+p 49 50 + 35 + 45 +
+u 1 ~xA_eq_1 >= 1 ;
+u 1 ~xA_eq_2 >= 1 ;
+u 1 ~xA_eq_3 >= 1 ;
+u 1 ~xB_eq_2 >= 1 ;
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<7>\tiny%
+\begin{Verbatim}
+* justifying integer linear inequality Obj >= 14
+* need A >= 4
+u 1 xA_b_0 2 xA_b_1 4 xA_b_2 >= 4 ;
+p 48 56 2 * + 7 3 * + 1 d
+* need xObj_ge_14
+red 1 xObj_b_0 2 xObj_b_1 4 xObj_b_2 8 xObj_b_3 16 xObj_b_4 32 xObj_b_5
+    64 xObj_b_6 128 xObj_b_7 256 xObj_b_8 512 xObj_b_9 1024 xObj_b_10
+    2048 xObj_b_11 4096 xObj_b_12 8192 xObj_b_13 14 ~xObj_ge_14 >= 14 ;
+    xObj_ge_14 0
+red -1 xObj_b_0 -2 xObj_b_1 -4 xObj_b_2 -8 xObj_b_3 -16 xObj_b_4 -32 xObj_b_5
+    -64 xObj_b_6 -128 xObj_b_7 -256 xObj_b_8 -512 xObj_b_9 -1024 xObj_b_10
+    -2048 xObj_b_11 -4096 xObj_b_12 -8192 xObj_b_13 16370 xObj_ge_14 >= -13 ;
+    xObj_ge_14 1
+u 1 xObj_ge_14 >= 1 ;
+
+* justifying integer linear inequality Obj < 20
+p 47 2 2 * + 8 3 * + 1 d
+* need xObj_ge_20 (omitted)
+u 1 ~xObj_ge_20 >= 1 ;
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<8>\tiny%
+\begin{Verbatim}
+* need xA_ge_5
+red 1 xA_b_0 2 xA_b_1 4 xA_b_2 5 ~xA_ge_5 >= 5 ; xA_ge_5 0
+red -1 xA_b_0 -2 xA_b_1 -4 xA_b_2 3 xA_ge_5 >= -4 ; xA_ge_5 1
+u -1 xA_ge_5 1 xA_ge_4 >= 0 ;
+* need xA_eq_4
+red 1 xA_ge_4 1 ~xA_ge_5 2 ~xA_eq_4 >= 2 ; xA_eq_4 0
+red -1 xA_ge_4 -1 ~xA_ge_5 1 xA_eq_4 >= -1 ; xA_eq_4 1
+* guessing xA_eq_4, decision stack is [ ]
+
+* justifying integer linear inequality Obj < 18
+* need A < 5
+u -1 xA_b_0 -2 xA_b_1 -4 xA_b_2 11 ~xA_eq_4 >= -4 ;
+p 47 71 2 * + 8 3 * + 1 d
+* need xObj_ge_18 (omitted)
+u 1 ~xA_eq_4 1 ~xObj_ge_18 >= 1 ;
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<9>\tiny%
+\begin{Verbatim}
+* guessing xC_eq_2, decision stack is [ xA_eq_4 ]
+* all-different
+u 1 ~xA_eq_4 1 ~xC_eq_2 1 ~xD_eq_2 >= 1 ;
+
+* justifying integer linear inequality Obj >= 17
+* need D >= 3
+u 1 xD_b_0 2 xD_b_1 6 ~xA_eq_4 6 ~xC_eq_2 >= 3 ;
+p 48 56 2 * + 79 3 * + 1 d
+* need xObj_ge_17 (omitted)
+u 1 ~xA_eq_4 1 ~xC_eq_2 1 xObj_ge_17 >= 1 ;
+
+* solution
+* need xObj_eq_17
+red 1 xObj_ge_17 1 ~xObj_ge_18 2 ~xObj_eq_17 >= 2 ; xObj_eq_17 0
+red -1 xObj_ge_17 -1 ~xObj_ge_18 1 xObj_eq_17 >= -1 ; xObj_eq_17 1
+o xA_eq_4 xB_eq_1 xC_eq_2 xD_eq_3 xObj_eq_17 xObj_b_0 ~xObj_b_1
+    ~xObj_b_2 ~xObj_b_3 xObj_b_4 ~xObj_b_5 ~xObj_b_6 ~xObj_b_7
+    ~xObj_b_8 ~xObj_b_9 ~xObj_b_10 ~xObj_b_11 ~xObj_b_12 ~xObj_b_13
+u 1 ~xObj_ge_17 >= 1 ;
+
+* backtracking
+u 1 ~xA_eq_4 1 ~xC_eq_2 >= 1 ;
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<10>\tiny%
+\begin{Verbatim}
+* then a bit more search happens (omitted), until...
+* solution
+o xA_eq_4 xB_eq_1 xC_eq_3 xD_eq_2 xObj_eq_14 ~xObj_b_0 xObj_b_1
+    xObj_b_2 xObj_b_3 ~xObj_b_4 ~xObj_b_5 ~xObj_b_6 ~xObj_b_7
+    ~xObj_b_8 ~xObj_b_9 ~xObj_b_10 ~xObj_b_11 ~xObj_b_12 ~xObj_b_13
+u 1 ~xObj_ge_14 >= 1 ;
+
+* backtracking
+u 1 ~xA_eq_4 1 ~xC_eq_3 >= 1 ;
+
+* backtracking
+u 1 ~xA_eq_4 >= 1 ;
+
+* need upper bound xA_eq_5
+red 1 xA_ge_5 1 ~xA_eq_5 >= 1 ; xA_eq_5 0
+red -1 xA_ge_5 1 xA_eq_5 >= 0 ; xA_eq_5 1
+* guessing xA_eq_5, decision stack is [ ]
+
+* backtracking
+u 1 ~xA_eq_5 >= 1 ;
+
+* backtracking
+u >= 1 ;
+
+* asserting contradiction
+c -1
+\end{Verbatim}
+\end{onlyenv}
+\end{columns}
+\end{frame}
+
 \begin{frame}{Propagator Bugs!}
     \begin{itemize}
         \item Early versions of integer linear inequality propagator had bug with negative values and negative coefficients.
