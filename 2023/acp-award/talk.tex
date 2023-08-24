@@ -30,6 +30,9 @@
 \usetikzlibrary{tikzmark, backgrounds}
 \usetikzlibrary{trees, overlay-beamer-styles}
 
+\tikzset{processarrow/.style={->, very thick, decorate, decoration={snake, post length=0.5mm}}}
+\tikzset{brace/.style={decorate, decoration={brace}, very thick}}
+
 \definecolor{uofguniversityblue}{rgb}{0, 0.219608, 0.396078}
 \definecolor{uofgheather}{rgb}{0.356863, 0.32549, 0.490196}
 \definecolor{uofgaquamarine}{rgb}{0.603922, 0.72549, 0.678431}
@@ -175,7 +178,7 @@
     \end{frame}
 }
 
-\section{What CP Taught Me About Subgraph Solving}
+\section{Finding Little Graphs Inside Big Graphs}
 
 \begin{frame}{Finding Little Graphs Inside Big Graphs}
     \centering
@@ -427,16 +430,192 @@
 \end{center}
 \end{frame}
 
-\begin{frame}{Benchmarking}
+\section{CP Helps Us Understand Algorithms}
+
+\begin{frame}{Understanding Colour Ordering}
+    \only<1>{
+        \centering
+    \begin{tikzpicture}
+        \begin{scope}[scale=1.5]
+        \newcount \myc
+        \foreach \n in {1, 3, 7}{
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \node[anchor=center] (L\n) at (\the\myc:1.1) {\n};
+            \node[anchor=center, circle, fill=uofgcobalt, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
+        }
+        \foreach \n in {2, 4, 9}{
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \node[anchor=center] (l\n) at (\the\myc:1.1) {\n};
+            \node[anchor=center, circle, fill=uofglawn, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
+        }
+        \foreach \n in {5, 6, 10}{
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \node[anchor=center] (L\n) at (\the\myc:1.1) {\n};
+            \node[anchor=center, circle, fill=uofgpumpkin, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
+        }
+        \foreach \n in {8, 11, 12}{
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \node[anchor=center] (L\n) at (\the\myc:1.1) {\n};
+            \node[anchor=center, circle, fill=uofgthistle, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
+        }
+        \draw [ultra thick] (N1) -- (N2);
+        \draw [ultra thick] (N1) -- (N5);
+        \draw [ultra thick] (N1) -- (N8);
+        \draw (N1) -- (N10);
+        \draw (N1) -- (N11);
+        \draw (N1) -- (N12);
+        \draw [ultra thick] (N2) -- (N5);
+        \draw [ultra thick] (N2) -- (N8);
+        \draw (N2) -- (N10);
+        \draw (N3) -- (N4);
+        \draw (N3) -- (N6);
+        \draw (N3) -- (N10);
+        \draw (N3) -- (N11);
+        \draw (N4) -- (N6);
+        \draw [ultra thick] (N5) -- (N8);
+        \draw (N6) -- (N7);
+        \draw (N6) -- (N12);
+        \draw (N7) -- (N9);
+        \draw (N7) -- (N11);
+        \draw (N7) -- (N12);
+        \draw (N8) -- (N9);
+        \draw (N9) -- (N10);
+        \draw (N9) -- (N11);
+        \draw (N9) -- (N12);
+        \draw (N10) -- (N11);
+    \end{scope}
+
+\draw [processarrow] (2.4, 0) -> (3.5, 0);
+
+\coordinate (Ms) at (3.8, 0.0);
+\node[right = 0.35 of Ms,  anchor=center, circle, fill=uofgcobalt,  inner sep=2pt] (V1) {};
+\node[right = 0.35 of V1,  anchor=center, circle, fill=uofgcobalt,  inner sep=2pt] (V2) {};
+\node[right = 0.35 of V2,  anchor=center, circle, fill=uofgcobalt,  inner sep=2pt] (V3) {};
+\node[right = 0.35 of V3,  anchor=center, circle, fill=uofglawn,    inner sep=2pt] (V4) {};
+\node[right = 0.35 of V4,  anchor=center, circle, fill=uofglawn,    inner sep=2pt] (V5) {};
+\node[right = 0.35 of V5,  anchor=center, circle, fill=uofglawn,    inner sep=2pt] (V6) {};
+\node[right = 0.35 of V6,  anchor=center, circle, fill=uofgpumpkin, inner sep=2pt] (V7) {};
+\node[right = 0.35 of V7,  anchor=center, circle, fill=uofgpumpkin, inner sep=2pt] (V8) {};
+\node[right = 0.35 of V8,  anchor=center, circle, fill=uofgpumpkin, inner sep=2pt] (V9) {};
+\node[right = 0.35 of V9,  anchor=center, circle, fill=uofgthistle, inner sep=2pt] (V10) {};
+\node[right = 0.35 of V10, anchor=center, circle, fill=uofgthistle, inner sep=2pt] (V11) {};
+\node[right = 0.35 of V11, anchor=center, circle, fill=uofgthistle, inner sep=2pt] (V12) {};
+\node[above = 0.0 of V1] {1};
+\node[above = 0.0 of V2] {3};
+\node[above = 0.0 of V3] {7};
+\node[above = 0.0 of V4] {2};
+\node[above = 0.0 of V5] {4};
+\node[above = 0.0 of V6] {9};
+\node[above = 0.0 of V7] {5};
+\node[above = 0.0 of V8] {6};
+\node[above = 0.0 of V9] {10};
+\node[above = 0.0 of V10] {8};
+\node[above = 0.0 of V11] {11};
+\node[above = 0.0 of V12] {12};
+\node[below = 0.0 of V1] {1};
+\node[below = 0.0 of V2] {1};
+\node[below = 0.0 of V3] {1};
+\node[below = 0.0 of V4] {2};
+\node[below = 0.0 of V5] {2};
+\node[below = 0.0 of V6] {2};
+\node[below = 0.0 of V7] {3};
+\node[below = 0.0 of V8] {3};
+\node[below = 0.0 of V9] {3};
+\node[below = 0.0 of V10] {4};
+\node[below = 0.0 of V11] {4};
+\node[below = 0.0 of V12] {4};
+
+\draw[brace] ($(V1.north)+(0.0,0.6)$) -- ($(V12.north)+(0.0,0.6)$);
+\node[anchor=south] at ($(V1)!0.5!(V12)$)[yshift=0.9cm] { Vertices in colour order };
+
+\draw[brace] ($(V12.south)+(0.0,-0.6)$) -- ($(V1.south)+(0.0,-0.6)$);
+\node[anchor=south] at ($(V1)!0.5!(V12)$)[yshift=-1.4cm] { Number of colours used };
+
+    \end{tikzpicture}
+    }\only<2->{
+    \begin{itemize}
+        \item Vertices in the rightmost colour class are ``generally expected [to have a] high
+            probability of belonging to a maximum clique'' according to Tomita and Kameda, J. Global
+            Optimization, 37(1) 2007.
+        \item <3-> It's not true.
+        \item <4-> Right to left is still better even if the algorithm is only proving optimality.
+        \item <4-> Better clique algorithms have \emph{worse} anytime behaviour and take
+            \emph{longer} to find a strong incumbent.
+        \item <5-> Rethinking the algorithms in terms of constraint programming variables and
+            heuristics explains this.
+    \end{itemize}}
 \end{frame}
 
-\begin{frame}{Explaining Solver Behaviour}
+\begin{frame}{Weights and Search Orders}
+    \begin{itemize}
+        \item Lack of good benchmark instances for the maximum weight clique problem.
+            \begin{itemize}
+                \item Many practical applications, but the instances aren't easily available.
+            \end{itemize}
+        \item Take the DIMACS clique instances, and give vertex $i$ weight $i \operatorname{mod} 200 + 1$.
+        \item <2-> Puts a huge emphasis on weights and very little on graph structure.
+        \item <2-> Real instances have much more interesting relationships.
+        \item <3-> Need search heuristics which consider both weight and adjacency, but you'd never find
+            this out on the usual benchmarks.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Really Large-Scale Experiments}
+\begin{frame}{Do Labels Make Things Easier or Harder?}
+
+    \begin{center}
+    \begin{tikzpicture}[scale=0.5,every node/.style={font=\footnotesize}]
+        \begin{scope}
+            \newcount \myc
+            \newcount \myd
+            \newcount \mye
+            \foreach \n in {1, ..., 9}{
+                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18.0
+                \node[draw, circle, fill=uofgcobalt, inner sep=0.5pt] (N\n) at (\the\myc:2.4) {\phantom{0}};
+            }
+            \node[draw, circle, fill=uofglawn, inner sep=0.5pt] (N10) at (54.0:2.4) {\phantom{0}};
+
+            \foreach \n in {1, ..., 8}{
+                \myd=\n
+                \myc=\n \advance\myc by 1
+                \foreach \m in {\the\myc, ..., 9}{
+                    \mye=\m
+                    \draw (N\the\myd) -- (N\the\mye);
+                }
+            }
+        \end{scope}
+        \begin{scope}[xshift=9cm]
+            \newcount \myc
+            \newcount \myd
+            \newcount \mye
+            \foreach \n in {1, ..., 9}{
+                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18.0
+                \node[draw, circle, fill=uofgcobalt, inner sep=0.5pt] (N\n) at (\the\myc:2.4) {\phantom{0}};
+            }
+            \node[draw, circle, fill=uofgthistle, inner sep=0.5pt] (N10) at (54.0:2.4) {\phantom{0}};
+
+            \foreach \n in {1, ..., 8}{
+                \myd=\n
+                \myc=\n \advance\myc by 1
+                \foreach \m in {\the\myc, ..., 9}{
+                    \mye=\m
+                    \draw (N\the\myd) -- (N\the\mye);
+                }
+            }
+        \end{scope}
+    \end{tikzpicture}
+    \end{center}
+
+    \bigskip
+
+    \begin{itemize}
+        \item <2-> Whole research area based around detecting unsatisfiability to avoid having to call a subgraph
+            isomorphism solver.
+        \item <2-> ``Subgraph isomorphism is NP-complete, so anything we can do to avoid doing a subgraph query
+            is going to speed things up.''
+    \end{itemize}
 \end{frame}
 
-\section{What Else Can CP Offer?}
+\section{Using CP to Improve Subgraph Algorithms}
 
 \begin{frame}{Search, Restarts, and Nogoods}
     \only<1>{
@@ -491,7 +670,12 @@
     \end{itemize}
 \end{frame}
 
-\section{Things CP Should Steal}
+\begin{frame}{Motivation}
+    Potentially huge gains to be had from making CP techniques easily
+    deployable and robust in non-CP settings.
+\end{frame}
+
+\section{Stealing From SAT to Improve CP}
 
 \begin{frame}{Demotivation}
     My first experience of research: a summer internship reimplementing a clique enumeration algorithm from the literature.
@@ -517,20 +701,22 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{The Very Rude Slide That Gets Me Into Trouble}
+\begin{frame}{The Slide That Gets Me Into Trouble}
     \begin{itemize}
         \item 2021 MiniZinc Challenge: for 1.28\% of ``solved'' instances, we get the wrong solution.
             \begin{itemize}
                 \item False claims of unsatisfiability.
                 \item False claims of optimality.
                 \item Infeasible solutions produced.
-                \item The same solver run on the same instance on the same hardware twice in a row
-                    can claim both unsatisfiability and satisfiability.
             \end{itemize}
         \item This includes academic and commercial CP and MIP solvers.
-        \item Extensive testing hasn't fixed this.
-        \item Formal methods are far from being able to handle solvers.
-        \item <2-> The SAT community has largely solved this problem.
+            \begin{itemize}
+                \item Gurobi run on the same instance on the same hardware twice in a row
+                    can claim both unsatisfiability and incorrect optimality.
+            \end{itemize}
+        \item <2-> Extensive testing hasn't fixed this.
+        \item <2-> Formal methods are far from being able to handle solvers.
+        \item <3-> The SAT community has largely solved this problem.
     \end{itemize}
 \end{frame}
 
