@@ -92,9 +92,14 @@
         \coordinate (logos) at ($(logo.south)!0.5!(logo2.north)$);
 
         \node [anchor=west, xshift=0.8cm] at (current page.west |- logos) {
-            \begin{minipage}{0.65\paperwidth}\raggedright
+            \begin{minipage}{0.85\paperwidth}\raggedright
                 {\usebeamerfont{title}\usebeamercolor[white]{}\inserttitle}\\[0.1cm]
-                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}
+                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}\\[0.1cm]
+                {\usebeamerfont{author}\usebeamercolor[white]{}\scriptsize With thanks to numerous unindicted
+                co-conspirators, including \"{O}zg\"{u}r Akg\"{u}n, Blair Archibald,\\Bart Bogaerts,
+                Jan Elffers, Stephan Gocht, Ruth Hoffmann, Sonja Kraiczy, Ross McBride,\\Matthew McIlree,
+                Samba Ndiaye, Jakob Nordstr\"{o}m, Craig Reilly, Kyle Simpson,\\Christine Solnon,
+                James Trimble, William Pettersson, and Patrick Prosser\\}
             \end{minipage}
         };
 
@@ -384,12 +389,12 @@
         \begin{scope}[scale=1.5]
         \newcount \myc
         \foreach \n in {3, 4, 6, 7, 9, 10, 11, 12}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
             \node[anchor=center] (L\n) at (\the\myc:1.7) {\n};
             \node[anchor=center, circle, fill=black, inner sep=2pt] (N\n) at (\the\myc:1.42) {};
         }
         \foreach \n in {1, 2, 5, 8}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
             \node[anchor=center] (L\n) at (\the\myc:1.7) {\n};
             \node<1>[anchor=center, circle, fill=black, inner sep=2pt] (N\n) at (\the\myc:1.42) {};
             \node<2>[anchor=center, circle, fill=uofgcobalt, inner sep=2pt] (N\n) at (\the\myc:1.42) {};
@@ -430,6 +435,70 @@
 \end{center}
 \end{frame}
 
+\section{Stealing from CP to Improve Subgraph Algorithms}
+
+\begin{frame}{Search, Restarts, and Nogoods}
+    \only<1>{
+    \begin{itemize}
+        \item We know that vanilla backtracking search isn't great.
+        \item The same is true in subgraph solving:
+            \begin{itemize}
+                \item Slightly-random value-ordering heuristic.
+                \item Aggressive restarts.
+                \item Nogood recording.
+            \end{itemize}
+        \item Two orders of magnitude speedup on satisfiable instances, without affecting unsatisfiable
+            performance.
+    \end{itemize}}\only<2>{
+    \centering\includegraphics{gen-graph-sbs.pdf}
+}
+\end{frame}
+
+\begin{frame}{Parallel Search, for (Nearly) Free}
+    \only<1>{
+    \begin{itemize}
+        \item Give each thread a different seed for the slightly-random value-ordering heuristic.
+        \item Share nogoods on restarts.
+        \item 24 times speedup on 36 shared memory cores, 145 times speedup on 720 distributed cores.
+    \end{itemize}}%
+\only<2>{
+    \centering\includegraphics{gen-graph-dist.pdf}
+}
+\end{frame}
+
+\begin{frame}{Why Isn't Anyone Else Doing This?}
+    \begin{itemize}
+        \item They don't know it can be done.
+        \item Implementation isn't easy.
+            \begin{itemize}
+                \item No clean separation between propagation, heuristics, and search.
+                \item Efficient nogood propagation is an engineering challenge.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Symmetries}
+    \begin{itemize}
+        \item The CP community understands symmetries much better than most algorithm implementers.
+        \item Huge potential for speedups in subgraph solving.
+        \item <2-> But a robust implementation is hard.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Counting and Sampling}
+    \begin{itemize}
+        \item People don't want to enumerate subgraph matches, they want an approximate count or
+            a uniform sample.
+        \item We know how to do this for SAT and CP.
+        \item <2-> But a robust implementation is hard.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Motivational Slide Number One}
+    Potentially huge gains to be had from making CP techniques easily
+    deployable and robust in non-CP settings.
+\end{frame}
+
 \section{CP Helps Us Understand Algorithms}
 
 \begin{frame}{Understanding Colour Ordering}
@@ -439,22 +508,22 @@
         \begin{scope}[scale=1.5]
         \newcount \myc
         \foreach \n in {1, 3, 7}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
             \node[anchor=center] (L\n) at (\the\myc:1.1) {\n};
             \node[anchor=center, circle, fill=uofgcobalt, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
         }
         \foreach \n in {2, 4, 9}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
             \node[anchor=center] (l\n) at (\the\myc:1.1) {\n};
             \node[anchor=center, circle, fill=uofglawn, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
         }
         \foreach \n in {5, 6, 10}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
             \node[anchor=center] (L\n) at (\the\myc:1.1) {\n};
             \node[anchor=center, circle, fill=uofgpumpkin, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
         }
         \foreach \n in {8, 11, 12}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
             \node[anchor=center] (L\n) at (\the\myc:1.1) {\n};
             \node[anchor=center, circle, fill=uofgthistle, inner sep=2pt] (N\n) at (\the\myc:0.9) {};
         }
@@ -546,6 +615,42 @@
     \end{itemize}}
 \end{frame}
 
+\begin{frame}{Which Optimisation Problems are Hard?}
+    \begin{center}\includegraphics[keepaspectratio=true,scale=0.65]{prosser.png}\end{center}
+
+    Prosser, Algorithms 5(4) 2012. Both plots have 100 samples per density step. The
+    left-hand plot seems to go up in density steps of 0.01, and the right-hand plot, 0.05.
+\end{frame}
+
+\begin{frame}{Optimisation, Refined}
+    \begin{center}
+    \includegraphics<1>{gen-graph-optimisation.pdf}%
+    \includegraphics<2>{gen-graph-optimisation-1.pdf}%
+    \includegraphics<3>{gen-graph-optimisation-2.pdf}
+        \end{center}
+\end{frame}
+
+\begin{frame}{Phase Transitions}
+    \centering\includegraphics{gen-graph-phase-transition.pdf}
+\end{frame}
+
+\begin{frame}{Optimisation versus Decision}
+    \begin{center}
+    \includegraphics<1>{gen-graph-waves-0.pdf}%
+    \includegraphics<2>{gen-graph-waves.pdf}%
+    \includegraphics<3>{gen-graph-waves-1.pdf}%
+    \includegraphics<4>{gen-graph-waves-2.pdf}%
+    \includegraphics<5>{gen-graph-waves-3.pdf}%
+    \end{center}
+\end{frame}
+
+\begin{frame}{Solution Quality over Time}
+    \begin{center}
+    \includegraphics<1>{gen-graph-sqot.pdf}%
+    \includegraphics<2>{gen-graph-sqot-rco.pdf}%
+    \end{center}
+\end{frame}
+
 \begin{frame}{Weights and Search Orders}
     \begin{itemize}
         \item Lack of good benchmark instances for the maximum weight clique problem.
@@ -569,10 +674,10 @@
             \newcount \myd
             \newcount \mye
             \foreach \n in {1, ..., 9}{
-                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18.0
+                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18
                 \node[draw, circle, fill=uofgcobalt, inner sep=0.5pt] (N\n) at (\the\myc:2.4) {\phantom{0}};
             }
-            \node[draw, circle, fill=uofglawn, inner sep=0.5pt] (N10) at (54.0:2.4) {\phantom{0}};
+            \node[draw, circle, fill=uofglawn, inner sep=0.5pt] (N10) at (54:2.4) {\phantom{0}};
 
             \foreach \n in {1, ..., 8}{
                 \myd=\n
@@ -588,10 +693,10 @@
             \newcount \myd
             \newcount \mye
             \foreach \n in {1, ..., 9}{
-                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18.0
+                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18
                 \node[draw, circle, fill=uofgcobalt, inner sep=0.5pt] (N\n) at (\the\myc:2.4) {\phantom{0}};
             }
-            \node[draw, circle, fill=uofgthistle, inner sep=0.5pt] (N10) at (54.0:2.4) {\phantom{0}};
+            \node[draw, circle, fill=uofgthistle, inner sep=0.5pt] (N10) at (54:2.4) {\phantom{0}};
 
             \foreach \n in {1, ..., 8}{
                 \myd=\n
@@ -615,69 +720,13 @@
     \end{itemize}
 \end{frame}
 
-\section{Using CP to Improve Subgraph Algorithms}
-
-\begin{frame}{Search, Restarts, and Nogoods}
-    \only<1>{
-    \begin{itemize}
-        \item We know that vanilla backtracking search isn't great.
-        \item The same is true in subgraph solving:
-            \begin{itemize}
-                \item Slightly-random value-ordering heuristic.
-                \item Aggressive restarts.
-                \item Nogood recording.
-            \end{itemize}
-        \item Two orders of magnitude speedup on satisfiable instances, without affecting unsatisfiable
-            performance.
-    \end{itemize}}\only<2>{
-    \centering\includegraphics{gen-graph-sbs.pdf}
-}
+\begin{frame}{Some More Motivation}
+    A lot of what we've learned about good benchmark instances applies elsewhere too, but they don't know it yet.
 \end{frame}
 
-\begin{frame}{Parallel Search, for (Nearly) Free}
-    \only<1>{
-    \begin{itemize}
-        \item Give each thread a different seed for the slightly-random value-ordering heuristic.
-        \item Share nogoods on restarts.
-        \item 24 times speedup on 36 shared memory cores, 145 times speedup on 720 distributed cores.
-    \end{itemize}}%
-\only<2>{
-    \centering\includegraphics{gen-graph-dist.pdf}
-}
-\end{frame}
+\section{Stealing Proof Logging From SAT}
 
-\begin{frame}{Why Isn't Anyone Else Doing This?}
-    \begin{itemize}
-        \item They don't know it can be done.
-        \item Implementation isn't easy.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Symmetries}
-    \begin{itemize}
-        \item The CP community understands symmetries much better than most algorithm implementers.
-        \item Huge potential for speedups in subgraph solving.
-        \item <2-> But a robust implementation is hard.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Counting and Sampling}
-    \begin{itemize}
-        \item People don't want to enumerate subgraph matches, they want an approximate count or
-            a uniform sample.
-        \item We know how to do this for SAT and CP.
-        \item <2-> But a robust implementation is hard.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Motivation}
-    Potentially huge gains to be had from making CP techniques easily
-    deployable and robust in non-CP settings.
-\end{frame}
-
-\section{Stealing From SAT to Improve CP}
-
-\begin{frame}{Demotivation}
+\begin{frame}{The Demotivation Slide}
     My first experience of research: a summer internship reimplementing a clique enumeration algorithm from the literature.
 
     \bigskip
@@ -720,7 +769,7 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Proof Logging}
+\begin{frame}{Proof Logging in SAT}
     \vspace*{-1.0em}
     \begin{center}
         \begin{tikzpicture}
@@ -773,7 +822,7 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{We Can't just Steal SAT Proof Logging}
+\begin{frame}{Unfortunately We Can't just Steal SAT Proof Logging}
     \only<1>{\begin{itemize}
         \item Need to be able to reason about 400+ global constraints.
         \item SAT proof checking struggles with parity and cardinality reasoning.
@@ -804,32 +853,105 @@
 
         \item Do all of your solving using a powerful solver, as normal.
         \item Have the solver output \emph{justifications} in a simpler format.
+            \pause
+        \item Just using print statements and simple text templates.
+        \item Without the solver needing to understand or manipulate proof terms.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{This Actually Works}
-    \begin{itemize}
-        \item So far:
-            \begin{itemize}
-                \item Clique and weighted clique.
-                \item Subgraph isomorphism, including degree reasoning, paths reasoning.
-                \item Maximum common connected subgraph, including microstructure reformulation.
-            \end{itemize}
-        \item Ongoing work on CP:
-            \begin{itemize}
-                \item Integer linear (in)equalities, including with large domains.
-                \item All different.
-                \item Table, Regular, Smart Table.
-                \item Circuit.
-                \item Element, Min, Max.
-            \end{itemize}
-        \item Our proof system doesn't need to know what graphs or integer variables are.
-    \end{itemize}
+\begin{frame}{Proof Logging for Every Solver}
+    \vspace*{-1.0em}
+    \begin{center}
+        \begin{tikzpicture}
+            \node (solver) [inner xsep=5.5em, inner ysep=2.5em, draw, rounded corners=3pt] { Solver };
+
+            \node (proofprinter) [
+                inner ysep=.2em,
+                rounded corners=3pt, anchor=south, xshift=1em, visible on=<4->] at (solver.south) { Added Print Statements };
+
+            \node (oldchecker) [right=2cm of solver.north east, anchor=north west,
+            inner xsep=0.5em, draw, rounded corners=3pt, minimum height=12em,
+            text width=4em, align=center, visible on=<1>] { \phantom{General}  Checker \phantom{Purpose} };
+
+            \node (checker) [right=2cm of solver.north east, anchor=north west,
+            inner xsep=0.5em, draw, rounded corners=3pt, minimum height=12em,
+            text width=4em, align=center, visible on=<2->] { General Purpose Checker };
+
+            \draw [->, thick] (solver.east) -- (solver.east -| checker.west)
+                coordinate [midway] (solutionmid) node [above, midway] { Result };
+
+            \draw [->, thick, rounded corners=3pt] (solver.south) -- (solver.south |- checker.west)
+                -- (checker.west) coordinate [midway] (proofmid);
+
+            \coordinate (prooflabel) at (proofmid-|solutionmid);
+            \node [above=0cm of prooflabel] { Proof };
+
+            \coordinate [right=1.5cm of checker.east] (verified);
+            \draw [->, thick] (checker.east) -- (verified) node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} };
+
+            \coordinate [left=1.5cm of solver.west] (input);
+            \draw [->, thick] (input) -- (solver.west) coordinate [midway] (inputmid) node [above, midway] { Input };
+
+            \coordinate (checkerbotleft) at ($(checker.west)+($(checker.west)-(solver.east-|checker.west)$)$);
+
+            \coordinate (solverstart) at ($(solver.south)!0.75!(solver.south west)$);
+            \coordinate (solverstart2) at ($(solver.south)!0.65!(solver.south west)$);
+            \draw [dotted, visible on=<3->] (solverstart2) -- (solverstart2 |- solver.north);
+            \draw [->, thick, rounded corners=3pt, visible on=<3->] (solverstart) -- (solverstart |- checkerbotleft) -- (checkerbotleft);
+
+            \draw [->, thick, rounded corners=3pt, visible on=<1-2>] ($(inputmid)+(-0.2,0)$) --
+            (inputmid) -- (inputmid |- checkerbotleft) -- (checkerbotleft) coordinate [midway] (altinputmid);
+
+            \draw [dotted, visible on=<4->] (solverstart2|-proofprinter.north) -- (solver.east|-proofprinter.north);
+
+            \coordinate (prooflabel) at (altinputmid-|solutionmid);
+            \node [above=0cm of prooflabel, xshift=-1.8cm, visible on=<3->] { Very Simple Encoding of Input };
+        \end{tikzpicture}
+      \end{center}
+\end{frame}
+
+\begin{frame}[t]{This Actually Works}
+    \only<1>{
+        \begin{center}
+            \url{https://github.com/ciaranm/glasgow-subgraph-solver}
+        \end{center}
+        \bigskip
+        \begin{itemize}
+            \item Clique and weighted clique.
+            \item Subgraph isomorphism, including degree reasoning, paths reasoning.
+            \item Maximum common connected subgraph, including microstructure reformulation.
+            \item All this is efficient:
+                \begin{itemize}
+                    \item Proof length is proportional to solver runtime.
+                    \item Little to no additional computation required.
+                \end{itemize}
+        \end{itemize}
+    }\only<2>{
+        \begin{center}
+            \url{https://github.com/ciaranm/glasgow-constraint-solver}
+        \end{center}
+        \bigskip
+        \begin{itemize}
+            \item Integer linear (in)equalities, including with large domains.
+            \item All different.
+            \item Table, Regular, Smart Table.
+            \item Circuit.
+            \item Element, Min, Max.
+        \end{itemize}
+    }\only<3>{
+        \begin{center}
+            \url{https://gitlab.com/MIAOresearch/software/VeriPB}
+        \end{center}
+        \bigskip
+        \begin{itemize}
+            \item Doesn't know what a graph or an integer variable is.
+        \end{itemize}
+    }
 \end{frame}
 
 \begin{frame}{But Wait, There's More!}
     \begin{itemize}
-        \item We can verify reasoning about symmetries:
+        \item We can check reasoning about symmetries:
             \begin{itemize}
                 \item Find your symmetries however you want.
                 \item Add breaking constraints, and output simple justifications.
@@ -853,28 +975,6 @@
             that testing misses.
         \item Proof logging is less effort and less code than writing good tests.
     \end{itemize}
-\end{frame}
-
-\begin{frame}{Proof Logs for Empirical Algorithmics?}
-    \begin{itemize}
-        \item Can we analyse proof logs to understand why solvers work so well?
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Getting Started}
-    Tutorial slides and video: \\
-        \qquad\url{https://ciaranm.github.io/}
-
-    \bigskip
-
-    Solvers: \\
-        \qquad\url{https://github.com/ciaranm/glasgow-constraint-solver} \\
-        \qquad\url{https://github.com/ciaranm/glasgow-subgraph-solver}
-
-    \bigskip
-
-    Proof checker: \\
-        \qquad\url{https://gitlab.com/MIAOresearch/software/VeriPB}
 \end{frame}
 
 \begin{frame}{The Big Question}
