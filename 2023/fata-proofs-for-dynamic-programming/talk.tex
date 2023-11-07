@@ -158,6 +158,8 @@
 
 % }}}
 
+\addtolength{\jot}{5pt}
+
 \author{Ciaran McCreesh}
 \title{Proof Logging for Dynamic Programming Algorithms}
 
@@ -176,9 +178,17 @@
 \section{Knapsack}
 
 \begin{frame}{Knapsack Problems}
+    \begin{align*}
+        &x_i \in \{0, 1\} && \text{whether or not we take item $i$}\\
+        &\sum \boldsymbol{w}_i x_i \le W && \text{total weight of items taken not too heavy}\\
+        &\operatorname{maximise} \sum \boldsymbol{p}_i x_i && \text{yay capitalism}
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Dynamic Programming for Knapsack}
+\end{frame}
+
+\begin{frame}{Sparse Dynamic Programming}
 \end{frame}
 
 \begin{frame}{Viewing Dynamic Programming as a Decision Diagram}
@@ -187,7 +197,16 @@
 \begin{frame}{Merging More States}
 \end{frame}
 
-\begin{frame}{Is It Correct?}
+\begin{frame}[t]{Is It Correct?}
+    \begin{minipage}{0.4\paperwidth}
+        Do you trust the theory?
+
+        \bigskip
+
+        \uncover<2->{Do you trust your PhD student to implement it correctly?}
+    \end{minipage}\hfill\begin{minipage}{0.4\paperwidth}%
+        \uncover<3->{\centering\includegraphics[width=0.3\paperwidth]{allofthethings.jpg}}
+    \end{minipage}
 \end{frame}
 
 \section{Proofs}
@@ -368,8 +387,8 @@
 \begin{frame}{Extension Variables for States}
     For each state (or entry in the matrix) on layer $\ell$, define
     \begin{align*}
-        W^{\ell}_{w} &\Leftrightarrow \sum_{i=1}^{\ell} W_i x_i \ge w \\[0.3cm]
-        P^{\ell}_{p} &\Leftrightarrow \sum_{i=1}^{\ell} P_i x_i \le p \\[0.3cm]
+        W^{\ell}_{w} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{w}_i x_i \ge w \\
+        P^{\ell}_{p} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{p}_i x_i \le p \\
         N^{\ell}_{w,p} & \Leftrightarrow W^{\ell}_{w} + P^{\ell}_{p} \ge 2
     \end{align*}
 \end{frame}
@@ -378,29 +397,29 @@
     \only<1>{
         If we don't take item $\ell$:
         \begin{align*}
-            W^{\ell-1}_{w} \land \overline{x}_\ell &\Rightarrow W^\ell_\mathit{w} \\[0.3cm]
-            P^{\ell-1}_{p} \land \overline{x}_\ell &\Rightarrow P^\ell_\mathit{p} \\[0.3cm]
+            W^{\ell-1}_{w} \land \overline{x}_\ell &\Rightarrow W^\ell_\mathit{w} \\
+            P^{\ell-1}_{p} \land \overline{x}_\ell &\Rightarrow P^\ell_\mathit{p} \\
             N^{\ell-1}_{w,p} \land \overline{x}_\ell &\Rightarrow N^\ell_{w,p}
         \end{align*}
     }
     \only<2>{
         If we can't take item $\ell$:
         \begin{align*}
-            W^{\ell-1}_{w} &\Rightarrow \overline{x}_\ell \\[0.3cm]
-            N^{\ell-1}_{w,p} &\Rightarrow \overline{x}_\ell  \\[0.3cm]
+            W^{\ell-1}_{w} &\Rightarrow \overline{x}_\ell \\
+            N^{\ell-1}_{w,p} &\Rightarrow \overline{x}_\ell  \\
             N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p}
         \end{align*}
     }
     \only<3>{
         If we can take item $\ell$, and do so, letting
         \begin{align*}
-            w' &= w + W_\ell \\
-            p' &= p + P_\ell
+            w' &= w + \boldsymbol{w}_\ell \\
+            p' &= p + \boldsymbol{p}_\ell
         \end{align*}
         we prove
         \begin{align*}
-            W^{\ell-1}_{w} \land x_\ell &\Rightarrow W^\ell_{w'} \\[0.3cm]
-            P^{\ell-1}_{p} \land x_\ell &\Rightarrow P^\ell_{p'} \\[0.3cm]
+            W^{\ell-1}_{w} \land x_\ell &\Rightarrow W^\ell_{w'} \\
+            P^{\ell-1}_{p} \land x_\ell &\Rightarrow P^\ell_{p'} \\
             N^{\ell-1}_{w,p} \land x_\ell &\Rightarrow N^\ell_{w',p'}
         \end{align*}
         and then
@@ -441,6 +460,19 @@
 \section{Constraints}
 
 \begin{frame}{Knapsack as a Constraint}
+    \begin{align*}
+        &x_i \in \{0, 1, \text{maybe other non-negative values}\}\\
+        &W, P \in \{\text{some domain of non-negative values}\}\\
+        &W = \sum \boldsymbol{w}_i x_i\\
+        &P = \sum \boldsymbol{p}_i x_i
+    \end{align*}
+
+    Now we can have lower and upper bounds on both $W$ and $P$, and maybe we can reason that some
+    items must or must not be taken.
+
+    \medskip
+
+    Effectively we're solving two (or one, or more?) non-negative integer linear equations simultaneously.
 \end{frame}
 
 \begin{frame}{A Change of States}
