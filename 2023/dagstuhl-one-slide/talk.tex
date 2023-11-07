@@ -1,0 +1,252 @@
+% vim: set spell spelllang=en tw=100 et sw=4 sts=4 foldmethod=marker foldmarker={{{,}}} :
+
+\documentclass{beamer}
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{complexity}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{amsmath}                   % \operatorname
+\usepackage{amsfonts}                  % \mathcal
+\usepackage{amssymb}                   % \nexists
+\usepackage[vlined]{algorithm2e} % algorithms
+\usepackage{centernot}
+\usepackage{listings}
+\usepackage{csquotes}
+\usepackage{fancyvrb}
+\usepackage{bussproofs}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{pifont}
+\usepackage{marvosym}
+\usepackage{cancel}
+
+\RequirePackage[tt=false, type1=true]{libertine}
+\RequirePackage[varqu]{zi4}
+\RequirePackage[libertine]{newtxmath}
+\RequirePackage[T1]{fontenc}
+
+\usetikzlibrary{shapes, arrows, shadows, calc, positioning, fit}
+\usetikzlibrary{decorations.pathreplacing, decorations.pathmorphing, shapes.misc}
+\usetikzlibrary{tikzmark, backgrounds}
+\usetikzlibrary{trees, overlay-beamer-styles}
+
+\definecolor{uofguniversityblue}{rgb}{0, 0.219608, 0.396078}
+\definecolor{uofgheather}{rgb}{0.356863, 0.32549, 0.490196}
+\definecolor{uofgaquamarine}{rgb}{0.603922, 0.72549, 0.678431}
+\definecolor{uofgslate}{rgb}{0.309804, 0.34902, 0.380392}
+\definecolor{uofgrose}{rgb}{0.823529, 0.470588, 0.709804}
+\definecolor{uofgmocha}{rgb}{0.709804, 0.564706, 0.47451}
+\definecolor{uofgsandstone}{rgb}{0.321569, 0.278431, 0.231373}
+\definecolor{uofgforest}{rgb}{0, 0.2, 0.129412}
+\definecolor{uofglawn}{rgb}{0.517647, 0.741176, 0}
+\definecolor{uofgcobalt}{rgb}{0, 0.615686, 0.92549}
+\definecolor{uofgturquoise}{rgb}{0, 0.709804, 0.819608}
+\definecolor{uofgsunshine}{rgb}{1.0, 0.862745, 0.211765}
+\definecolor{uofgpumpkin}{rgb}{1.0, 0.72549, 0.282353}
+\definecolor{uofgthistle}{rgb}{0.584314, 0.070588, 0.447059}
+\definecolor{uofgrust}{rgb}{0.603922, 0.227451, 0.023529}
+\definecolor{uofgburgundy}{rgb}{0.490196, 0.133333, 0.223529}
+\definecolor{uofgpillarbox}{rgb}{0.701961, 0.047059, 0}
+\definecolor{uofglavendar}{rgb}{0.356863, 0.301961, 0.580392}
+
+% {{{ theme things
+\useoutertheme[footline=authortitle]{miniframes}
+\useinnertheme{rectangles}
+
+\setbeamerfont{block title}{size={}}
+\setbeamerfont{title}{size=\large,series=\bfseries}
+\setbeamerfont{section title}{size=\large,series=\mdseries}
+\setbeamerfont{author}{size=\normalsize,series=\mdseries}
+\setbeamercolor*{structure}{fg=uofguniversityblue}
+\setbeamercolor*{palette primary}{use=structure,fg=black,bg=white}
+\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=uofgcobalt}
+\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=uofguniversityblue}
+\setbeamercolor*{palette quaternary}{fg=white,bg=black}
+\setbeamercolor{block body}{bg=structure!10}
+\setbeamercolor{block title}{bg=structure,fg=white}
+\setbeamertemplate{blocks}[rounded]
+\setbeamercolor*{titlelike}{parent=palette primary}
+
+\beamertemplatenavigationsymbolsempty
+
+\setbeamertemplate{title page}
+{
+    \begin{tikzpicture}[remember picture, overlay]
+        \node at (current page.north west) {
+            \begin{tikzpicture}[remember picture, overlay]
+                \fill [fill=uofguniversityblue, anchor=north west] (0, 0) rectangle (\paperwidth, -3.0cm);
+            \end{tikzpicture}
+        };
+
+        \node (logo) [anchor=north east, shift={(-0.6cm,-0.2cm)}] at (current page.north east) {
+            \includegraphics[keepaspectratio=true,scale=0.5]{../../images/UoG_keyline.pdf}
+        };
+
+        \node (logo2) [anchor=north, below=0.2cm of logo.south] {
+            \includegraphics[keepaspectratio=true,scale=0.1]{../../images/RAEngWhite.pdf}
+        };
+
+        \coordinate (logos) at ($(logo.south)!0.5!(logo2.north)$);
+
+        \node [anchor=west, xshift=0.2cm] at (current page.west |- logos) {
+            \begin{minipage}{0.65\paperwidth}\raggedright
+                {\usebeamerfont{title}\usebeamercolor[white]{}\inserttitle}\\[0.2cm]
+                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}\\[0.2cm]
+                {\usebeamerfont{author}\usebeamercolor[white]{}\tiny With numerous co-conspirators, including Bart Bogaerts, Jan Elffers, \\
+                Stephan Gocht, Ross McBride, Matthew McIlree, Jakob Nordstr{\"o}m, \\
+                Andy Oertel, Patrick Prosser, and James Trimble \\[0cm]}
+            \end{minipage}
+        };
+    \end{tikzpicture}
+}
+
+\setbeamertemplate{section page}
+{
+    \begin{centering}
+        \begin{beamercolorbox}[sep=12pt,center]{part title}
+            \usebeamerfont{section title}\insertsection\par
+        \end{beamercolorbox}
+    \end{centering}
+}
+
+\newcommand{\frameofframes}{/}
+\newcommand{\setframeofframes}[1]{\renewcommand{\frameofframes}{#1}}
+
+\makeatletter
+\setbeamertemplate{footline}
+{%
+    \begin{beamercolorbox}[colsep=1.5pt]{upper separation line foot}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,%
+        leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \leavevmode{\usebeamerfont{author in head/foot}\insertshortauthor}%
+        \hfill%
+        {\usebeamerfont{institute in head/foot}\usebeamercolor[fg]{institute in head/foot}\insertshortinstitute}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,%
+        leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        {\usebeamerfont{title in head/foot}\insertshorttitle}%
+        \hfill%
+        {\usebeamerfont{frame number}\usebeamercolor[fg]{frame number}\insertframenumber~\frameofframes~\inserttotalframenumber}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[colsep=1.5pt]{lower separation line foot}
+    \end{beamercolorbox}
+}
+
+\makeatletter
+\newenvironment{nearlyplainframe}[2][]{
+    \def\beamer@entrycode{\vspace*{-\headheight}\vspace*{3pt}}
+    \setbeamertemplate{headline}
+    {%
+        \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+        \end{beamercolorbox}
+        \vspace*{\headheight}
+    }
+
+    \setbeamertemplate{footline}
+    {%
+        \begin{beamercolorbox}[colsep=1.5pt]{upper separation line foot}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[colsep=1.5pt]{lower separation line foot}
+        \end{beamercolorbox}
+    }
+
+    \begin{frame}[#1]{#2}
+    }{
+    \end{frame}
+}
+\makeatother
+
+\makeatletter
+\newenvironment{justborderframe}[2][]{
+    \def\beamer@entrycode{\vspace*{-\headheight}}
+    \setbeamertemplate{headline}
+    {%
+        \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+        \end{beamercolorbox}
+        \vspace*{\headheight}
+    }
+
+    \setbeamertemplate{footline}
+    {%
+        \begin{beamercolorbox}[colsep=1.5pt]{upper separation line foot}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[colsep=1.5pt]{lower separation line foot}
+        \end{beamercolorbox}
+    }
+
+    \begin{frame}[#1]{}
+    }{
+    \end{frame}
+}
+\makeatother
+
+\makeatletter
+\setbeamertemplate{mini frame}
+{%
+  \begin{pgfpicture}{0pt}{0pt}{.04cm}{.04cm}
+    \pgfpathcircle{\pgfpoint{0.04cm}{0.04cm}}{0.04cm}
+    \pgfusepath{fill,stroke}
+  \end{pgfpicture}%
+}
+\setbeamertemplate{mini frame in current subsection}
+{%
+  \begin{pgfpicture}{0pt}{0pt}{.04cm}{.04cm}
+    \pgfpathcircle{\pgfpoint{0.04cm}{0.04cm}}{0.04cm}
+    \pgfsetfillcolor{section in head/foot.bg}
+    \pgfusepath{fill,stroke}
+  \end{pgfpicture}%
+}
+
+\setbeamersize{mini frame size=0.10cm, mini frame offset=0.06cm}
+\makeatother
+
+% }}}
+
+\author{Ciaran McCreesh}
+\title{About Me}
+
+\begin{document}
+
+\begin{frame}{Ciaran McCreesh \\ University of Glasgow / Royal Academy of Engineering}
+    \begin{itemize}
+        \item Subgraph-finding algorithms.
+        \item Constraint programming.
+        \item Proof logging.
+            \bigskip
+        \item Will soon be hiring a 3 year postdoc to work on proof logging.
+    \end{itemize}
+\end{frame}
+
+\end{document}
