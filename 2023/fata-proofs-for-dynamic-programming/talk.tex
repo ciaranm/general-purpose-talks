@@ -184,6 +184,12 @@
 \begin{frame}{Viewing Dynamic Programming as a Decision Diagram}
 \end{frame}
 
+\begin{frame}{Merging More States}
+\end{frame}
+
+\begin{frame}{Is It Correct?}
+\end{frame}
+
 \section{Proofs}
 
 \begin{frame}{Proof Logging}
@@ -241,7 +247,7 @@
 
 \begin{frame}{Pseudo-Boolean Problems}
 
-    ?? negation and normal form
+    ?? negation of literals and constraints, normal form
 \end{frame}
 
 \begin{frame}{Knapsack as a Pseudo-Boolean Problem}
@@ -299,6 +305,9 @@
     \end{prooftree}\end{minipage}
 \end{frame}
 
+\begin{frame}{CNF and Resolution}
+\end{frame}
+
 \begin{frame}{Reverse Unit Propagation}
 \end{frame}
 
@@ -306,21 +315,24 @@
   Suppose we want new, fresh variable
   $a$ encoding
   \begin{equation*}
-      \textcolor{uofglawn}{
         a
         \Leftrightarrow
         ( 3x + 2y + z + w \ge 3 )
-      }
   \end{equation*}
 
   Introduce constraints
+    \begin{equation*}
+    a \Rightarrow 3x + 2y + z + w \ge 3
+    \qquad
+        \overline{a} \Rightarrow
+    3 \overline{x} + 2 \overline{y}  + \overline{z} + \overline{w} \ge 5
+    \end{equation*}
+    i.e.
   \begin{equation*}
-      \textcolor{uofgcobalt}{
     3 \overline{a} + 3x + 2y + z + w \ge 3
     \qquad
     5 a +
     3 \overline{x} + 2 \overline{y}  + \overline{z} + \overline{w} \ge 5
-}
   \end{equation*}
 
   Should be fine, so long as $a$ hasn't been used before.
@@ -336,10 +348,12 @@
 
     Then we know how to get a proof deriving $\land \cup_i G_i \Rightarrow D$.
     \end{theorem}
-    \begin{proof}
-        For RUP, it ``just works''. \\\medskip
+    \begin{proof}[Handwavy proof sketch]
+        For RUP, add in the implications and it ``just works''. \\\medskip
 
-        For cutting planes, run the same proof, but saturate between each step. \\\medskip
+        For cutting planes, run the same proof, but saturate between each step. Use literal
+        axioms at the end to re-introduce any assumptions that disappear from $\land \cup_i G_i$,
+        and to fix up coefficients. \\\medskip
 
         For extension rules, keep them as-is.
     \end{proof}
@@ -352,15 +366,70 @@
 \end{frame}
 
 \begin{frame}{Extension Variables for States}
+    For each state (or entry in the matrix) on layer $\ell$, define
+    \begin{align*}
+        W^{\ell}_{w} &\Leftrightarrow \sum_{i=1}^{\ell} W_i x_i \ge w \\[0.3cm]
+        P^{\ell}_{p} &\Leftrightarrow \sum_{i=1}^{\ell} P_i x_i \le p \\[0.3cm]
+        N^{\ell}_{w,p} & \Leftrightarrow W^{\ell}_{w} + P^{\ell}_{p} \ge 2
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Transitioning Between States}
+    \only<1>{
+        If we don't take item $\ell$:
+        \begin{align*}
+            W^{\ell-1}_{w} \land \overline{x}_\ell &\Rightarrow W^\ell_\mathit{w} \\[0.3cm]
+            P^{\ell-1}_{p} \land \overline{x}_\ell &\Rightarrow P^\ell_\mathit{p} \\[0.3cm]
+            N^{\ell-1}_{w,p} \land \overline{x}_\ell &\Rightarrow N^\ell_{w,p}
+        \end{align*}
+    }
+    \only<2>{
+        If we can't take item $\ell$:
+        \begin{align*}
+            W^{\ell-1}_{w} &\Rightarrow \overline{x}_\ell \\[0.3cm]
+            N^{\ell-1}_{w,p} &\Rightarrow \overline{x}_\ell  \\[0.3cm]
+            N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p}
+        \end{align*}
+    }
+    \only<3>{
+        If we can take item $\ell$, and do so, letting
+        \begin{align*}
+            w' &= w + W_\ell \\
+            p' &= p + P_\ell
+        \end{align*}
+        we prove
+        \begin{align*}
+            W^{\ell-1}_{w} \land x_\ell &\Rightarrow W^\ell_{w'} \\[0.3cm]
+            P^{\ell-1}_{p} \land x_\ell &\Rightarrow P^\ell_{p'} \\[0.3cm]
+            N^{\ell-1}_{w,p} \land x_\ell &\Rightarrow N^\ell_{w',p'}
+        \end{align*}
+        and then
+        \begin{align*}
+            N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p} + N^\ell_{w',p'} \ge 1
+        \end{align*}
+    }
 \end{frame}
 
-\begin{frame}{Infeasible and Merged States}
+\begin{frame}{Merged States}
+    For each $N^\ell_{w,p}$ that is dominated by some other $N^\ell_{w',p'}$, prove
+    \begin{align*}
+        N^\ell_{w,p} \Rightarrow N^\ell_{w',p'}
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Establishing Completeness}
+    Show that we have to be in one of the states on this layer,
+    \begin{align*}
+        \sum_{(w,p)~\text{on layer}~\ell} N^\ell_{w,p} \ge 1
+    \end{align*}
+
+    Use the at-least-one constraint
+    \begin{align*}
+        \sum_{(w,p)~\text{on layer}~\ell - 1} N^{\ell-1}_{w,p} \ge 1
+    \end{align*}
+    from the previous layer, and resolve on each \begin{align*}
+            N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p} + N^\ell_{w',p'} \ge 1
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Reading Off a Conclusion}
