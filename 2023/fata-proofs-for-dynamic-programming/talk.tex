@@ -94,10 +94,11 @@
         \node [anchor=west, xshift=0.8cm] at (current page.west |- logos) {
             \begin{minipage}{0.65\paperwidth}\raggedright
                 {\usebeamerfont{title}\usebeamercolor[white]{}\inserttitle}\\[0.1cm]
-                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}\\[0.1cm]
-                {\usebeamerfont{author}\usebeamercolor[white]{}In collaboration with Emir
-                Demirovi\'c, Matthew McIlree, Jakob Nordstr\"om, Andy Oertel, and Konstantin
-                Sidorov}
+                {\usebeamerfont{author}\usebeamercolor[white]{}\insertauthor}\\[0.2cm]
+                {\usebeamerfont{author}\usebeamercolor[white]{}\scriptsize In collaboration with Matthew
+                McIlree; Emir Demirovi\'c and Konstantin
+                                Sidorov (TU Delft);\\[-0.1cm]and Jakob Nordstr\"om and Andy Oertel (Lund
+                                University / University of Copenhagen)}
             \end{minipage}
         };
     \end{tikzpicture}
@@ -180,8 +181,8 @@
 \begin{frame}{Knapsack Problems}
     \begin{align*}
         &x_i \in \{0, 1\} && \text{whether or not we take item $i$}\\
-        &\sum \boldsymbol{w}_i x_i \le W && \text{total weight of items taken not too heavy}\\
-        &\operatorname{maximise} \sum \boldsymbol{p}_i x_i && \text{yay capitalism}
+        &\sum_i \boldsymbol{w}_i x_i \le W && \text{total weight of items taken not too heavy}\\
+        &\operatorname{maximise} \sum_i \boldsymbol{p}_i x_i && \text{yay capitalism}
     \end{align*}
 \end{frame}
 
@@ -209,7 +210,7 @@
     \end{minipage}
 \end{frame}
 
-\section{Proofs}
+\section{VeriPB Proofs}
 
 \begin{frame}{Proof Logging}
     \vspace*{-1.0em}
@@ -278,19 +279,12 @@
 \begin{frame}{The VeriPB Proof System}
 \end{frame}
 
-\begin{frame}{Cutting Planes Proofs}
+\begin{frame}{Cutting Planes Proofs 1: Linear Inequalities}
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Model axioms}}
     \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}
         \centering From the input
-    \end{minipage}\medskip
-
-    \begin{minipage}[c]{0.35\framewidth}
-        \textcolor{uofgcobalt}{\textbf{Literal axioms}}
-    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
-        \AxiomC{~}
-        \UnaryInfC{$\ell_i \ge 0$}
-    \end{prooftree}\end{minipage}\medskip
+    \end{minipage}\bigskip
 
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Addition}}
@@ -298,7 +292,7 @@
         \AxiomC{$\sum_i a_i \ell_i \ge A$}
         \AxiomC{$\sum_i b_i \ell_i \ge B$}
         \BinaryInfC{$\sum_i (a_i + b_i) \ell_i \ge A + B$}
-    \end{prooftree}\end{minipage}\medskip
+    \end{prooftree}\end{minipage}\bigskip
 
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Multiplication}}\\
@@ -306,7 +300,16 @@
     \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
         \AxiomC{$\sum_i a_i \ell_i \ge A$}
         \UnaryInfC{$\sum_i { c a_i \ell_i } \ge c A$}
-    \end{prooftree}\end{minipage}\medskip
+    \end{prooftree}\end{minipage}
+\end{frame}
+
+\begin{frame}{Cutting Planes Proofs 2: 0-1 Variables}
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Literal axioms}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{~}
+        \UnaryInfC{$\ell_i \ge 0$}
+    \end{prooftree}\end{minipage}\bigskip
 
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Division}}\\
@@ -314,7 +317,7 @@
     \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
         \AxiomC{$\sum_i a_i \ell_i \ge A$}
         \UnaryInfC{$\sum_i {\left\lceil \frac{a_i}{c} \right\rceil} \ell_i \ge \left\lceil \frac{A}{c} \right\rceil$}
-    \end{prooftree}\end{minipage}\medskip
+    \end{prooftree}\end{minipage}\bigskip
 
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Saturation}}
@@ -324,13 +327,36 @@
     \end{prooftree}\end{minipage}
 \end{frame}
 
-\begin{frame}{CNF and Resolution}
+\begin{frame}{CNF, Resolution, and Implications}
+    Pseudo-Boolean constraints are a superset of CNF clauses:
+    \begin{equation*}
+        a \lor \overline{b} \lor c \qquad \Leftrightarrow \qquad a + \overline{b} + c \ge 1
+    \end{equation*}
+
+    CNF proofs can be done using the resolution rule:\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Resolution}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$a_1 \lor a_2 \lor \cdots \lor c$}
+        \AxiomC{$\overline{c} \lor b_1 \lor b_2 \lor \cdots$}
+        \BinaryInfC{$a_1 \lor a_2 \lor \cdots b_1 \lor b_2 \lor \cdots$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    Another way of viewing this is:\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Resolution}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$(\overline{a}_1 \land \overline{a}_2 \land \cdots) \Rightarrow c$}
+        \AxiomC{$c \Rightarrow (b_1 \lor b_2 \lor \cdots)$}
+        \BinaryInfC{$(\overline{a}_1 \land \overline{a}_2 \land \cdots) \Rightarrow (b_1 \lor b_2 \lor \cdots)$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    We can simulate this in cutting planes using addition then saturation.
 \end{frame}
 
-\begin{frame}{Reverse Unit Propagation}
-\end{frame}
-
-\begin{frame}{The Extension Rule}
+\begin{frame}{Extended Cutting Planes Proofs}
   Suppose we want new, fresh variable
   $a$ encoding
   \begin{equation*}
@@ -357,6 +383,47 @@
   Should be fine, so long as $a$ hasn't been used before.
 \end{frame}
 
+\begin{frame}{Reverse Unit Propagation}
+\end{frame}
+
+\begin{frame}{Formally Verified Proof Checking}
+    \begin{center}
+        \begin{tikzpicture}
+            \node (solver) [ inner xsep=4em, inner ysep=2.5em, draw, rounded corners=3pt] { Solver };
+            \node (elaborator) [ right=2cm of solver.north east, anchor=north west, inner xsep=0.25em, draw, rounded corners=3pt, minimum height=12em] { Elaborator };
+            \node (verifiedchecker) [ right=2cm of elaborator.north east, anchor=north west, inner xsep=0.25em, draw, rounded corners=3pt, minimum height=8em, text width=4em, text centered, yshift=-2cm] { Verified Checker };
+
+            \draw [->, thick] (solver.east) -- (solver.east -| elaborator.west) coordinate [midway] (solutionmid) node [above, midway] { Result };
+
+            \draw [->, thick, rounded corners=3pt] (solver.south) -- (solver.south |- elaborator.west) -- (elaborator.west) coordinate [midway] (proofmid);
+
+            \coordinate (prooflabel) at (proofmid-|solutionmid); \node [above=0cm of prooflabel] { Proof };
+
+            \coordinate [right=2cm of verifiedchecker.east] (verified);
+            \draw [->, thick] (verifiedchecker.east) -- (verified)
+                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} }
+                node [below, midway, text centered, text width=5em] { Trusted Result };
+
+            \coordinate [left=1.5cm of solver.west] (input);
+            \draw [->, thick] (input) -- (solver.west) coordinate [midway] (inputmid) node [above, midway] { Input };
+
+            \coordinate (verifiedcheckertopleft) at ($(verifiedchecker.west)+($(0cm,1.2cm)$)$);
+            \draw [->, thick] (elaborator.east |- verifiedcheckertopleft) -- (verifiedcheckertopleft) node [above, midway, text width=4em, text centered] { Result };
+            \draw [->, thick] (elaborator.east |- verifiedchecker.west) -- (verifiedchecker.west) node [above, midway, text width=4em, text centered] { Kernel Proof };
+
+            \coordinate (elaboratorbotleft) at ($(elaborator.west)+($(elaborator.west)-(solver.east-|elaborator.west)$)$);
+            \coordinate (verifiedcheckerbotleft) at ($(verifiedchecker.west)+($(0cm,-1.2cm)$)$);
+
+            \draw [->, thick, rounded corners=3pt] ($(inputmid)+(-0.2,0)$) -- (inputmid) -- (inputmid |- elaboratorbotleft) -- (elaboratorbotleft);
+            \draw [->, thick, rounded corners=3pt] ($(inputmid)+(-0.2,0)$) -- (inputmid) -- (inputmid |- verifiedcheckerbotleft) -- (verifiedcheckerbotleft);
+
+            \coordinate (elaboratortopright) at ($(elaborator.east)+($(verifiedcheckertopleft)-(verifiedchecker.west)$)$);
+            \draw [->, thick] (elaboratortopright) -- (elaboratortopright-|verifiedchecker.west)
+                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} };
+        \end{tikzpicture}
+      \end{center}
+\end{frame}
+
 \begin{frame}{Proofs Under Implication}
     \begin{theorem}
     Let's say we have a collection of constraints $\mathcal{C}$ and know how to get a proof deriving
@@ -380,6 +447,8 @@
 
 \begin{frame}{Proofs for Backtracking Search}
 \end{frame}
+
+\section{Proofs for Knapsack}
 
 \begin{frame}{Proofs for Dynamic Programming Algorithms for Knapsack}
 \end{frame}
@@ -457,14 +526,14 @@
 \begin{frame}{An Actual VeriPB Proof}
 \end{frame}
 
-\section{Constraints}
+\section{Knapsack Constraints}
 
 \begin{frame}{Knapsack as a Constraint}
     \begin{align*}
         &x_i \in \{0, 1, \text{maybe other non-negative values}\}\\
         &W, P \in \{\text{some domain of non-negative values}\}\\
-        &W = \sum \boldsymbol{w}_i x_i\\
-        &P = \sum \boldsymbol{p}_i x_i
+        &W = \sum_i \boldsymbol{w}_i x_i\\
+        &P = \sum_i \boldsymbol{p}_i x_i
     \end{align*}
 
     Now we can have lower and upper bounds on both $W$ and $P$, and maybe we can reason that some
