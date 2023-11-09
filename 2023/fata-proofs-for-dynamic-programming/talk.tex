@@ -157,9 +157,55 @@
 \setbeamersize{mini frame size=0.10cm, mini frame offset=0.06cm}
 \makeatother
 
+\makeatletter
+\newenvironment{nearlyplainframe}[2][]{
+    \def\beamer@entrycode{\vspace*{-\headheight}\vspace*{3pt}}
+    \setbeamertemplate{headline}
+    {%
+        \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+        \end{beamercolorbox}
+        \vspace*{\headheight}
+    }
+
+    \setbeamertemplate{footline}
+    {%
+        \begin{beamercolorbox}[colsep=1.5pt]{upper separation line foot}
+        \end{beamercolorbox}
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[ht=0.5ex,dp=0.125ex,%
+            leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[colsep=1.5pt]{lower separation line foot}
+        \end{beamercolorbox}
+    }
+
+    \begin{frame}[#1]{#2}
+    }{
+    \end{frame}
+}
+\makeatother
+
 % }}}
 
 \addtolength{\jot}{5pt}
+
+\tikzstyle{state} = [inner sep=1pt]
+\tikzstyle{infeasible} = [color=uofgpillarbox]
+\tikzstyle{dominated} = [color=uofgcobalt]
+\tikzstyle{backwards} = [color=uofgpumpkin]
+\tikzstyle{accept} = [solid, thick]
+\tikzstyle{reject} = [dotted, thick]
+\tikzstyle{domination} = [dashed, thick, ->, color=uofgcobalt]
 
 \author{Ciaran McCreesh}
 \title{Proof Logging for Dynamic Programming Algorithms}
@@ -184,21 +230,270 @@
         &\sum_i \boldsymbol{w}_i x_i \le W && \text{total weight of items taken not too heavy}\\
         &\operatorname{maximise} \sum_i \boldsymbol{p}_i x_i && \text{yay capitalism}
     \end{align*}
+
+    For our running example,
+    \begin{align*}
+        \boldsymbol{w} &= [2, 5, 2, 3, 2, 3] \text{~and}\\
+        \boldsymbol{p} &= [2, 4, 2, 5, 4, 3]
+    \end{align*}
+
 \end{frame}
 
 \begin{frame}{Dynamic Programming for Knapsack}
 \end{frame}
 
 \begin{frame}{Sparse Dynamic Programming}
-\end{frame}
-
-\begin{frame}{Viewing Dynamic Programming as a Decision Diagram}
+    Key ideas:
+    \begin{itemize}
+        \item Don't calculate the same state more than once.
+        \item Only calculate partial sums of weights and profits that can actually be
+            achieved.
+    \end{itemize}
+    \bigskip
+    Algorithmic details matter a lot for performance but end up being more or less the same for proof logging.
 \end{frame}
 
 \begin{frame}{Merging More States}
+    The ``maximum'' rule says, if we could reach states \begin{equation*}
+        \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
+        \qquad \text{or} \qquad
+        \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
+    \end{equation*}
+    with $p > p'$ then we only need to consider the state with profit $p$.
+
+    \bigskip
+
+    More generally, if we have two states
+    \begin{equation*}
+            \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
+            \qquad \text{or} \qquad
+            \sum_{i=1}^{\ell} \boldsymbol{w}_i = w' \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
+    \end{equation*}
+    with $p \ge p'$ and $w \le w'$ then we need only consider the former.
+
+    \bigskip
+
+    Whether or not this can be detected efficiently depends upon how the algorithm is implemented.
 \end{frame}
 
-\begin{frame}[t]{Is It Correct?}
+\begin{nearlyplainframe}[t]{Viewing Dynamic Programming as a Decision Diagram}
+\tikzstyle{level 1}=[level distance=2.20cm, sibling distance=3.00cm]
+\tikzstyle{level 2}=[level distance=2.20cm, sibling distance=2.00cm]
+\tikzstyle{level 3}=[level distance=2.20cm, sibling distance=1.25cm]
+\tikzstyle{level 4}=[level distance=2.20cm, sibling distance=0.75cm]
+\tikzstyle{level 5}=[level distance=2.20cm, sibling distance=0.60cm]
+\tikzstyle{level 6}=[level distance=2.20cm, sibling distance=0.30cm]
+\begin{tikzpicture}[grow=right, sloped, font=\small]
+    \node (N0w0p0) [state] {$N^0_{0,0}$}
+    child {
+        node (N1w0p0) [state] {$N^1_{0,0}$}
+        child {
+            node (N2w0p0) [state] {$N^2_{0,0}$}
+            child {
+                node (N3w0p0) [state, yshift=0.625cm] {$N^3_{0,0}$}
+                child {
+                    node (N4w0p0) [state] {$N^4_{0,0}$}
+                    child {
+                        node (N5w0p0) [state] {$N^5_{0,0}$}
+                        child {
+                            node (N6w0p0) [state] {$N^6_{0,0}$}
+                            edge from parent [reject]
+                        }
+                        child {
+                            node (N6w3p3) [state, dominated, yshift=0.3cm] {$N^6_{3,3}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [reject]
+                    }
+                    child {
+                        node (N5w2p4) [state] {$N^5_{2,4}$}
+                        child {
+                            node (N6w2p4) [state, yshift=0.8cm] {$N^6_{2,4}$}
+                            edge from parent [reject]
+                        }
+                        child {
+                            node (N6w5p7) [state, dominated, yshift=0.9cm] {$N^6_{5,7}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [accept]
+                    }
+                    edge from parent [reject]
+                }
+                child {
+                    node (N4w3p5) [state, yshift=0.375cm] {$N^4_{3,5}$}
+                    child {
+                        node (N5w3p5) [state, yshift=0.25cm] {$N^5_{3,5}$}
+                        child {
+                            node (N6w3p5) [state, yshift=0.8cm] {$N^6_{3,5}$}
+                            edge from parent [reject]
+                        }
+                        child {
+                            node (N6w6p8) [state, dominated, yshift=1cm] {$N^6_{6,8}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [reject]
+                    }
+                    child {
+                        node (N5w5p9) [state, yshift=0.2cm] {$N^5_{5,9}$}
+                        child {
+                            node (N6w5p9) [state, yshift=1.5cm] {$N^6_{5,9}$}
+                            edge from parent [reject]
+                        }
+                        child {
+                            node [state, infeasible, yshift=1.7cm] {$N^6_{8,12}$}
+                            edge from parent [accept, infeasible]
+                        }
+                        edge from parent [accept]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [reject]
+            }
+            child {
+                node (N3w2p2) [state, yshift=1cm] {$N^3_{2,2}$}
+                child {
+                    node [state, yshift=0.5cm] {$N^4_{2,2}$}
+                    child {
+                        node (N5w2p2) [state, dominated, yshift=0.5cm] {$N^5_{2,2}$}
+                        edge from parent [reject]
+                    }
+                    child {
+                        node (N5w4p6) [state, yshift=0.5cm] {$N^5_{4,6}$}
+                        child {
+                            node [state, yshift=1.1cm] {$N^6_{4,6}$}
+                            edge from parent [reject]
+                        }
+                        child {
+                            node (N6w7p9) [state, dominated, yshift=1.4cm] {$N^6_{7,9}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [accept]
+                    }
+                    edge from parent [reject]
+                }
+                child {
+                    node [state, yshift=0.5cm] {$N^4_{5,7}$}
+                    child {
+                        node (N5w5p7) [state, dominated, yshift=1.0cm] {$N^5_{5,7}$}
+                        edge from parent [reject]
+                    }
+                    child {
+                        node (N5w7p11) [state, yshift=1.2cm] {$N^5_{7,11}$}
+                        child {
+                            node (N6w7p11) [state, yshift=1cm] {$N^6_{7,11}$}
+                            edge from parent [reject]
+                        }
+                        child {
+                            node [state, infeasible, yshift=1.2cm] {$N^6_{10,14}$}
+                            edge from parent [accept, infeasible]
+                        }
+                        edge from parent [accept]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [accept]
+            }
+            edge from parent [reject]
+        }
+        child {
+            node (N2w5p5) [state] {$N^2_{5,4}$}
+            child {
+                node (N3w5p4) [state, dominated, yshift=1cm] {$N^3_{5,4}$}
+                edge from parent [reject]
+            }
+            child {
+                node (N3w7p6) [state, yshift=1cm] {$N^3_{7,6}$}
+                child {
+                    node (N4w7p6) [state, dominated] {$N^4_{7,6}$}
+                    edge from parent [reject]
+                }
+                child {
+                    node [state, infeasible] {$N^4_{10,11}$}
+                    edge from parent [accept, infeasible]
+                }
+                edge from parent [accept]
+            }
+            edge from parent [accept]
+        }
+        edge from parent [reject] node [midway, above] { reject }
+    }
+    child {
+        node [state] {$N^1_{2,2}$}
+        child {
+            node (N2w2p2) [state] {$N^2_{2,2}$}
+            child {
+                node (N3w4p4) [state, yshift=1.5cm] {$N^3_{4,4}$}
+                child {
+                    node (N4w4p4) [state, dominated, yshift=0.5cm] {$N^4_{4,4}$}
+                    edge from parent [reject]
+                }
+                child {
+                    node (N4w7p9) [state, yshift=0.5cm] {$N^4_{7,9}$}
+                    child {
+                        node (N5w7p9) [state, dominated, yshift=-0.2cm] {$N^5_{7,9}$}
+                        edge from parent [reject]
+                    }
+                    child {
+                        node (N5w9p12) [state, infeasible, yshift=-0.3cm] {$N^5_{9,12}$}
+                        edge from parent [accept, infeasible]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [accept]
+            }
+            edge from parent [reject]
+        }
+        child {
+            node (N2w7p6) [state] {$N^2_{7,6}$}
+            child {
+                node [state, infeasible, yshift=0.25cm] {$N^3_{9,8}$}
+                edge from parent [accept, infeasible]
+            }
+            edge from parent [accept]
+        }
+        edge from parent [accept] node [midway, above] { accept }
+    };
+
+    \coordinate (B1x) at ($(N0w0p0)!0.5!(N1w0p0)$);
+    \coordinate (B1) at (B1x|-N6w0p0);
+    \node [below=0.25cm of B1] {$\boldsymbol{w}_1{=}2, \boldsymbol{p}_1{=}2$};
+
+    \coordinate (B2x) at ($(N1w0p0)!0.5!(N2w0p0)$);
+    \coordinate (B2) at (B2x|-N6w0p0);
+    \node [below=0.25cm of B2] {$\boldsymbol{w}_2{=}5, \boldsymbol{p}_2{=}4$};
+
+    \coordinate (B3x) at ($(N2w0p0)!0.5!(N3w0p0)$);
+    \coordinate (B3) at (B3x|-N6w0p0);
+    \node [below=0.25cm of B3] {$\boldsymbol{w}_3{=}2, \boldsymbol{p}_3{=}2$};
+
+    \coordinate (B4x) at ($(N3w0p0)!0.5!(N4w0p0)$);
+    \coordinate (B4) at (B4x|-N6w0p0);
+    \node [below=0.25cm of B4] {$\boldsymbol{w}_4{=}3, \boldsymbol{p}_4{=}5$};
+
+    \coordinate (B5x) at ($(N4w0p0)!0.5!(N5w0p0)$);
+    \coordinate (B5) at (B5x|-N6w0p0);
+    \node [below=0.25cm of B5] {$\boldsymbol{w}_5{=}2, \boldsymbol{p}_5{=}4$};
+
+    \coordinate (B6x) at ($(N5w0p0)!0.5!(N6w0p0)$);
+    \coordinate (B6) at (B6x|-N6w0p0);
+    \node [below=0.25cm of B6] {$\boldsymbol{w}_6{=}3, \boldsymbol{p}_6{=}3$};
+
+    \draw [reject, out=330, in=150] (N2w2p2) to (N3w2p2);
+    \draw [reject, out=330, in=150] (N2w7p6) to (N3w7p6);
+    \draw [domination, out=50, in=310] (N3w5p4) to (N3w4p4);
+    \draw [domination, out=45, in=315] (N4w7p6) to (N4w7p9);
+    \draw [domination, out=315, in=45] (N4w4p4) to (N4w3p5);
+    \draw [domination, out=295, in=65] (N5w7p9) to (N5w7p11);
+    \draw [domination, out=340, in=20] (N5w5p7) to (N5w5p9);
+    \draw [domination, out=330, in=30] (N5w2p2) to (N5w2p4);
+    \draw [domination, out=10, in=350] (N6w7p9) to (N6w7p11);
+    \draw [domination, out=30, in=330] (N6w5p7) to (N6w5p9);
+    \draw [domination, out=60, in=300] (N6w3p3) to (N6w2p4);
+    \draw [domination, out=60, in=300] (N6w6p8) to (N6w5p9);
+\end{tikzpicture}
+\end{nearlyplainframe}
+
+\begin{frame}[t]{Is This Correct?}
     \begin{minipage}{0.4\paperwidth}
         Do you trust the theory?
 
@@ -383,7 +678,16 @@
   Should be fine, so long as $a$ hasn't been used before.
 \end{frame}
 
+\begin{frame}{Unit Propagation for Clauses}
+
+\end{frame}
+
+\begin{frame}{Unit Propagation for Constraints}
+
+\end{frame}
+
 \begin{frame}{Reverse Unit Propagation}
+
 \end{frame}
 
 \begin{frame}{Formally Verified Proof Checking}
@@ -545,15 +849,323 @@
 \end{frame}
 
 \begin{frame}{A Change of States}
+    For each state (or entry in the matrix) on layer $\ell$, define
+    \begin{align*}
+        W{\uparrow}^{\ell}_{w} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{w}_i x_i \ge w
+        &&\text{and}&
+        W{\downarrow}^{\ell}_{w} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{w}_i x_i \le w \\
+        P{\uparrow}^{\ell}_{p} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{p}_i x_i \ge p
+        &&\text{and}&
+        P{\downarrow}^{\ell}_{p} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{p}_i x_i \le p
+    \end{align*}\begin{align*}
+        N^{\ell}_{w,p} & \Leftrightarrow W{\uparrow}^{\ell}_{w} + W{\downarrow}^{\ell}_{w} + P{\uparrow}^{\ell}_{p} + P{\downarrow}^{\ell}_{p} \ge 4
+    \end{align*}
+    So now our states represent \emph{exact} weights and profits.
 \end{frame}
 
 \begin{frame}{A Change of Merge Rules}
+    We can still use the maximum rule to merge \begin{equation*}
+        \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
+        \qquad \text{or} \qquad
+        \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
+    \end{equation*}
+    with $p > p'$.
+
+    \bigskip
+
+    We can no longer merge states where
+    \begin{equation*}
+            \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
+            \qquad \text{or} \qquad
+            \sum_{i=1}^{\ell} \boldsymbol{w}_i = w' \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
+    \end{equation*}
+    with $p \ge p'$ and $w \le w'$.
+
+    \bigskip
+
+    Reassuringly, the proofs won't work if you try this\ldots
+
 \end{frame}
 
 \begin{frame}{Establishing Arc Consistency}
+    We can read off all possible values for $P$ and $W$ from the final layer.
+
+    \bigskip
+
+    Easy to use this and resolution with the at-least-one constraint to eliminate all
+    other values.
+
+    \bigskip
+
+    But what about the $x_i$ variables?
+\end{frame}
+
+\begin{nearlyplainframe}[t]{Forced and Forbidden Items}
+\tikzstyle{level 1}=[level distance=2.20cm, sibling distance=4.00cm]
+\tikzstyle{level 2}=[level distance=2.20cm, sibling distance=2.00cm]
+\tikzstyle{level 3}=[level distance=2.20cm, sibling distance=1.00cm]
+\tikzstyle{level 4}=[level distance=2.20cm, sibling distance=0.75cm]
+\tikzstyle{level 5}=[level distance=2.20cm, sibling distance=0.50cm]
+\tikzstyle{level 6}=[level distance=2.20cm, sibling distance=0.30cm]
+\vspace*{-1cm}
+\begin{tikzpicture}[grow=right, sloped]
+    \node (N0w0p0) [state] {$N^0_{0,0}$}
+    child {
+        node (N1w0p0) [state] {$N^1_{0,0}$}
+        child {
+            node (N2w0p0) [state] {$N^2_{0,0}$}
+            child {
+                node (N3w0p0) [state, yshift=-1.0cm] {$N^3_{0,0}$}
+                child {
+                    node (N4w0p0) [state, backwards] {$N^4_{0,0}$}
+                    child {
+                        node (N5w0p0) [state, backwards] {$N^5_{0,0}$}
+                        child {
+                            node (N6w0p0) [state, infeasible] {$N^6_{0,0}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [reject, backwards]
+                    }
+                    child {
+                        node [state, backwards, yshift=-0.05cm] {$N^5_{2,4}$}
+                        child {
+                            node [state, infeasible] {$N^6_{2,4}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [accept, backwards]
+                    }
+                    edge from parent [reject, backwards]
+                }
+                child {
+                    node [state, yshift=0.1cm] {$N^4_{3,5}$}
+                    child {
+                        node [state, backwards, yshift=0.05cm] {$N^5_{3,5}$}
+                        child {
+                            node [state, infeasible] {$N^6_{3,5}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [reject, backwards]
+                    }
+                    child {
+                        node [state] {$N^5_{5,9}$}
+                        child {
+                            node [state] {$N^6_{5,9}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [accept]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [reject]
+            }
+            child {
+                node (N3w2p2) [state] {$N^3_{2,2}$}
+                child {
+                    node [state, backwards, yshift=-0.2cm] {$N^4_{2,2}$}
+                    child {
+                        node [state, backwards] {$N^5_{2,2}$}
+                        child {
+                            node [state, infeasible] {$N^6_{2,2}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [reject, backwards]
+                    }
+                    child {
+                        node [state, backwards] {$N^5_{4,6}$}
+                        child {
+                            node [state, infeasible] {$N^6_{4,6}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [accept, backwards]
+                    }
+                    edge from parent [reject, backwards]
+                }
+                child {
+                    node [state] {$N^4_{5,7}$}
+                    child {
+                        node [state] {$N^5_{5,7}$}
+                        child {
+                            node [state] {$N^6_{5,7}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [reject]
+                    }
+                    child {
+                        node [state, infeasible] {$N^5_{7,11}$}
+                        edge from parent [accept, infeasible]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [accept]
+            }
+            edge from parent [reject]
+        }
+        child {
+            node (N2w5p5) [state, backwards, yshift=0.5cm] {$N^2_{5,4}$}
+            child {
+                node [state, backwards] {$N^3_{5,4}$}
+                child {
+                    node [state, backwards, yshift=0.2cm] {$N^4_{5,4}$}
+                    child {
+                        node [state, backwards] {$N^5_{5,4}$}
+                        child {
+                            node [state, infeasible] {$N^6_{5,4}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [reject, backwards]
+                    }
+                    child {
+                        node [state, backwards] {$N^5_{7,8}$}
+                        child {
+                            node [state, infeasible] {$N^6_{7,8}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [accept, backwards]
+                    }
+                    edge from parent [reject, backwards]
+                }
+                child {
+                    node [state, infeasible, yshift=-0.1cm] {$N^4_{8,9}$}
+                    edge from parent [accept, infeasible]
+                }
+                edge from parent [reject, backwards]
+            }
+            child {
+                node (N3w7p6) [state, backwards] {$N^3_{7,6}$}
+                child {
+                    node [state, backwards, yshift=0.2cm] {$N^4_{7,6}$}
+                    child {
+                        node [state, backwards] {$N^5_{7,6}$}
+                        child {
+                            node [state, infeasible] {$N^6_{7,6}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [reject, backwards]
+                    }
+                    child {
+                        node [state, infeasible] {$N^5_{9,10}$}
+                        edge from parent [accept, infeasible]
+                    }
+                    edge from parent [reject, backwards]
+                }
+                child {
+                    node [state, infeasible] {$N^4_{10,11}$}
+                    edge from parent [accept, infeasible]
+                }
+                edge from parent [accept, backwards]
+            }
+            edge from parent [accept, backwards]
+        }
+        edge from parent [reject]
+    }
+    child {
+        node [state, yshift=-0.5cm] {$N^1_{2,2}$}
+        child {
+            node (N2w2p2) [state] {$N^2_{2,2}$}
+            child {
+                node [state, yshift=1.2cm] {$N^3_{4,4}$}
+                child {
+                    node [state, backwards, yshift=-0.2cm] {$N^4_{4,4}$}
+                    child {
+                        node [state, backwards] {$N^5_{4,4}$}
+                        child {
+                            node [state, infeasible] {$N^6_{4,4}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [reject, backwards]
+                    }
+                    child {
+                        node [state, backwards] {$N^5_{6,8}$}
+                        child {
+                            node [state, infeasible] {$N^6_{6,8}$}
+                            edge from parent [accept, backwards]
+                        }
+                        edge from parent [accept]
+                    }
+                    edge from parent [reject, backwards]
+                }
+                child {
+                    node [state] {$N^4_{7,9}$}
+                    child {
+                        node [state] {$N^5_{7,9}$}
+                        child {
+                            node [state] {$N^6_{7,9}$}
+                            edge from parent [accept]
+                        }
+                        edge from parent [reject]
+                    }
+                    child {
+                        node [state, infeasible] {$N^5_{9,13}$}
+                        edge from parent [accept, infeasible]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [accept]
+            }
+            edge from parent [reject]
+        }
+        child {
+            node (N2w7p6) [state, backwards, yshift=-1cm] {$N^2_{7,6}$}
+            child {
+                node [state, infeasible, yshift=0.8cm] {$N^3_{9,8}$}
+                edge from parent [accept, infeasible]
+            }
+            edge from parent [accept, backwards]
+        }
+        edge from parent [accept]
+    };
+
+    \draw [reject, out=330, in=150] (N2w2p2) to (N3w2p2);
+    \draw [reject, backwards, out=330, in=150] (N2w7p6) to (N3w7p6);
+
+    \coordinate (B1x) at ($(N0w0p0)!0.5!(N1w0p0)$);
+    \coordinate (B1) at (B1x|-N6w0p0);
+    \node [below=0.25cm of B1] {$\boldsymbol{w}_1{=}2, \boldsymbol{p}_1{=}2$};
+
+    \coordinate (B2x) at ($(N1w0p0)!0.5!(N2w0p0)$);
+    \coordinate (B2) at (B2x|-N6w0p0);
+    \node [below=0.25cm of B2] {$\boldsymbol{w}_2{=}5, \boldsymbol{p}_2{=}4$};
+
+    \coordinate (B3x) at ($(N2w0p0)!0.5!(N3w0p0)$);
+    \coordinate (B3) at (B3x|-N6w0p0);
+    \node [below=0.25cm of B3] {$\boldsymbol{w}_3{=}2, \boldsymbol{p}_3{=}2$};
+
+    \coordinate (B4x) at ($(N3w0p0)!0.5!(N4w0p0)$);
+    \coordinate (B4) at (B4x|-N6w0p0);
+    \node [below=0.25cm of B4] {$\boldsymbol{w}_4{=}3, \boldsymbol{p}_4{=}5$};
+
+    \coordinate (B5x) at ($(N4w0p0)!0.5!(N5w0p0)$);
+    \coordinate (B5) at (B5x|-N6w0p0);
+    \node [below=0.25cm of B5] {$\boldsymbol{w}_5{=}2, \boldsymbol{p}_5{=}4$};
+
+    \coordinate (B6x) at ($(N5w0p0)!0.5!(N6w0p0)$);
+    \coordinate (B6) at (B6x|-N6w0p0);
+    \node [below=0.25cm of B6] {$\boldsymbol{w}_6{=}3, \boldsymbol{p}_6{=}3$};
+
+    \coordinate (SC) at ($(N0w0p0.west)+(0cm,-3cm)$);
+    \node [anchor=north west, text width=8em] at (SC) {Side constraints:
+    \\$P \in \{7, 9\}$,
+    \\$W \in \{5, 6, 7\}$,
+    \\$x_6 = 0$};
+\end{tikzpicture}
+\end{nearlyplainframe}
+
+\begin{frame}{It Works}
 \end{frame}
 
 \begin{frame}{So What?}
+    \begin{itemize}
+        \item We can do dynamic programming / decision diagram propagators for CP.
+        \item All of this is under a unified setting.
+            \begin{itemize}
+                \item In particular, nothing in the proof system knows about ``search'' or
+                    ``states''.
+                \item We can reason about complex states using the full power of cutting
+                    planes.
+            \end{itemize}
+        \item Might help us start to trust some of these clever hybrid algorithms
+            for graph parameters like treewidth?
+    \end{itemize}
 \end{frame}
 
 {
