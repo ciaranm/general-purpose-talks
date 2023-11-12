@@ -979,26 +979,17 @@
 \end{frame}
 
 \begin{frame}{A Change of Merge Rules}
-    We can still use the maximum rule to merge \begin{equation*}
-        \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
-        \qquad \text{or} \qquad
-        \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
-    \end{equation*}
-    with $p > p'$.
-
-    \bigskip
-
-    We can no longer merge states where
-    \begin{equation*}
-            \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
-            \qquad \text{or} \qquad
-            \sum_{i=1}^{\ell} \boldsymbol{w}_i = w' \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
-    \end{equation*}
-    with $p \ge p'$ and $w \le w'$.
+    We can no longer merge non-identical states!
 
     \bigskip
 
     Reassuringly, the proofs won't work if you try this\ldots
+
+    \bigskip
+
+    End up trying to prove ``if there is an assignment to the first $\ell$ $x_i$ variables where the weight sums to
+    \emph{exactly} 7 and the profit to \emph{exactly} 4, then there is an assignment where the weight sums
+    to \emph{exactly} 6 and the profit to \emph{exactly} 5.
 
 \end{frame}
 
@@ -1009,6 +1000,11 @@
 
     Easy to use this and resolution with the at-least-one constraint to eliminate all
     other values.
+
+    \bigskip
+
+    If we used weaker state reification variables, we could merge more states but would get weaker
+    consistency on the variables.
 
     \bigskip
 
