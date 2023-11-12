@@ -234,17 +234,28 @@
     For our running example,
     \begin{align*}
         \boldsymbol{w} &= [2, 5, 2, 3, 2, 3] \text{~and}\\
-        \boldsymbol{p} &= [2, 4, 2, 5, 4, 3]
+        \boldsymbol{p} &= [2, 4, 2, 5, 4, 3] \text{~with}\\
+        W &\le 7
     \end{align*}
 
 \end{frame}
 
 \begin{frame}{Dynamic Programming for Knapsack}
+    To decide whether we're taking the $i$th item, with $w$ weight available to spend,
+    \begin{align*}
+        & P(i, w) = \operatorname{max}(\\
+        &     \qquad P(i - 1, w),\\
+        &     \qquad P(i - 1, w - \boldsymbol{w}_i) + \boldsymbol{p}_i \text{~if~} \boldsymbol{w}_i \le w \\
+        & ) \\ \medskip
+        & P(0, w) = 0
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Sparse Dynamic Programming}
     Key ideas:
     \begin{itemize}
+        \item ``Maximum'' selects between partial sums on the same items with the same
+            combined weights but different profits.
         \item Don't calculate the same state more than once.
         \item Only calculate partial sums of weights and profits that can actually be
             achieved.
@@ -254,7 +265,7 @@
 \end{frame}
 
 \begin{frame}{Merging More States}
-    The ``maximum'' rule says, if we could reach states \begin{equation*}
+    The ``maximum'' means, if we could reach states \begin{equation*}
         \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
         \qquad \text{or} \qquad
         \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p'
@@ -263,6 +274,7 @@
 
     \bigskip
 
+    \uncover<2->{
     More generally, if we have two states
     \begin{equation*}
             \sum_{i=1}^{\ell} \boldsymbol{w}_i = w \text{~and~} \sum_{i=1}^{\ell} \boldsymbol{p}_i = p
@@ -273,7 +285,7 @@
 
     \bigskip
 
-    Whether or not this can be detected efficiently depends upon how the algorithm is implemented.
+    Whether or not this can be detected efficiently depends upon how the algorithm is implemented.}
 \end{frame}
 
 \begin{nearlyplainframe}[t]{Viewing Dynamic Programming as a Decision Diagram}
@@ -500,8 +512,13 @@
         \bigskip
 
         \uncover<2->{Do you trust your PhD student to implement it correctly?}
+
+        \bigskip
+
+        \uncover<3->{Would you trust this inside a larger solver, where side constraints could
+        apply?}
     \end{minipage}\hfill\begin{minipage}{0.4\paperwidth}%
-        \uncover<3->{\centering\includegraphics[width=0.3\paperwidth]{allofthethings.jpg}}
+        \uncover<4->{\centering\includegraphics[width=0.3\paperwidth]{allofthethings.jpg}}
     \end{minipage}
 \end{frame}
 
@@ -561,17 +578,67 @@
 \end{frame}
 
 \begin{frame}{Pseudo-Boolean Problems}
+    \begin{minipage}[t]{0.25\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Variables}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.70\framewidth}
+        $x_i \in \{ 0, 1 \}$
+    \end{minipage}\bigskip
 
-    ?? negation of literals and constraints, normal form
+    \begin{minipage}[t]{0.25\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Literals}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.70\framewidth}
+        $\{ x_i, \overline{x}_i \}$
+
+        \medskip
+
+        $\overline{x}_i$ defined to be $1 - x_i$, means ``not $x$''
+    \end{minipage}\bigskip
+
+    \begin{minipage}[t]{0.25\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Constraints}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.70\framewidth}
+        $\sum_i a_i x_i \bowtie A$ for $a_i, A \in \mathbb{Z}$ and $\bowtie \,\in \{ \le, \ge \}$
+
+        \medskip
+        Can rewrite into normalised form with $a_i, A \in \mathbb{N}$ and $\bowtie\,=\,\ge$
+    \end{minipage}\bigskip
+
+    \begin{minipage}[t]{0.25\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Objective}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.70\framewidth}
+        Maximise $\sum_i a_i x_i$
+    \end{minipage}\bigskip
 \end{frame}
 
 \begin{frame}{Knapsack as a Pseudo-Boolean Problem}
+    \begin{align*}
+        &2 x_1 + 5 x_2 + 2 x_3 + 3 x_4 + 2 x_5 + 3 x_6 \le 7 \\
+        \text{maximise~} &2 x_1 + 4 x_2 + 2 x_3 + 5 x_4 + 4 x_5 + 3 x_6
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Implications as Pseudo-Boolean Constraints}
+    Can express implications
+    \begin{equation*} y \Rightarrow 3x_1 + 2x_2 + x_3 + x_4 \ge 3 \end{equation*}
+    as
+    \begin{equation*}
+    3\overline{y} + 3x_1 + 2x_2 + x_3 + x_4 \ge 3
+    \end{equation*}
+
+    \bigskip
+
+    We can also do $\land_i y_i \Rightarrow C$ and $y \Leftarrow C$.
 \end{frame}
 
 \begin{frame}{The VeriPB Proof System}
+    \begin{center}
+        \url{https://gitlab.com/MIAOresearch/software/VeriPB} \\
+        \bigskip
+    \end{center}
+    \begin{itemize}
+        \item MIT licence, written in Python with parsing in C++.
+        \item Useful features like tracing and proof debugging.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Cutting Planes Proofs 1: Linear Inequalities}
@@ -652,80 +719,80 @@
 \end{frame}
 
 \begin{frame}{Extended Cutting Planes Proofs}
-  Suppose we want new, fresh variable
-  $a$ encoding
-  \begin{equation*}
-        a
-        \Leftrightarrow
-        ( 3x + 2y + z + w \ge 3 )
-  \end{equation*}
+    We'll also need a way of introducing a new variable that are true if and only if a certain
+    constraint holds (\emph{reification}).
 
-  Introduce constraints
-    \begin{equation*}
-    a \Rightarrow 3x + 2y + z + w \ge 3
-    \qquad
-        \overline{a} \Rightarrow
-    3 \overline{x} + 2 \overline{y}  + \overline{z} + \overline{w} \ge 5
-    \end{equation*}
-    i.e.
-  \begin{equation*}
-    3 \overline{a} + 3x + 2y + z + w \ge 3
-    \qquad
-    5 a +
-    3 \overline{x} + 2 \overline{y}  + \overline{z} + \overline{w} \ge 5
-  \end{equation*}
+    \bigskip
 
-  Should be fine, so long as $a$ hasn't been used before.
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Extension}}\\
+        $y$ a fresh variable \\
+        $C$ any constraint
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{~}
+        \UnaryInfC{$y \Rightarrow C$ \qquad $y \Leftarrow C$}
+    \end{prooftree}\end{minipage}
+
+    \bigskip
+
+    In reality: we have a more general extension rule, but we don't need it today.
 \end{frame}
 
 \begin{frame}{Unit Propagation for Clauses}
 
+    \begin{align*}
+        & a \lor \overline{b} \lor c \\
+        & \overline{c} \lor d
+    \end{align*}
+
+    Suppose I tell you that $a$ must be false and $b$ must be true.
+
+    \bigskip
+
+    Must set $c$ to true to satisfy first clause.
+
+    \bigskip
+
+    Now must set $d$ to false to satisfy second clause.
 \end{frame}
 
 \begin{frame}{Unit Propagation for Constraints}
+    \begin{align*}
+        5a + 2b + 3c + d + e + f \ge 5
+    \end{align*}
 
+    Suppose I tell you that $a = 0$. Can't say anything yet.
+
+    \bigskip
+
+    Suppose I tell you that $b = 0$ as well. Then $c = 1$ must hold.
+
+    \bigskip
+
+    In general: integer bounds consistency. We can do this \emph{efficiently}.
 \end{frame}
 
 \begin{frame}{Reverse Unit Propagation}
+    Let $C$ be any constraint. Suppose $\overline{C}$ unit propagates to contradiction. Then without
+    loss of satisfaction, we can add $C$ as a new constraint.
 
+    \bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{RUP}}\\
+        $C$ any constraint
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\overline{C}$ unit propagates to contradiction}
+        \UnaryInfC{$C$}
+    \end{prooftree}\end{minipage}
+
+    \bigskip
+
+    Can rewrite any RUP step as a sequence of cutting planes steps, but often writing RUP proofs is
+    much more convenient.
 \end{frame}
 
-\begin{frame}{Formally Verified Proof Checking}
-    \begin{center}
-        \begin{tikzpicture}
-            \node (solver) [ inner xsep=4em, inner ysep=2.5em, draw, rounded corners=3pt] { Solver };
-            \node (elaborator) [ right=2cm of solver.north east, anchor=north west, inner xsep=0.25em, draw, rounded corners=3pt, minimum height=12em] { Elaborator };
-            \node (verifiedchecker) [ right=2cm of elaborator.north east, anchor=north west, inner xsep=0.25em, draw, rounded corners=3pt, minimum height=8em, text width=4em, text centered, yshift=-2cm] { Verified Checker };
-
-            \draw [->, thick] (solver.east) -- (solver.east -| elaborator.west) coordinate [midway] (solutionmid) node [above, midway] { Result };
-
-            \draw [->, thick, rounded corners=3pt] (solver.south) -- (solver.south |- elaborator.west) -- (elaborator.west) coordinate [midway] (proofmid);
-
-            \coordinate (prooflabel) at (proofmid-|solutionmid); \node [above=0cm of prooflabel] { Proof };
-
-            \coordinate [right=2cm of verifiedchecker.east] (verified);
-            \draw [->, thick] (verifiedchecker.east) -- (verified)
-                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} }
-                node [below, midway, text centered, text width=5em] { Trusted Result };
-
-            \coordinate [left=1.5cm of solver.west] (input);
-            \draw [->, thick] (input) -- (solver.west) coordinate [midway] (inputmid) node [above, midway] { Input };
-
-            \coordinate (verifiedcheckertopleft) at ($(verifiedchecker.west)+($(0cm,1.2cm)$)$);
-            \draw [->, thick] (elaborator.east |- verifiedcheckertopleft) -- (verifiedcheckertopleft) node [above, midway, text width=4em, text centered] { Result };
-            \draw [->, thick] (elaborator.east |- verifiedchecker.west) -- (verifiedchecker.west) node [above, midway, text width=4em, text centered] { Kernel Proof };
-
-            \coordinate (elaboratorbotleft) at ($(elaborator.west)+($(elaborator.west)-(solver.east-|elaborator.west)$)$);
-            \coordinate (verifiedcheckerbotleft) at ($(verifiedchecker.west)+($(0cm,-1.2cm)$)$);
-
-            \draw [->, thick, rounded corners=3pt] ($(inputmid)+(-0.2,0)$) -- (inputmid) -- (inputmid |- elaboratorbotleft) -- (elaboratorbotleft);
-            \draw [->, thick, rounded corners=3pt] ($(inputmid)+(-0.2,0)$) -- (inputmid) -- (inputmid |- verifiedcheckerbotleft) -- (verifiedcheckerbotleft);
-
-            \coordinate (elaboratortopright) at ($(elaborator.east)+($(verifiedcheckertopleft)-(verifiedchecker.west)$)$);
-            \draw [->, thick] (elaboratortopright) -- (elaboratortopright-|verifiedchecker.west)
-                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} };
-        \end{tikzpicture}
-      \end{center}
+\begin{frame}{A Framework for Proofs for Backtracking Search}
 \end{frame}
 
 \begin{frame}{Proofs Under Implication}
@@ -749,7 +816,46 @@
     \end{proof}
 \end{frame}
 
-\begin{frame}{Proofs for Backtracking Search}
+\begin{frame}{Should You Trust the Checker?}
+    \begin{center}
+        \begin{tikzpicture}
+            \node (solver) [ inner xsep=4em, inner ysep=2.5em, draw, rounded corners=3pt] { Solver };
+            \node (elaborator) [ right=2cm of solver.north east, anchor=north west, inner
+            xsep=0.25em, draw, rounded corners=3pt, minimum height=12em, text width=5em, text centered] {
+                \only<1>{Checker}\only<2->{Elaborator} };
+            \node (verifiedchecker) [ right=2cm of elaborator.north east, anchor=north west, inner
+                xsep=0.25em, draw, rounded corners=3pt, minimum height=8em, text width=4em, text
+                centered, yshift=-2cm, visible on=<3->] { Verified Checker };
+
+            \draw [->, thick] (solver.east) -- (solver.east -| elaborator.west) coordinate [midway] (solutionmid) node [above, midway] { Result };
+
+            \draw [->, thick, rounded corners=3pt] (solver.south) -- (solver.south |- elaborator.west) -- (elaborator.west) coordinate [midway] (proofmid);
+
+            \coordinate (prooflabel) at (proofmid-|solutionmid); \node [above=0cm of prooflabel] { Proof };
+
+            \coordinate [right=2cm of verifiedchecker.east] (verified);
+            \draw [->, thick, visible on=<3->] (verifiedchecker.east) -- (verified)
+                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} }
+                node [below, midway, text centered, text width=5em] { Trusted Result };
+
+            \coordinate [left=1.5cm of solver.west] (input);
+            \draw [->, thick] (input) -- (solver.west) coordinate [midway] (inputmid) node [above, midway] { Input };
+
+            \coordinate (verifiedcheckertopleft) at ($(verifiedchecker.west)+($(0cm,1.2cm)$)$);
+            \draw [->, thick, visible on=<2->] (elaborator.east |- verifiedcheckertopleft) -- (verifiedcheckertopleft) node [above, midway, text width=4em, text centered] { Result };
+            \draw [->, thick, visible on=<2->] (elaborator.east |- verifiedchecker.west) -- (verifiedchecker.west) node [above, midway, text width=4em, text centered] { Kernel Proof };
+
+            \coordinate (elaboratorbotleft) at ($(elaborator.west)+($(elaborator.west)-(solver.east-|elaborator.west)$)$);
+            \coordinate (verifiedcheckerbotleft) at ($(verifiedchecker.west)+($(0cm,-1.2cm)$)$);
+
+            \draw [->, thick, rounded corners=3pt] ($(inputmid)+(-0.2,0)$) -- (inputmid) -- (inputmid |- elaboratorbotleft) -- (elaboratorbotleft);
+            \draw [->, thick, rounded corners=3pt, visible on=<3->] ($(inputmid)+(-0.2,0)$) -- (inputmid) -- (inputmid |- verifiedcheckerbotleft) -- (verifiedcheckerbotleft);
+
+            \coordinate (elaboratortopright) at ($(elaborator.east)+($(verifiedcheckertopleft)-(verifiedchecker.west)$)$);
+            \draw [->, thick] (elaboratortopright) -- (elaboratortopright-|verifiedchecker.west)
+                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} };
+        \end{tikzpicture}
+      \end{center}
 \end{frame}
 
 \section{Proofs for Knapsack}
@@ -758,7 +864,7 @@
 \end{frame}
 
 \begin{frame}{Extension Variables for States}
-    For each state (or entry in the matrix) on layer $\ell$, define
+    For each state (or entry in the matrix) on layer $\ell$, create extension variables
     \begin{align*}
         W^{\ell}_{w} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{w}_i x_i \ge w \\
         P^{\ell}_{p} &\Leftrightarrow \sum_{i=1}^{\ell} \boldsymbol{p}_i x_i \le p \\
@@ -766,68 +872,77 @@
     \end{align*}
 \end{frame}
 
-\begin{frame}{Transitioning Between States}
-    \only<1>{
-        If we don't take item $\ell$:
+\begin{frame}[t]{Transitioning Between States}
+    \begin{minipage}[t]{0.3\framewidth}
+    \uncover<1->{
+        We don't have to take an item on layer $\ell$, so need to prove:
         \begin{align*}
             W^{\ell-1}_{w} \land \overline{x}_\ell &\Rightarrow W^\ell_\mathit{w} \\
             P^{\ell-1}_{p} \land \overline{x}_\ell &\Rightarrow P^\ell_\mathit{p} \\
             N^{\ell-1}_{w,p} \land \overline{x}_\ell &\Rightarrow N^\ell_{w,p}
         \end{align*}
     }
-    \only<2>{
-        If we can't take item $\ell$:
+    \end{minipage}\hfill\begin{minipage}[t]{0.30\framewidth}
+    \uncover<2->{
+        If we can't take item on layer $\ell$, need to prove:
         \begin{align*}
             W^{\ell-1}_{w} &\Rightarrow \overline{x}_\ell \\
             N^{\ell-1}_{w,p} &\Rightarrow \overline{x}_\ell  \\
             N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p}
         \end{align*}
     }
-    \only<3>{
-        If we can take item $\ell$, and do so, letting
-        \begin{align*}
-            w' &= w + \boldsymbol{w}_\ell \\
-            p' &= p + \boldsymbol{p}_\ell
-        \end{align*}
-        we prove
+    \end{minipage}\hfill\begin{minipage}[t]{0.35\framewidth}
+    \uncover<3->{
+        If we can take item on layer $\ell$, we need to prove:
         \begin{align*}
             W^{\ell-1}_{w} \land x_\ell &\Rightarrow W^\ell_{w'} \\
             P^{\ell-1}_{p} \land x_\ell &\Rightarrow P^\ell_{p'} \\
-            N^{\ell-1}_{w,p} \land x_\ell &\Rightarrow N^\ell_{w',p'}
-        \end{align*}
-        and then
-        \begin{align*}
+            N^{\ell-1}_{w,p} \land x_\ell &\Rightarrow N^\ell_{w',p'} \\
             N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p} + N^\ell_{w',p'} \ge 1
         \end{align*}
+        where
+        \begin{align*}
+            (w', p') &= (w + \boldsymbol{w}_\ell, p + \boldsymbol{p}_\ell)
+        \end{align*}
     }
+    \end{minipage}
 \end{frame}
 
 \begin{frame}{Merged States}
-    For each $N^\ell_{w,p}$ that is dominated by some other $N^\ell_{w',p'}$, prove
+    For each $N^\ell_{w,p}$ that is dominated by some other $N^\ell_{w',p'}$, we prove
+        $N^\ell_{w,p} \Rightarrow N^\ell_{w',p'}$.
+
+        \medskip
+
+    We can do this by unwrapping the conjunction, proving
     \begin{align*}
-        N^\ell_{w,p} \Rightarrow N^\ell_{w',p'}
+        & W^\ell_{w} \Rightarrow W^\ell_{w'} & \text{i.e.} && (\sum_{i=1}^{\ell} \boldsymbol{w}_i
+        x_i \ge w) \Rightarrow (\sum_{i=1}^{\ell} \boldsymbol{w}_i x_i \ge w') &\text{~for some~} w' \le w \\
+        & P^\ell_{p} \Rightarrow P^\ell_{p'} & \text{i.e.} && (\sum_{i=1}^{\ell} \boldsymbol{p}_i
+        x_i \ge p) \Rightarrow (\sum_{i=1}^{\ell} \boldsymbol{p}_i x_i \ge p') &\text{~for some~} p' \ge p \\
     \end{align*}
+    ``If there is an assignment to the first $\ell$ $x_i$ variables where the weight sums to at
+    least 7 and the profit to no more than 4, then there is an assignment where the weight sums
+    to at least 6 and the profit to no more than 5''.
 \end{frame}
 
 \begin{frame}{Establishing Completeness}
-    Show that we have to be in one of the states on this layer,
+    Must show that we have to be in one of the states on this layer,
     \begin{align*}
         \sum_{(w,p)~\text{on layer}~\ell} N^\ell_{w,p} \ge 1
     \end{align*}
 
-    Use the at-least-one constraint
+    We can use the at-least-one constraint
     \begin{align*}
         \sum_{(w,p)~\text{on layer}~\ell - 1} N^{\ell-1}_{w,p} \ge 1
     \end{align*}
     from the previous layer, and resolve on each \begin{align*}
-            N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p} + N^\ell_{w',p'} \ge 1
+        N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p} + N^\ell_{w',p'} \ge 1 &&\text{or}&
+        N^{\ell-1}_{w,p} &\Rightarrow N^\ell_{w,p}
     \end{align*}
 \end{frame}
 
 \begin{frame}{Reading Off a Conclusion}
-\end{frame}
-
-\begin{frame}{An Actual VeriPB Proof}
 \end{frame}
 
 \section{Knapsack Constraints}
@@ -1155,14 +1270,18 @@
 
 \begin{frame}{So What?}
     \begin{itemize}
+        \item This is a general framework, not specific to knapsack.
         \item We can do dynamic programming / decision diagram propagators for CP.
-        \item All of this is under a unified setting.
+        \item All of this is in a unified proof setting.
             \begin{itemize}
                 \item In particular, nothing in the proof system knows about ``search'' or
                     ``states''.
                 \item We can reason about complex states using the full power of cutting
                     planes.
+                \item We could do symmetry reasoning (two identical items) and dominance reasoning
+                    (one item better than another) too.
             \end{itemize}
+        \item Key proof technique is that we can wrap and unwrap extension variables and implications.
         \item Might help us start to trust some of these clever hybrid algorithms
             for graph parameters like treewidth?
     \end{itemize}
