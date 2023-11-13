@@ -197,7 +197,7 @@
 
 % }}}
 
-\addtolength{\jot}{5pt}
+\addtolength{\jot}{2pt}
 
 \tikzstyle{state} = [inner sep=1pt]
 \tikzstyle{infeasible} = [color=uofgpillarbox]
@@ -261,7 +261,7 @@
             achieved.
     \end{itemize}
     \bigskip
-    Algorithmic details matter a lot for performance but end up being more or less the same for proof logging.
+    Algorithmic details matter a lot for performance, but end up being more or less the same for proof logging.
 \end{frame}
 
 \begin{frame}{Merging More States}
@@ -577,6 +577,17 @@
   \end{enumerate}
 \end{frame}
 
+\begin{frame}{The VeriPB Proof System}
+    \begin{center}
+        \url{https://gitlab.com/MIAOresearch/software/VeriPB} \\
+        \bigskip
+    \end{center}
+    \begin{itemize}
+        \item MIT licence, written in Python with parsing in C++.
+        \item Useful features like tracing and proof debugging.
+    \end{itemize}
+\end{frame}
+
 \begin{frame}{Pseudo-Boolean Problems}
     \begin{minipage}[t]{0.25\framewidth}
         \textcolor{uofgcobalt}{\textbf{Variables}}
@@ -615,6 +626,11 @@
         &2 x_1 + 5 x_2 + 2 x_3 + 3 x_4 + 2 x_5 + 3 x_6 \le 7 \\
         \text{maximise~} &2 x_1 + 4 x_2 + 2 x_3 + 5 x_4 + 4 x_5 + 3 x_6
     \end{align*}
+
+    \bigskip
+
+    We must \emph{describe} knapsack in pseudo-Boolean terms, but our solver can do
+    whatever it likes.
 \end{frame}
 
 \begin{frame}{Implications as Pseudo-Boolean Constraints}
@@ -628,17 +644,6 @@
     \bigskip
 
     We can also do $\land_i y_i \Rightarrow C$ and $y \Leftarrow C$.
-\end{frame}
-
-\begin{frame}{The VeriPB Proof System}
-    \begin{center}
-        \url{https://gitlab.com/MIAOresearch/software/VeriPB} \\
-        \bigskip
-    \end{center}
-    \begin{itemize}
-        \item MIT licence, written in Python with parsing in C++.
-        \item Useful features like tracing and proof debugging.
-    \end{itemize}
 \end{frame}
 
 \begin{frame}{Cutting Planes Proofs 1: Linear Inequalities}
@@ -740,6 +745,8 @@
 
 \begin{frame}{Unit Propagation for Clauses}
 
+    Given the following,
+
     \begin{align*}
         & a \lor \overline{b} \lor c \\
         & \overline{c} \lor d
@@ -748,10 +755,12 @@
     Suppose I tell you that $a$ must be false and $b$ must be true.
 
     \bigskip
+    \pause
 
     Must set $c$ to true to satisfy first clause.
 
     \bigskip
+    \pause
 
     Now must set $d$ to false to satisfy second clause.
 \end{frame}
@@ -764,10 +773,12 @@
     Suppose I tell you that $a = 0$. Can't say anything yet.
 
     \bigskip
+    \pause
 
     Suppose I tell you that $b = 0$ as well. Then $c = 1$ must hold.
 
     \bigskip
+    \pause
 
     In general: integer bounds consistency. We can do this \emph{efficiently}.
 \end{frame}
@@ -792,7 +803,102 @@
     much more convenient.
 \end{frame}
 
-\begin{frame}{A Framework for Proofs for Backtracking Search}
+\begin{frame}{RUP as a Proof Framework for Backtracking Search}
+    \begin{minipage}[c]{0.45\framewidth}
+        \begin{align*}
+            2 x_1 + 2 x_2 + 3 x_3 + x_4 + 3 x_5 + 2 x_6 &\le 5 \\
+            3 x_1 + 3 x_2 + 4 x_3 + x_4 + 3 x_5 + x_6   &\ge 8
+        \end{align*}
+        \begin{center}
+            \tikzstyle{level 1}=[level distance=1.20cm, sibling distance=2.00cm]
+            \tikzstyle{level 2}=[level distance=1.20cm, sibling distance=1.00cm]
+            \tikzstyle{level 3}=[level distance=1.20cm, sibling distance=0.5cm]
+        \begin{tikzpicture}
+            \node [state] { $x_1$ }
+            child {
+                node [state] { $x_2$ }
+                child {
+                    node {\Lightning}
+                    edge from parent [reject]
+                }
+                child {
+                    node [state] { $x_3$ }
+                    child {
+                        node {\Lightning}
+                        edge from parent [reject]
+                    }
+                    child {
+                        node {\Lightning}
+                        edge from parent [accept]
+                    }
+                    edge from parent [accept]
+                }
+                edge from parent [reject]
+            }
+            child {
+                node [state] { $x_2$ }
+                child {
+                    node [state] { $x_3$ }
+                    child {
+                        node {\Lightning}
+                        edge from parent [reject]
+                    }
+                    child {
+                        node {\Lightning}
+                        edge from parent [accept]
+                    }
+                    edge from parent [reject]
+                }
+                child {
+                    node {\Lightning}
+                    edge from parent [accept]
+                }
+                edge from parent [accept]
+            }
+            ;
+        \end{tikzpicture}
+        \end{center}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{0.45\framewidth}
+        \begin{align*}
+            \operatorname{rup}~ & x_1 + x_2 \ge 1 \\
+            \operatorname{rup}~ & x_1 + \overline{x}_2 + x_3 \ge 1 \\
+            \operatorname{rup}~ & x_1 + \overline{x}_2 + \overline{x}_3 \ge 1 \\
+            \operatorname{rup}~ & x_1 + \overline{x}_2 \ge 1 \\
+            \operatorname{rup}~ & x_1 \ge 1 \\
+            \operatorname{rup}~ & \overline{x}_1 + x_2 + x_3 \ge 1 \\
+            \operatorname{rup}~ & \overline{x}_1 + x_2 + \overline{x}_3 \ge 1 \\
+            \operatorname{rup}~ & \overline{x}_1 + x_2 \ge 1 \\
+            \operatorname{rup}~ & \overline{x}_1 \ge 1 \\
+            \operatorname{rup}~ & 0 \ge 1
+        \end{align*}
+    \end{minipage}
+\end{frame}
+
+\begin{frame}{Interleaving Propagations}
+    \begin{itemize}
+        \item Many facts discovered by propagation algorithms do \emph{not} follow by RUP.
+        \item Interleave additional extra RUP steps for propagated facts:
+            \begin{itemize}
+                \item Table constraints.
+                \item Circuit constraints (simple propagators).
+            \end{itemize}
+        \item Interleave explicit extended cutting planes proofs:
+            \begin{itemize}
+                \item All-different Hall sets.
+                \item Linear inequalities with non-0/1 variables.
+                \item Circuit constraints (cleverer propagators).
+            \end{itemize}
+        \item Enough to do subgraph isomorphism, constraint programming, \ldots
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Branch and Bound?}
+    \begin{itemize}
+        \item Log solutions as we find them, get a solution-improving constraint.
+        \item So the semantics are ``this instance is unsatisfiable if the objective has to beat
+            whatever the best solution I found is''.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Proofs Under Implication}
@@ -805,6 +911,7 @@
 
     Then we know how to get a proof deriving $\land \cup_i G_i \Rightarrow D$.
     \end{theorem}
+
     \begin{proof}[Handwavy proof sketch]
         For RUP, add in the implications and it ``just works''. \\\medskip
 
@@ -861,6 +968,14 @@
 \section{Proofs for Knapsack}
 
 \begin{frame}{Proofs for Dynamic Programming Algorithms for Knapsack}
+    \begin{itemize}
+        \item For backtracking search, we constructed a proof tree out of RUP steps.
+        \item For dynamic programming:
+            \begin{itemize}
+                \item Use extension variables to describe states.
+                \item Prove implications between states to create a decision diagram.
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Extension Variables for States}
@@ -943,6 +1058,17 @@
 \end{frame}
 
 \begin{frame}{Reading Off a Conclusion}
+    We can log an optimal solution, and get a solution-improving constraint.
+
+    \bigskip
+
+    We have an at-least-one constraint over feasible states on the final layer, which
+    we can unwrap to only talk about profits.
+
+    \bigskip
+
+    The solution-improving constraint contradicts each entry in the at-least-one
+    constraint.
 \end{frame}
 
 \section{Knapsack Constraints}
@@ -1262,11 +1388,20 @@
 \end{nearlyplainframe}
 
 \begin{frame}{It Works}
+    \begin{itemize}
+        \item Standalone implementation.
+        \item Another independent implementation at TU Delft.
+        \item Also implemented as a propagator inside the Glasgow Constraint Solver.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{So What?}
     \begin{itemize}
         \item This is a general framework, not specific to knapsack.
+            \begin{itemize}
+                \item Implications between extension variables describe \emph{structure}.
+                \item Key proof technique is that we can wrap and unwrap extension variables and implications.
+            \end{itemize}
         \item We can do dynamic programming / decision diagram propagators for CP.
         \item All of this is in a unified proof setting.
             \begin{itemize}
@@ -1277,9 +1412,9 @@
                 \item We could do symmetry reasoning (two identical items) and dominance reasoning
                     (one item better than another) too.
             \end{itemize}
-        \item Key proof technique is that we can wrap and unwrap extension variables and implications.
         \item Might help us start to trust some of these clever hybrid algorithms
             for graph parameters like treewidth?
+        \item Does this give us a better way of explaining and teaching dynamic programming?
     \end{itemize}
 \end{frame}
 
