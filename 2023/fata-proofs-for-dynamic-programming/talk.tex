@@ -202,9 +202,10 @@
 \tikzstyle{state} = [inner sep=1pt]
 \tikzstyle{infeasible} = [color=uofgpillarbox]
 \tikzstyle{dominated} = [color=uofgcobalt]
-\tikzstyle{backwards} = [color=uofgpumpkin]
+\tikzstyle{backwards} = []
 \tikzstyle{accept} = [solid, thick]
 \tikzstyle{reject} = [dotted, thick]
+\tikzstyle{forced} = [color=uofglawn]
 \tikzstyle{domination} = [dashed, thick, ->, color=uofgcobalt]
 
 \author{Ciaran McCreesh}
@@ -545,6 +546,9 @@
             minimum height=12em, 
             visible on=<3->] { Checker };
 
+            \node (print) [anchor=south, above=0cm of solver.south, visible on=<2->] { added print statements };
+            \draw [dotted, visible on=<2->] (solver.west|-print.north) -- (solver.east|-print.north);
+
             \draw [->, thick] (solver.east) -- (solver.east -| checker.west)
                 coordinate [midway] (solutionmid) node [above, midway]
                 { 
@@ -573,7 +577,7 @@
   \item<1->
     Run solver on problem input.
   \item<2->
-    Get both a solution and a proof as output.
+    Solver also prints out a proof as part of its output.
   \item<3->
     Feed input + solution + proof to proof checker.
   \item<4->
@@ -703,14 +707,16 @@
 
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Division}}\\
-        for any $c \in \mathbb{N^+}$
+        for any $c \in \mathbb{N^+}$ \\
+        assumes normalised form
     \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
         \AxiomC{$\sum_i a_i \ell_i \ge A$}
         \UnaryInfC{$\sum_i {\left\lceil \frac{a_i}{c} \right\rceil} \ell_i \ge \left\lceil \frac{A}{c} \right\rceil$}
     \end{prooftree}\end{minipage}\bigskip
 
     \begin{minipage}[c]{0.35\framewidth}
-        \textcolor{uofgcobalt}{\textbf{Saturation}}
+        \textcolor{uofgcobalt}{\textbf{Saturation}}\\
+        assumes normalised form
     \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
         \AxiomC{$\sum_i a_i \ell_i \ge A$}
         \UnaryInfC{$\sum_i \operatorname{min}\left(a_i, A\right) \ell_i \ge A$}
@@ -968,6 +974,9 @@
                 xsep=0.25em, draw, rounded corners=3pt, minimum height=8em, text width=4em, text
                 centered, yshift=-2cm, visible on=<3->] { Verified Checker };
 
+            \node (print) [anchor=south, above=0cm of solver.south] { added print statements };
+            \draw [dotted] (solver.west|-print.north) -- (solver.east|-print.north);
+
             \draw [->, thick] (solver.east) -- (solver.east -| elaborator.west) coordinate [midway] (solutionmid) node [above, midway] { Result };
 
             \draw [->, thick, rounded corners=3pt] (solver.south) -- (solver.south |- elaborator.west) -- (elaborator.west) coordinate [midway] (proofmid);
@@ -1180,7 +1189,7 @@
 \tikzstyle{level 6}=[level distance=2.20cm, sibling distance=0.30cm]
 \vspace*{-1cm}
 \begin{tikzpicture}[grow=right, sloped]
-    \node (N0w0p0) [state] {$N^0_{0,0}$}
+    \node (N0w0p0) [state, visible on=<1-7>] {$N^0_{0,0}$}
     child {
         node (N1w0p0) [state] {$N^1_{0,0}$}
         child {
@@ -1188,68 +1197,68 @@
             child {
                 node (N3w0p0) [state, yshift=-1.0cm] {$N^3_{0,0}$}
                 child {
-                    node (N4w0p0) [state, backwards] {$N^4_{0,0}$}
+                    node (N4w0p0) [state, backwards, visible on=<1-3>] {$N^4_{0,0}$}
                     child {
-                        node (N5w0p0) [state, backwards] {$N^5_{0,0}$}
+                        node (N5w0p0) [state, backwards, visible on=<1-2>] {$N^5_{0,0}$}
                         child {
-                            node (N6w0p0) [state, infeasible] {$N^6_{0,0}$}
-                            edge from parent [accept, backwards]
+                            node (N6w0p0) [state, infeasible, visible on=<1>] {$N^6_{0,0}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [reject, backwards]
+                        edge from parent [reject, backwards, visible on=<1-2>]
                     }
                     child {
-                        node [state, backwards, yshift=-0.05cm] {$N^5_{2,4}$}
+                        node [state, backwards, visible on=<1-2>, yshift=-0.05cm] {$N^5_{2,4}$}
                         child {
-                            node [state, infeasible] {$N^6_{2,4}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{2,4}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [accept, backwards]
+                        edge from parent [accept, backwards, visible on=<1-2>]
                     }
-                    edge from parent [reject, backwards]
+                    edge from parent [reject, backwards, visible on=<1-3>]
                 }
                 child {
                     node [state, yshift=0.1cm] {$N^4_{3,5}$}
                     child {
-                        node [state, backwards, yshift=0.05cm] {$N^5_{3,5}$}
+                        node [state, backwards, visible on=<1-2>, yshift=0.05cm] {$N^5_{3,5}$}
                         child {
-                            node [state, infeasible] {$N^6_{3,5}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{3,5}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [reject, backwards]
+                        edge from parent [reject, backwards, visible on=<1-2>]
                     }
                     child {
                         node [state] {$N^5_{5,9}$}
                         child {
                             node [state] {$N^6_{5,9}$}
-                            edge from parent [accept]
+                            edge from parent [reject]
                         }
                         edge from parent [accept]
                     }
-                    edge from parent [accept]
+                    edge from parent [accept] coordinate (F4c) [midway]
                 }
                 edge from parent [reject]
             }
             child {
                 node (N3w2p2) [state] {$N^3_{2,2}$}
                 child {
-                    node [state, backwards, yshift=-0.2cm] {$N^4_{2,2}$}
+                    node [state, backwards, visible on=<1-3>, yshift=-0.2cm] {$N^4_{2,2}$}
                     child {
-                        node [state, backwards] {$N^5_{2,2}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{2,2}$}
                         child {
-                            node [state, infeasible] {$N^6_{2,2}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{2,2}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [reject, backwards]
+                        edge from parent [reject, backwards, visible on=<1-2>]
                     }
                     child {
-                        node [state, backwards] {$N^5_{4,6}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{4,6}$}
                         child {
-                            node [state, infeasible] {$N^6_{4,6}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{4,6}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [accept, backwards]
+                        edge from parent [accept, backwards, visible on=<1-2>]
                     }
-                    edge from parent [reject, backwards]
+                    edge from parent [reject, backwards, visible on=<1-3>]
                 }
                 child {
                     node [state] {$N^4_{5,7}$}
@@ -1257,75 +1266,75 @@
                         node [state] {$N^5_{5,7}$}
                         child {
                             node [state] {$N^6_{5,7}$}
-                            edge from parent [accept]
+                            edge from parent [reject]
                         }
                         edge from parent [reject]
                     }
                     child {
-                        node [state, infeasible] {$N^5_{7,11}$}
-                        edge from parent [accept, infeasible]
+                        node [state, infeasible, visible on=<1>] {$N^5_{7,11}$}
+                        edge from parent [accept, infeasible, visible on=<1>]
                     }
-                    edge from parent [accept]
+                    edge from parent [accept] coordinate (F4b) [midway]
                 }
                 edge from parent [accept]
             }
-            edge from parent [reject]
+            edge from parent [reject] coordinate (F2b) [midway]
         }
         child {
-            node (N2w5p5) [state, backwards, yshift=0.5cm] {$N^2_{5,4}$}
+            node (N2w5p5) [state, backwards, visible on=<1-5>, yshift=0.5cm] {$N^2_{5,4}$}
             child {
-                node [state, backwards] {$N^3_{5,4}$}
+                node [state, backwards, visible on=<1-4>] {$N^3_{5,4}$}
                 child {
-                    node [state, backwards, yshift=0.2cm] {$N^4_{5,4}$}
+                    node [state, backwards, visible on=<1-3>, yshift=0.2cm] {$N^4_{5,4}$}
                     child {
-                        node [state, backwards] {$N^5_{5,4}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{5,4}$}
                         child {
-                            node [state, infeasible] {$N^6_{5,4}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{5,4}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [reject, backwards]
+                        edge from parent [reject, backwards, visible on=<1-2>]
                     }
                     child {
-                        node [state, backwards] {$N^5_{7,8}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{7,8}$}
                         child {
-                            node [state, infeasible] {$N^6_{7,8}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{7,8}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [accept, backwards]
+                        edge from parent [accept, backwards, visible on=<1-2>]
                     }
-                    edge from parent [reject, backwards]
+                    edge from parent [reject, backwards, visible on=<1-3>]
                 }
                 child {
-                    node [state, infeasible, yshift=-0.1cm] {$N^4_{8,9}$}
-                    edge from parent [accept, infeasible]
+                    node [state, infeasible, visible on=<1>, yshift=-0.1cm] {$N^4_{8,9}$}
+                    edge from parent [accept, infeasible, visible on=<1>]
                 }
-                edge from parent [reject, backwards]
+                edge from parent [reject, backwards, visible on=<1-4>]
             }
             child {
-                node (N3w7p6) [state, backwards] {$N^3_{7,6}$}
+                node (N3w7p6) [state, backwards, visible on=<1-4>] {$N^3_{7,6}$}
                 child {
-                    node [state, backwards, yshift=0.2cm] {$N^4_{7,6}$}
+                    node [state, backwards, visible on=<1-3>, yshift=0.2cm] {$N^4_{7,6}$}
                     child {
-                        node [state, backwards] {$N^5_{7,6}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{7,6}$}
                         child {
-                            node [state, infeasible] {$N^6_{7,6}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{7,6}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [reject, backwards]
+                        edge from parent [reject, backwards, visible on=<1-2>]
                     }
                     child {
-                        node [state, infeasible] {$N^5_{9,10}$}
-                        edge from parent [accept, infeasible]
+                        node [state, infeasible, visible on=<1>] {$N^5_{9,10}$}
+                        edge from parent [accept, infeasible, visible on=<1>]
                     }
-                    edge from parent [reject, backwards]
+                    edge from parent [reject, backwards, visible on=<1-3>]
                 }
                 child {
-                    node [state, infeasible] {$N^4_{10,11}$}
-                    edge from parent [accept, infeasible]
+                    node [state, infeasible, visible on=<1>] {$N^4_{10,11}$}
+                    edge from parent [accept, infeasible, visible on=<1>]
                 }
-                edge from parent [accept, backwards]
+                edge from parent [accept, backwards, visible on=<1-4>]
             }
-            edge from parent [accept, backwards]
+            edge from parent [accept, backwards, visible on=<1-5>]
         }
         edge from parent [reject]
     }
@@ -1336,24 +1345,24 @@
             child {
                 node [state, yshift=1.2cm] {$N^3_{4,4}$}
                 child {
-                    node [state, backwards, yshift=-0.2cm] {$N^4_{4,4}$}
+                    node [state, backwards, visible on=<1-3>, yshift=-0.2cm] {$N^4_{4,4}$}
                     child {
-                        node [state, backwards] {$N^5_{4,4}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{4,4}$}
                         child {
-                            node [state, infeasible] {$N^6_{4,4}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{4,4}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [reject, backwards]
+                        edge from parent [reject, backwards, visible on=<1-2>]
                     }
                     child {
-                        node [state, backwards] {$N^5_{6,8}$}
+                        node [state, backwards, visible on=<1-2>] {$N^5_{6,8}$}
                         child {
-                            node [state, infeasible] {$N^6_{6,8}$}
-                            edge from parent [accept, backwards]
+                            node [state, infeasible, visible on=<1>] {$N^6_{6,8}$}
+                            edge from parent [reject, infeasible, visible on=<1>]
                         }
-                        edge from parent [accept]
+                        edge from parent [accept, visible on=<1-2>]
                     }
-                    edge from parent [reject, backwards]
+                    edge from parent [reject, backwards, visible on=<1-3>]
                 }
                 child {
                     node [state] {$N^4_{7,9}$}
@@ -1361,33 +1370,33 @@
                         node [state] {$N^5_{7,9}$}
                         child {
                             node [state] {$N^6_{7,9}$}
-                            edge from parent [accept]
+                            edge from parent [reject]
                         }
                         edge from parent [reject]
                     }
                     child {
-                        node [state, infeasible] {$N^5_{9,13}$}
-                        edge from parent [accept, infeasible]
+                        node [state, infeasible, visible on=<1>] {$N^5_{9,13}$}
+                        edge from parent [accept, infeasible, visible on=<1>]
                     }
-                    edge from parent [accept]
+                    edge from parent [accept] coordinate (F4a) [midway]
                 }
                 edge from parent [accept]
             }
-            edge from parent [reject]
+            edge from parent [reject] coordinate (F2a) [midway]
         }
         child {
-            node (N2w7p6) [state, backwards, yshift=-1cm] {$N^2_{7,6}$}
+            node (N2w7p6) [state, backwards, visible on=<1-5>, yshift=-1cm] {$N^2_{7,6}$}
             child {
-                node [state, infeasible, yshift=0.8cm] {$N^3_{9,8}$}
-                edge from parent [accept, infeasible]
+                node [state, infeasible, visible on=<1>, yshift=0.8cm] {$N^3_{9,8}$}
+                edge from parent [accept, infeasible, visible on=<1>]
             }
-            edge from parent [accept, backwards]
+            edge from parent [accept, backwards, visible on=<1-5>]
         }
         edge from parent [accept]
     };
 
     \draw [reject, out=330, in=150] (N2w2p2) to (N3w2p2);
-    \draw [reject, backwards, out=330, in=150] (N2w7p6) to (N3w7p6);
+    \draw [reject, backwards, out=330, in=150, visible on=<1-4>] (N2w7p6) to (N3w7p6);
 
     \coordinate (B1x) at ($(N0w0p0)!0.5!(N1w0p0)$);
     \coordinate (B1) at (B1x|-N6w0p0);
@@ -1412,6 +1421,15 @@
     \coordinate (B6x) at ($(N5w0p0)!0.5!(N6w0p0)$);
     \coordinate (B6) at (B6x|-N6w0p0);
     \node [below=0.25cm of B6] {$\boldsymbol{w}_6{=}3, \boldsymbol{p}_6{=}3$};
+
+    \node [visible on=<7>, left=0.0cm of B2] (x2) {$x_2=0$};
+    \draw [->, visible on=<7>, color=uofglawn, thick] (x2) to[out=90, in=280] ($(F2a)+(0cm,-0.1cm)$);
+    \draw [->, visible on=<7>, color=uofglawn, thick] (x2) to[out=90, in=270] ($(F2b)+(0cm,-0.1cm)$);
+
+    \node [visible on=<7>, right=0.0cm of B4] (x4) {$x_4=1$};
+    \draw [->, visible on=<7>, color=uofglawn, thick] (x4) to[out=90, in=280] ($(F4a)+(0cm,-0.1cm)$);
+    \draw [->, visible on=<7>, color=uofglawn, thick] (x4) to[out=90, in=270] ($(F4b)+(0cm,-0.1cm)$);
+    \draw [->, visible on=<7>, color=uofglawn, thick] (x4) to[out=90, in=270] ($(F4c)+(0cm,-0.1cm)$);
 
     \coordinate (SC) at ($(N0w0p0.west)+(0cm,-3cm)$);
     \node [anchor=north west, text width=8em] at (SC) {Side constraints:
