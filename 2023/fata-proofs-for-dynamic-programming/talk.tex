@@ -290,12 +290,12 @@
 \end{frame}
 
 \begin{nearlyplainframe}[t]{Viewing Dynamic Programming as a Decision Diagram}
-\tikzstyle{level 1}=[level distance=2.20cm, sibling distance=3.00cm]
-\tikzstyle{level 2}=[level distance=2.20cm, sibling distance=2.00cm]
-\tikzstyle{level 3}=[level distance=2.20cm, sibling distance=1.25cm]
-\tikzstyle{level 4}=[level distance=2.20cm, sibling distance=0.75cm]
-\tikzstyle{level 5}=[level distance=2.20cm, sibling distance=0.60cm]
-\tikzstyle{level 6}=[level distance=2.20cm, sibling distance=0.30cm]
+\tikzstyle{level 1}=[level distance=2.20cm, sibling distance=3.00cm, visible on=<2->]
+\tikzstyle{level 2}=[level distance=2.20cm, sibling distance=2.00cm, visible on=<3->]
+\tikzstyle{level 3}=[level distance=2.20cm, sibling distance=1.25cm, visible on=<4->]
+\tikzstyle{level 4}=[level distance=2.20cm, sibling distance=0.75cm, visible on=<5->]
+\tikzstyle{level 5}=[level distance=2.20cm, sibling distance=0.60cm, visible on=<6->]
+\tikzstyle{level 6}=[level distance=2.20cm, sibling distance=0.30cm, visible on=<7->]
 \begin{tikzpicture}[grow=right, sloped, font=\small]
     \node (N0w0p0) [state] {$N^0_{0,0}$}
     child {
@@ -468,45 +468,45 @@
     };
 
     \coordinate (SC) at ($(N0w0p0.west)+(0cm,-2cm)$);
-    \node [anchor=north west, text width=8em] at (SC) {Constraints:
+    \node [anchor=north west, text width=8em, visible on=<4->] at (SC) {Constraints:
     \\$W \le 7$};
 
     \coordinate (B1x) at ($(N0w0p0)!0.5!(N1w0p0)$);
     \coordinate (B1) at (B1x|-N6w0p0);
-    \node [below=0.25cm of B1] {$\boldsymbol{w}_1{=}2, \boldsymbol{p}_1{=}2$};
+    \node [visible on=<2->, below=0.25cm of B1] {$\boldsymbol{w}_1{=}2, \boldsymbol{p}_1{=}2$};
 
     \coordinate (B2x) at ($(N1w0p0)!0.5!(N2w0p0)$);
     \coordinate (B2) at (B2x|-N6w0p0);
-    \node [below=0.25cm of B2] {$\boldsymbol{w}_2{=}5, \boldsymbol{p}_2{=}4$};
+    \node [visible on=<3->, below=0.25cm of B2] {$\boldsymbol{w}_2{=}5, \boldsymbol{p}_2{=}4$};
 
     \coordinate (B3x) at ($(N2w0p0)!0.5!(N3w0p0)$);
     \coordinate (B3) at (B3x|-N6w0p0);
-    \node [below=0.25cm of B3] {$\boldsymbol{w}_3{=}2, \boldsymbol{p}_3{=}2$};
+    \node [visible on=<4->, below=0.25cm of B3] {$\boldsymbol{w}_3{=}2, \boldsymbol{p}_3{=}2$};
 
     \coordinate (B4x) at ($(N3w0p0)!0.5!(N4w0p0)$);
     \coordinate (B4) at (B4x|-N6w0p0);
-    \node [below=0.25cm of B4] {$\boldsymbol{w}_4{=}3, \boldsymbol{p}_4{=}5$};
+    \node [visible on=<5->, below=0.25cm of B4] {$\boldsymbol{w}_4{=}3, \boldsymbol{p}_4{=}5$};
 
     \coordinate (B5x) at ($(N4w0p0)!0.5!(N5w0p0)$);
     \coordinate (B5) at (B5x|-N6w0p0);
-    \node [below=0.25cm of B5] {$\boldsymbol{w}_5{=}2, \boldsymbol{p}_5{=}4$};
+    \node [visible on=<6->, below=0.25cm of B5] {$\boldsymbol{w}_5{=}2, \boldsymbol{p}_5{=}4$};
 
     \coordinate (B6x) at ($(N5w0p0)!0.5!(N6w0p0)$);
     \coordinate (B6) at (B6x|-N6w0p0);
-    \node [below=0.25cm of B6] {$\boldsymbol{w}_6{=}3, \boldsymbol{p}_6{=}3$};
+    \node [visible on=<7->, below=0.25cm of B6] {$\boldsymbol{w}_6{=}3, \boldsymbol{p}_6{=}3$};
 
-    \draw [reject, out=330, in=150] (N2w2p2) to (N3w2p2);
-    \draw [reject, out=330, in=150] (N2w7p6) to (N3w7p6);
-    \draw [domination, out=50, in=310] (N3w5p4) to (N3w4p4);
-    \draw [domination, out=45, in=315] (N4w7p6) to (N4w7p9);
-    \draw [domination, out=315, in=45] (N4w4p4) to (N4w3p5);
-    \draw [domination, out=295, in=65] (N5w7p9) to (N5w7p11);
-    \draw [domination, out=340, in=20] (N5w5p7) to (N5w5p9);
-    \draw [domination, out=330, in=30] (N5w2p2) to (N5w2p4);
-    \draw [domination, out=10, in=350] (N6w7p9) to (N6w7p11);
-    \draw [domination, out=30, in=330] (N6w5p7) to (N6w5p9);
-    \draw [domination, out=60, in=300] (N6w3p3) to (N6w2p4);
-    \draw [domination, out=60, in=300] (N6w6p8) to (N6w5p9);
+    \draw [visible on=<4->, reject, out=330, in=150] (N2w2p2) to (N3w2p2);
+    \draw [visible on=<4->, reject, out=330, in=150] (N2w7p6) to (N3w7p6);
+    \draw [visible on=<4->, domination, out=50, in=310] (N3w5p4) to (N3w4p4);
+    \draw [visible on=<5->, domination, out=45, in=315] (N4w7p6) to (N4w7p9);
+    \draw [visible on=<5->, domination, out=315, in=45] (N4w4p4) to (N4w3p5);
+    \draw [visible on=<6->, domination, out=295, in=65] (N5w7p9) to (N5w7p11);
+    \draw [visible on=<6->, domination, out=340, in=20] (N5w5p7) to (N5w5p9);
+    \draw [visible on=<6->, domination, out=330, in=30] (N5w2p2) to (N5w2p4);
+    \draw [visible on=<7->, domination, out=10, in=350] (N6w7p9) to (N6w7p11);
+    \draw [visible on=<7->, domination, out=30, in=330] (N6w5p7) to (N6w5p9);
+    \draw [visible on=<7->, domination, out=60, in=300] (N6w3p3) to (N6w2p4);
+    \draw [visible on=<7->, domination, out=60, in=300] (N6w6p8) to (N6w5p9);
 \end{tikzpicture}
 \end{nearlyplainframe}
 
