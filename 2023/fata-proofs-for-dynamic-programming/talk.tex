@@ -466,6 +466,10 @@
         edge from parent [accept] node [midway, above] { accept }
     };
 
+    \coordinate (SC) at ($(N0w0p0.west)+(0cm,-2cm)$);
+    \node [anchor=north west, text width=8em] at (SC) {Constraints:
+    \\$W \le 7$};
+
     \coordinate (B1x) at ($(N0w0p0)!0.5!(N1w0p0)$);
     \coordinate (B1) at (B1x|-N6w0p0);
     \node [below=0.25cm of B1] {$\boldsymbol{w}_1{=}2, \boldsymbol{p}_1{=}2$};
@@ -646,6 +650,25 @@
     We can also do $\land_i y_i \Rightarrow C$ and $y \Leftarrow C$.
 \end{frame}
 
+\begin{frame}{What is a Proof?}
+        For satisfiable problem instances: just a witness.
+
+        \bigskip\pause
+
+        For unsatisfiable problem instances:
+        \begin{itemize}
+            \item Start by assuming the constraints in the input.
+            \item At each step, derive a new additional constraint that must hold,
+                based upon what we know so far.
+                \begin{itemize}
+                    \item ``Must hold'' means ``equisatisfiable'': can't turn a satisfiable
+                        instance into an unsatisfiable instance, or vice-versa.
+                    \item Steps have to be efficiently computable, possibly with hints.
+                \end{itemize}
+            \item Finish by deriving $0 \ge 1$.
+        \end{itemize}
+\end{frame}
+
 \begin{frame}{Cutting Planes Proofs 1: Linear Inequalities}
     \begin{minipage}[c]{0.35\framewidth}
         \textcolor{uofgcobalt}{\textbf{Model axioms}}
@@ -710,6 +733,11 @@
         \BinaryInfC{$a_1 \lor a_2 \lor \cdots b_1 \lor b_2 \lor \cdots$}
     \end{prooftree}\end{minipage}\bigskip
 
+    We can simulate this in cutting planes using addition then saturation.
+
+    \pause
+    \bigskip
+
     Another way of viewing this is:\bigskip
 
     \begin{minipage}[c]{0.35\framewidth}
@@ -718,9 +746,7 @@
         \AxiomC{$(\overline{a}_1 \land \overline{a}_2 \land \cdots) \Rightarrow c$}
         \AxiomC{$c \Rightarrow (b_1 \lor b_2 \lor \cdots)$}
         \BinaryInfC{$(\overline{a}_1 \land \overline{a}_2 \land \cdots) \Rightarrow (b_1 \lor b_2 \lor \cdots)$}
-    \end{prooftree}\end{minipage}\bigskip
-
-    We can simulate this in cutting planes using addition then saturation.
+    \end{prooftree}\end{minipage}
 \end{frame}
 
 \begin{frame}{Extended Cutting Planes Proofs}
@@ -780,6 +806,11 @@
     \bigskip
     \pause
 
+    Suppose I tell you that $d = 0$ as well. Then $e = 1$ and $f = 1$ must hold.
+
+    \bigskip
+    \pause
+
     In general: integer bounds consistency. We can do this \emph{efficiently}.
 \end{frame}
 
@@ -809,6 +840,7 @@
             2 x_1 + 2 x_2 + 3 x_3 + x_4 + 3 x_5 + 2 x_6 &\le 5 \\
             3 x_1 + 3 x_2 + 4 x_3 + x_4 + 3 x_5 + x_6   &\ge 8
         \end{align*}
+        \pause
         \begin{center}
             \tikzstyle{level 1}=[level distance=1.20cm, sibling distance=2.00cm]
             \tikzstyle{level 2}=[level distance=1.20cm, sibling distance=1.00cm]
@@ -861,16 +893,16 @@
     \end{minipage}\hfill
     \begin{minipage}[c]{0.45\framewidth}
         \begin{align*}
-            \operatorname{rup}~ & x_1 + x_2 \ge 1 \\
-            \operatorname{rup}~ & x_1 + \overline{x}_2 + x_3 \ge 1 \\
-            \operatorname{rup}~ & x_1 + \overline{x}_2 + \overline{x}_3 \ge 1 \\
-            \operatorname{rup}~ & x_1 + \overline{x}_2 \ge 1 \\
-            \operatorname{rup}~ & x_1 \ge 1 \\
-            \operatorname{rup}~ & \overline{x}_1 + x_2 + x_3 \ge 1 \\
-            \operatorname{rup}~ & \overline{x}_1 + x_2 + \overline{x}_3 \ge 1 \\
-            \operatorname{rup}~ & \overline{x}_1 + x_2 \ge 1 \\
-            \operatorname{rup}~ & \overline{x}_1 \ge 1 \\
-            \operatorname{rup}~ & 0 \ge 1
+            \uncover<3->{\operatorname{rup}~ & x_1 + x_2 \ge 1} \\
+            \uncover<4->{\operatorname{rup}~ & x_1 + \overline{x}_2 + x_3 \ge 1} \\
+            \uncover<5->{\operatorname{rup}~ & x_1 + \overline{x}_2 + \overline{x}_3 \ge 1} \\
+            \uncover<6->{\operatorname{rup}~ & x_1 + \overline{x}_2 \ge 1} \\
+            \uncover<7->{\operatorname{rup}~ & x_1 \ge 1} \\
+            \uncover<8->{\operatorname{rup}~ & \overline{x}_1 + x_2 + x_3 \ge 1} \\
+            \uncover<8->{\operatorname{rup}~ & \overline{x}_1 + x_2 + \overline{x}_3 \ge 1} \\
+            \uncover<8->{\operatorname{rup}~ & \overline{x}_1 + x_2 \ge 1} \\
+            \uncover<8->{\operatorname{rup}~ & \overline{x}_1 \ge 1} \\
+            \uncover<9->{\operatorname{rup}~ & 0 \ge 1}
         \end{align*}
     \end{minipage}
 \end{frame}
@@ -890,14 +922,6 @@
                 \item Circuit constraints (cleverer propagators).
             \end{itemize}
         \item Enough to do subgraph isomorphism, constraint programming, \ldots
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Branch and Bound?}
-    \begin{itemize}
-        \item Log solutions as we find them, get a solution-improving constraint.
-        \item So the semantics are ``this instance is unsatisfiable if the objective has to beat
-            whatever the best solution I found is''.
     \end{itemize}
 \end{frame}
 
@@ -921,6 +945,16 @@
 
         For extension rules, keep them as-is.
     \end{proof}
+\end{frame}
+
+\begin{frame}{Branch and Bound?}
+    \begin{itemize}
+        \item Log solutions as we find them, get a solution-improving constraint.
+        \item So the semantics are ``this instance is unsatisfiable if the objective has to beat
+            whatever the best solution I found is''.
+            \pause
+        \item Have to replace ``equisatisfiable'' with ``equioptimal''!
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Should You Trust the Checker?}
