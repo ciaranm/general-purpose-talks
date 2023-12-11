@@ -22,6 +22,7 @@
 \usepackage{pifont}
 \usepackage{marvosym}
 \usepackage{cancel}
+\usepackage{nicefrac}
 
 \usefonttheme{professionalfonts}
 
@@ -508,7 +509,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \begin{tikzpicture}
         \newcount \myc
         \foreach \n in {1, ..., 9}{
-            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 9 \advance\myc by 290.0
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 9 \advance\myc by 290
             \ifthenelse{\n = 3 \OR \n = 6 \OR \n = 9}{
                 \node<1>[draw, circle, inner sep=2pt] (N\n) at (\the\myc:2.2) {\phantom{0}};
                 \node<2>[draw, circle, fill=uofgcobalt, inner sep=2pt] (N\n) at (\the\myc:2.2) {\phantom{0}};
@@ -578,22 +579,14 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Directed Graphs}
-\end{frame}
-
-\begin{frame}{Labelled Graphs}
-\end{frame}
-
-\begin{frame}{Loops}
-\end{frame}
-
-\begin{frame}{Multi-Edges?}
-\end{frame}
-
-\begin{frame}{Hyper-Edges?}
-\end{frame}
-
-\begin{frame}{Partially Defined Graphs}
+\begin{frame}{Graphs Aren't Just Graphs}
+    \begin{itemize}
+        \item Vertex and / or edge labels, or broader compatibility functions.
+        \item Multi-edges, more than one edge between vertices.
+        \item Hyper-edges, between more than two vertices.
+        \item Partially defined graphs?
+        \item Loops.
+    \end{itemize}
 \end{frame}
 
 \section{Algorithm Basics}
@@ -602,7 +595,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \begin{enumerate}
         \item Pick a vertex, guess where it goes, and start trying to grow a connected component.
             \begin{itemize}
-                \item Popular solvers: VF2, RI, TurboISO, \ldots
+                \item Popular solvers: VF2, VF3, RI, TurboISO, \ldots
                 \item Very fast to start up.
                 \item Often good on easy instances.
                 \item Spectacularly bad on hard instances, and on some easy instances.
@@ -621,12 +614,69 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \begin{center}
         \url{https://github.com/ciaranm/glasgow-subgraph-solver}
     \end{center}
+
+    \begin{itemize}
+        \item A CP style solver specifically for subgraph algorithms.
+        \item Subgraph isomorphism, and all its variants (induced / non-induced, homomorphism,
+            locally injective, labels, side constraints, directed, \ldots).
+        \item Also special algorithms for clique.
+        \item Guaranteed no bugs!
+            \begin{itemize}
+                \item<2-> Or at least, any buggy output will always be detected, if you enable proof
+                    logging.
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Benchmark Instances}
     \begin{center}
         \url{http://perso.citi-lab.fr/csolnon/SIP.html}
     \end{center}
+
+    \begin{itemize}
+        \item 14,621 instances from Christine Solnon's collection:
+            \begin{itemize}
+                \item Randomly generated with different models (MIVIA suite).
+                \item Real-world graphs.
+                \item Computer vision problems.
+                \item Biochemistry problems.
+                \item Phase transition instances.
+            \end{itemize}
+        \item At least\ldots
+            \begin{itemize}
+                \item $\ge$ 2,110 satisfiable.
+                \item $\ge$ 12,322 unsatisfiable.
+            \end{itemize}
+        \item A lot of them are very easy for good algorithms.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Is It Any Good?}
+
+    \includegraphics<1>{gen-graph-others.pdf}%
+
+\end{frame}
+
+\begin{frame}{Easy Conclusion!}
+    \begin{itemize}
+        \item CP is best!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{An Observation about Certain Datasets}
+    \begin{itemize}
+        \item All of the randomly generated instances from the MIVIA suites are satisfiable.
+        \item The target graphs are randomly generated, and patterns are made by selecting
+            random connected subgraphs and permuting them.
+        \item These instances are usually rather easy\ldots
+        \item Many papers use \emph{only} these instances for benchmarking.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{A Different Easy Conclusion!}
+    \begin{itemize}
+        \item CP is slow! VF3 is best!
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Constraint Programming}
@@ -712,20 +762,14 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{Injectivity Filtering}
-    \only<1>{
     \begin{align*}
         A &\in \{ 1, 2 \} \\
         B &\in \{ 2, 3 \} \\
         C &\in \{ 1, 3 \} \\
-        D &\in \{ 1, 4 \}
-    \end{align*}}\only<2->{
-    \begin{itemize}
-        \item If we have $n$ variables with $n$ values between them, those values can't
-            be used anywhere else.
-        \item <3-> If we have $n$ variables with $n - 1$ or fewer values between them,
-            backtrack.
-    \end{itemize}
-}
+        D &\in \{ 1, 4, 5, 6 \} \\
+        E &\in \{ 2, 5 \} \\
+        F &\in \{ 3, 5 \}
+    \end{align*}
 \end{frame}
 
 \begin{frame}{Matchings and All-Different}
@@ -1046,6 +1090,90 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \end{center}
 \end{frame}
 
+\section{Detour: Hard Instances}
+
+\begin{frame}[t]{Clique in Random Graphs}
+    \begin{center}
+        \includegraphics<1>{gen-graph-clique-phase-transition.pdf}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Let's Generate Random Instances a Different Way}
+    \begin{itemize}
+        \item Decide upon a pattern graph order (number of vertices) and density.
+        \item Decide upon a target graph order and density.
+        \item Generate instances at random, independently.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{When is Non-Induced Subgraph Isomorphism Hard?}
+    \begin{center}
+        \only<1>{
+            \includegraphics<1>{gen-graph-phase-transition.pdf}
+        }\only<2>{
+            \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=10pt}, ampersand replacement=\&]
+                \matrix {
+                    \node [anchor=center] {}; \&
+                \node [anchor=center] {\tiny $G(10, x) \rightarrowtail G(150, y)$}; \&
+                \node [anchor=center] {\tiny $G(20, x) \rightarrowtail G(150, y)$}; \&
+                \node [anchor=center] {\tiny $G(30, x) \rightarrowtail G(150, y)$}; \&
+                \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-10-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-30-150.pdf}}; \&
+                \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Glasgow Nodes}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-10-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-20-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-30-150.pdf}}; \&
+                \\
+            };
+            \end{tikzpicture}
+        }\only<3>{
+            \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=10pt}, ampersand replacement=\&]
+                \matrix {
+                    \node [anchor=center] {}; \&
+                \node [anchor=center] {\tiny $G(10, x) \rightarrowtail G(150, y)$}; \&
+                \node [anchor=center] {\tiny $G(20, x) \rightarrowtail G(150, y)$}; \&
+                \node [anchor=center] {\tiny $G(30, x) \rightarrowtail G(150, y)$}; \&
+                \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-10-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-30-150.pdf}}; \&
+                \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny LAD Nodes}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-10-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-20-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-30-150.pdf}}; \&
+                \\
+            };
+            \end{tikzpicture}
+        }\only<4>{
+            \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=10pt}, ampersand replacement=\&]
+                \matrix {
+                    \node [anchor=center] {}; \&
+                \node [anchor=center] {\tiny $G(10, x) \rightarrowtail G(150, y)$}; \&
+                \node [anchor=center] {\tiny $G(20, x) \rightarrowtail G(150, y)$}; \&
+                \node [anchor=center] {\tiny $G(30, x) \rightarrowtail G(150, y)$}; \&
+                \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-10-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-30-150.pdf}}; \&
+                \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny VF2 Nodes}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-10-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-20-150.pdf}}; \&
+                \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-30-150.pdf}}; \&
+                \\
+            };
+            \end{tikzpicture}
+        }
+    \end{center}
+\end{frame}
+
 \begin{frame}{Hand-Wavy Theoretical Justification}
     \begin{itemize}
         \item Maximise the expected number of solutions during search?
@@ -1060,44 +1188,24 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Subgraph Isomorphism in Random Graphs}
-    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=10pt}, ampersand replacement=\&]
-            \matrix {
-                \node [anchor=center] {}; \&
-            \node [anchor=center] {\tiny $G(10, x) \rightarrowtail G(150, y)$}; \&
-            \node [anchor=center] {\tiny $G(20, x) \rightarrowtail G(150, y)$}; \&
-            \node [anchor=center] {\tiny $G(30, x) \rightarrowtail G(150, y)$}; \&
+\begin{frame}{Induced is Much More Complicated}
+    \begin{center}
+        \only<1>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(20, x) \hookrightarrow G(150, y)$}; \&
             \\[0.1cm]
-            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
-            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-10-150.pdf}}; \&
-            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
-            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-30-150.pdf}}; \&
-            \\[0.2cm]
-            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Search cost}; \&
-            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-10-150.pdf}}; \&
-            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-20-150.pdf}}; \&
-            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-30-150.pdf}}; \&
-            \\
-        };
-    \end{tikzpicture}
-\end{frame}
-
-\begin{frame}[t]{Induced Subgraph Isomorphism is More Complicated\ldots}
-    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=10pt}, ampersand replacement=\&]
-            \matrix {
-                \node [anchor=center] {}; \&
-            \node [anchor=center] {\tiny $G(10, x) \rightarrowtail G(150, y)$}; \&
-            \node [anchor=center] {\tiny $G(14, x) \rightarrowtail G(150, y)$}; \&
-            \node [anchor=center] {\tiny $G(16, x) \rightarrowtail G(150, y)$}; \&
-            \node [anchor=center] {\tiny $G(20, x) \rightarrowtail G(150, y)$}; \&
-            \\[0.1cm]
-            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-20-150.pdf}}; \&
             \\[0.2cm]
-            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Search cost}; \&
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Glasgow Nodes}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-10-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-14-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-16-150.pdf}}; \&
@@ -1105,7 +1213,330 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             \\
         };
     \end{tikzpicture}
+}\only<2>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(20, x) \hookrightarrow G(150, y)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-20-150.pdf}}; \&
+            \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny LAD Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-induced-nodes-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-induced-nodes-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-induced-nodes-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-induced-nodes-20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+}\only<3>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(20, x) \hookrightarrow G(150, y)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-20-150.pdf}}; \&
+            \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny VF2 Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-induced-nodes-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-induced-nodes-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-induced-nodes-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-induced-nodes-20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+}\only<4>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(20, x) \hookrightarrow G(150, y)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-20-150.pdf}}; \&
+            \\[0.2cm] \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny VF3 Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf3-induced-nodes-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf3-induced-nodes-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf3-induced-nodes-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf3-induced-nodes-20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+}
+    \end{center}
 \end{frame}
+
+\begin{frame}{Is This Algorithm-Independent?}
+    \begin{center}
+        \only<1>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+            \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(18, x) \hookrightarrow G(75, y)$}; \&
+            \\[0.1cm]
+            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-18-75.pdf}}; \&
+            \\[0.2cm] \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Glucose (SAT)}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-glucose-induced-nodes-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-glucose-induced-nodes-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-glucose-induced-nodes-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-glucose-induced-nodes-18-75.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}}\only<2>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+            \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(18, x) \hookrightarrow G(75, y)$}; \&
+            \\[0.1cm]
+            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-18-75.pdf}}; \&
+            \\[0.2cm] \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Clasp (PB)}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clasp-induced-nodes-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clasp-induced-nodes-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clasp-induced-nodes-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clasp-induced-nodes-18-75.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}}\only<3>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+            \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(18, x) \hookrightarrow G(75, y)$}; \&
+            \\[0.1cm]
+            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-18-75.pdf}}; \&
+            \\[0.2cm] \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny BBMC (Clique)}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clique-induced-nodes-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clique-induced-nodes-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clique-induced-nodes-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-clique-induced-nodes-18-75.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}}\only<4>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+            \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(75, y)$}; \&
+            \node [anchor=center] {\tiny $G(18, x) \hookrightarrow G(75, y)$}; \&
+            \\[0.1cm]
+            \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-satisfiable-18-75.pdf}}; \&
+            \\[0.2cm] \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Gurobi (MIP)}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-gurobi-induced-nodes-10-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-gurobi-induced-nodes-14-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-gurobi-induced-nodes-16-75.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-gurobi-induced-nodes-18-75.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Constrainedness}
+    \only<1>{\begin{equation*}\label{equation:constrainedness}\kappa = 1 - \frac{\log \left( t^{\underline{p}}
+\cdot {u}^{q \cdot \binom{p}{2}} \cdot {(1 - u)}^{(1 - q) \cdot \binom{p}{2}}
+    \right)}{\log t^{\underline{p}}} \end{equation*}}\only<2>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(10, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(14, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(150, y)$}; \&
+            \node [anchor=center] {\tiny $G(20, x) \hookrightarrow G(150, y)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-20-150.pdf}}; \&
+            \\[0.2cm] \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Glasgow Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-10-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-14-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-16-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-induced-nodes-20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+    }
+\end{frame}
+
+\begin{frame}{Labelled Subgraph Isomorphism}
+    \begin{itemize}
+        \item Vertices have labels, and the isomorphism must preserve labels.
+        \item Carbon must map to carbon, hydrogen to hydrogen, \ldots
+    \end{itemize}
+
+    \begin{equation*}\label{equation:non-induced-labelled-prediction} \langle Sol \rangle = \left(
+        \frac{\Gamma\left(\nicefrac{t}{k} + 1\right)}{\Gamma\left(\nicefrac{t}{k} - \nicefrac{p}{k} +
+        1\right)} \right)^{k}  \cdot
+    {u}^{q \cdot \binom{p}{2}} \end{equation*}
+\end{frame}
+
+\begin{frame}{Labels and Phase Transitions}
+    \begin{center}
+        \only<1>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(20, x, 1) \hookrightarrow G(150, y, 1)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 2) \hookrightarrow G(150, y, 2)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 5) \hookrightarrow G(150, y, 5)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 20) \hookrightarrow G(150, y, 20)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l2-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l5-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l20-150.pdf}}; \&
+            \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Glasgow Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-20-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-20-l2-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-20-l5-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-nodes-20-l20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+}\only<2>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(20, x, 1) \hookrightarrow G(150, y, 1)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 2) \hookrightarrow G(150, y, 2)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 5) \hookrightarrow G(150, y, 5)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 20) \hookrightarrow G(150, y, 20)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l2-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l5-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l20-150.pdf}}; \&
+            \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny LAD Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-20-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-20-l2-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-20-l5-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-lad-non-induced-nodes-20-l20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+}\only<3>{
+    \begin{tikzpicture}[every node/.style={inner sep=0pt, outer sep=0pt, column sep=6pt}, ampersand replacement=\&]
+        \matrix {
+                    \node [anchor=center] {}; \&
+            \node [anchor=center] {\tiny $G(20, x, 1) \hookrightarrow G(150, y, 1)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 2) \hookrightarrow G(150, y, 2)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 5) \hookrightarrow G(150, y, 5)$}; \&
+            \node [anchor=center] {\tiny $G(20, x, 20) \hookrightarrow G(150, y, 20)$}; \&
+            \\[0.1cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l2-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l5-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-non-induced-satisfiable-20-l20-150.pdf}}; \&
+            \\[0.2cm]
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny VF2 Nodes}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-20-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-20-l2-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-20-l5-150.pdf}}; \&
+            \node [anchor=center] {\includegraphics{gen-graph-vf2-non-induced-nodes-20-l20-150.pdf}}; \&
+            \\
+        };
+    \end{tikzpicture}
+}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Connectivity Algorithms are Really Stupid}
+    \centering
+    \begin{tikzpicture}[scale=0.5,every node/.style={font=\footnotesize}]
+        \begin{scope}
+            \newcount \myc
+            \newcount \myd
+            \newcount \mye
+            \foreach \n in {1, ..., 8}{
+                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18
+                \node[draw, circle, fill=uofgcobalt, inner sep=0.5pt] (N\n) at (\the\myc:2.4) {\phantom{0}};
+            }
+            \node[draw, circle, fill=uofgpillarbox, inner sep=0.5pt] (N9) at (90.0:2.4) {\phantom{0}};
+            \node[draw, circle, fill=uofglawn, inner sep=0.5pt] (N10) at (54.0:2.4) {\phantom{0}};
+
+            \foreach \n in {1, ..., 8}{
+                \myd=\n
+                \myc=\n \advance\myc by 1
+                \foreach \m in {\the\myc, ..., 9}{
+                    \mye=\m
+                    \draw (N\the\myd) -- (N\the\mye);
+                }
+            }
+        \end{scope}
+        \begin{scope}[xshift=9cm]
+            \newcount \myc
+            \newcount \myd
+            \newcount \mye
+            \foreach \n in {1, ..., 8}{
+                \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 10 \advance\myc by 18
+                \node[draw, circle, fill=uofgcobalt, inner sep=0.5pt] (N\n) at (\the\myc:2.4) {\phantom{0}};
+            }
+            \node[draw, circle, fill=uofgpillarbox, inner sep=0.5pt] (N9) at (90.0:2.4) {\phantom{0}};
+            \node[draw, circle, fill=uofgpumpkin, inner sep=0.5pt] (N10) at (54.0:2.4) {\phantom{0}};
+
+            \foreach \n in {1, ..., 8}{
+                \myd=\n
+                \myc=\n \advance\myc by 1
+                \foreach \m in {\the\myc, ..., 9}{
+                    \mye=\m
+                    \draw (N\the\myd) -- (N\the\mye);
+                }
+            }
+        \end{scope}
+    \end{tikzpicture}
+\end{frame}
+
+\section{Back to Search}
 
 \begin{frame}{Back to Value-Ordering Heuristics}
     \begin{itemize}
