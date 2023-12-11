@@ -231,6 +231,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
         \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
 
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N7) at (9.5, -3) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N8) at (9.5, -1.5) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N9) at (9.5, 0) {\vphantom{1}};
+
         \node <2-3> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
         \node <2-3> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
         \node <2-3> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
@@ -371,6 +375,12 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \draw <4> [thick, dashed, color=uofgpumpkin, arrows=->] (Nb) to (N3);
         \draw <4> [thick, dashed, color=uofglawn, arrows=->] (Nc) to [out=20, in=160] (N6);
         \draw <4> [thick, dashed, color=uofgthistle, arrows=->] (Nd) to [out=20, in=160] (N5);
+
+        \draw [thick, color=uofgsandstone!50] (N7) -- (N8);
+        \draw [thick, color=uofgsandstone!50] (N8) -- (N9);
+        \draw [thick, color=uofgsandstone!50] (N2) -- (N9);
+        \draw [thick, color=uofgsandstone!50] (N4) -- (N8);
+        \draw [thick, color=uofgsandstone!50] (N6) -- (N7);
     \end{tikzpicture}
 \end{frame}
 
@@ -586,6 +596,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \item Multi-edges, more than one edge between vertices.
         \item Hyper-edges, between more than two vertices.
         \item Partially defined graphs?
+        \item No need for injectivity (homomorphism), or only local injectivity.
         \item <2-> Don't forget about loops!
     \end{itemize}
 \end{frame}
@@ -1063,7 +1074,60 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \begin{frame}{Induced and Partially Defined Graphs}
 \end{frame}
 
-\begin{frame}{Clique Filtering}
+\begin{frame}{Clique Neighbourhood Filtering}
+    \begin{itemize}
+        \item If a pattern vertex is contained in a $k$-vertex clique, it must be mapped to a
+            target vertex contained in at least a $k$-vertex clique.
+        \item Valid without injectivity (with a caveat for loops).
+    \end{itemize}
+
+    \bigskip\centering
+    \begin{tikzpicture}
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Na) at (1,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nb) at (1, -1.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nc) at (0, -3) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nd) at (2, -3) {\vphantom{1}};
+
+        \node <2> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Na) at (1,  0) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpillarbox, inner sep=4pt, font=\bfseries] (Nb) at (1, -1.5) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpillarbox, inner sep=4pt, font=\bfseries] (Nc) at (0, -3) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpillarbox, inner sep=4pt, font=\bfseries] (Nd) at (2, -3) {\vphantom{1}};
+
+        \draw [ultra thick] (Na) -- (Nb);
+        \draw [ultra thick] (Nb) -- (Nc);
+        \draw [ultra thick] (Nc) -- (Nd);
+        \draw [ultra thick] (Nb) -- (Nd);
+
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N7) at (9.5, -3) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpillarbox, inner sep=4pt, font=\bfseries] (N7) at (9.5, -3) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N8) at (9.5, -1.5) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpillarbox, inner sep=4pt, font=\bfseries] (N8) at (9.5, -1.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N9) at (9.5, 0) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpillarbox, inner sep=4pt, font=\bfseries] (N9) at (9.5, 0) {\vphantom{1}};
+
+        \draw [thick, color=uofgsandstone!50] (N1) -- (N2);
+        \draw [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw [thick, color=uofgsandstone!50] (N1) -- (N4);
+        \draw [thick, color=uofgsandstone!50] (N2) -- (N4);
+        \draw [thick, color=uofgsandstone!50] (N3) -- (N5);
+        \draw [thick, color=uofgsandstone!50] (N3) -- (N6);
+        \draw [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw [thick, color=uofgsandstone!50] (N5) -- (N6);
+        \draw [thick, color=uofgsandstone!50] (N1) to [in=135, out=225] (N5);
+
+        \draw [thick, color=uofgsandstone!50] (N7) -- (N8);
+        \draw [thick, color=uofgsandstone!50] (N8) -- (N9);
+        \draw [thick, color=uofgsandstone!50] (N2) -- (N9);
+        \draw [thick, color=uofgsandstone!50] (N4) -- (N8);
+        \draw [thick, color=uofgsandstone!50] (N6) -- (N7);
+    \end{tikzpicture}
 \end{frame}
 
 \section{Search}
