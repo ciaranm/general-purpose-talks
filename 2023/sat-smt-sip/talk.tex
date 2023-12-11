@@ -473,11 +473,11 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             \draw [ultra thick] (M4) -- (M6);
             \draw [ultra thick] (M5) -- (M6);
             \draw [ultra thick] (M3) -- (M1);
-            \draw [color=uofgsandstone!60] (M6) -- (M7);
+            \draw [thick, color=uofgsandstone!60] (M6) -- (M7);
             \draw [ultra thick] (M6) -- (M8);
-            \draw [color=uofgsandstone!60] (M6) -- (M9);
-            \draw [color=uofgsandstone!60] (M7) -- (M9);
-            \draw [color=uofgsandstone!60] (M8) -- (M9);
+            \draw [thick, color=uofgsandstone!60] (M6) -- (M9);
+            \draw [thick, color=uofgsandstone!60] (M7) -- (M9);
+            \draw [thick, color=uofgsandstone!60] (M8) -- (M9);
         \end{scope}
 
         \begin{scope}[xshift=6cm]
@@ -520,19 +520,19 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \node<1>[draw, circle, inner sep=2pt] (N10) at (0, 0) {\phantom{0}};
         \node<2>[draw, circle, fill=uofgcobalt, inner sep=2pt] (N10) at (0, 0) {\phantom{0}};
 
-        \draw (N1) -- (N2);
-        \draw (N2) -- (N3);
-        \draw (N3) -- (N4);
-        \draw (N4) -- (N5);
-        \draw (N5) -- (N6);
-        \draw (N6) -- (N7);
-        \draw (N7) -- (N8);
-        \draw (N8) -- (N9);
-        \draw (N9) -- (N1);
+        \draw [thick, color=uofgsandstone!60] (N1) -- (N2);
+        \draw [thick, color=uofgsandstone!60] (N2) -- (N3);
+        \draw [thick, color=uofgsandstone!60] (N3) -- (N4);
+        \draw [thick, color=uofgsandstone!60] (N4) -- (N5);
+        \draw [thick, color=uofgsandstone!60] (N5) -- (N6);
+        \draw [thick, color=uofgsandstone!60] (N6) -- (N7);
+        \draw [thick, color=uofgsandstone!60] (N7) -- (N8);
+        \draw [thick, color=uofgsandstone!60] (N8) -- (N9);
+        \draw [thick, color=uofgsandstone!60] (N9) -- (N1);
 
-        \draw (N4) to [out=10, in=170] (N8);
-        \draw (N2) to [out=50, in=250] (N7);
-        \draw (N5) to [out=290, in=130] (N1);
+        \draw [thick, color=uofgsandstone!60] (N4) to [out=10, in=170] (N8);
+        \draw [thick, color=uofgsandstone!60] (N2) to [out=50, in=250] (N7);
+        \draw [thick, color=uofgsandstone!60] (N5) to [out=290, in=130] (N1);
 
         \draw<1> [thick, color=uofgsandstone!60] (N3) -- (N10);
         \draw<2> [ultra thick] (N3) -- (N10);
@@ -582,10 +582,11 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \begin{frame}{Graphs Aren't Just Graphs}
     \begin{itemize}
         \item Vertex and / or edge labels, or broader compatibility functions.
+        \item Directed edges.
         \item Multi-edges, more than one edge between vertices.
         \item Hyper-edges, between more than two vertices.
         \item Partially defined graphs?
-        \item Loops.
+        \item <2-> Don't forget about loops!
     \end{itemize}
 \end{frame}
 
@@ -675,7 +676,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \begin{frame}{A Different Easy Conclusion!}
     \begin{itemize}
-        \item CP is slow! VF3 is best!
+        \item CP is slow! RI is best!
     \end{itemize}
 \end{frame}
 
@@ -893,15 +894,15 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \centering
         \begin{tikzpicture}[scale=0.65]
             \path (-1, -0.6) rectangle (7, 8.6);
-            \node <3-> [inner sep = 1pt] (X1) at (0, 8) { $\mathit{row}[0]$ };
-            \node <3-> [inner sep = 1pt] (X2) at (0, 7) { $\mathit{row}[1]$ };
-            \node <3-> [inner sep = 1pt] (X3) at (0, 6) { $\mathit{row}[2]$ };
-            \node <3-> [inner sep = 1pt] (X4) at (0, 5) { $\mathit{row}[3]$ };
-            \node <3-> [inner sep = 1pt] (X5) at (0, 4) { $\mathit{row}[4]$ };
-            \node <3-> [inner sep = 1pt] (X6) at (0, 3) { $\mathit{row}[5]$ };
-            \node <3-> [inner sep = 1pt] (X7) at (0, 2) { $\mathit{row}[6]$ };
-            \node <3-> [inner sep = 1pt] (X8) at (0, 1) { $\mathit{row}[7]$ };
-            \node <3-> [inner sep = 1pt] (X9) at (0, 0) { $\mathit{row}[8]$ };
+            \node <3-> [inner sep = 1pt] (X1) at (0, 8) { $x_0$ };
+            \node <3-> [inner sep = 1pt] (X2) at (0, 7) { $x_1$ };
+            \node <3-> [inner sep = 1pt] (X3) at (0, 6) { $x_2$ };
+            \node <3-> [inner sep = 1pt] (X4) at (0, 5) { $x_3$ };
+            \node <3-> [inner sep = 1pt] (X5) at (0, 4) { $x_4$ };
+            \node <3-> [inner sep = 1pt] (X6) at (0, 3) { $x_5$ };
+            \node <3-> [inner sep = 1pt] (X7) at (0, 2) { $x_6$ };
+            \node <3-> [inner sep = 1pt] (X8) at (0, 1) { $x_7$ };
+            \node <3-> [inner sep = 1pt] (X9) at (0, 0) { $x_8$ };
 
             \node <4-> [inner sep = 1pt] (V1) at (6, 8) { $1\vphantom{[]}$ };
             \node <4-> [inner sep = 1pt] (V2) at (6, 7) { $2\vphantom{[]}$ };
@@ -1606,9 +1607,11 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{Is It Even Betterer?}
+    \begin{center}
     \includegraphics<1>{gen-graph-par-scatter.pdf}%
     \includegraphics<2>{gen-graph-par.pdf}%
     \includegraphics<3>{gen-graph-dist.pdf}%
+    \end{center}
 \end{frame}
 
 \section{Summary}
@@ -1620,6 +1623,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
                 \item Design.
                 \item Engineering.
                 \item Evaluation.
+                \item Understanding the hardware.
             \end{itemize}
         \item Being clever only pays off if you can do it quickly.
             \begin{itemize}
@@ -1632,6 +1636,28 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \section{Research Topics}
 
 \begin{frame}{Symmetries}
+    \centering
+    \begin{tikzpicture}
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Na) at (1,  0) {\vphantom{1}};
+        \node at (Na) {A};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nb) at (1, -1.5) {\vphantom{1}};
+        \node at (Nb) {B};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nc) at (0, -3) {\vphantom{1}};
+        \node at (Nc) {C};
+        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nd) at (2, -3) {\vphantom{1}};
+        \node at (Nd) {D};
+
+        \draw [ultra thick] (Na) -- (Nb);
+        \draw [ultra thick] (Nb) -- (Nc);
+        \draw [ultra thick] (Nc) -- (Nd);
+        \draw [ultra thick] (Nb) -- (Nd);
+    \end{tikzpicture}
+
+    \begin{itemize}
+        \item <2-> Only find solutions where $C < D$.
+        \item <3-> What about for arbitrary symmetries, in both pattern and target graphs?
+        \item <4-> Dynamic symmetries?
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Counting and Sampling}
@@ -1729,6 +1755,14 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \item Constraint programming solvers take too long to start up for ``really easy'' instances.
         \item Run a ``fast'' solver for 0.1s and then switch?
         \item <2-> Doesn't help us for very solution-dense enumeration problems though.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Performance Portability}
+    \begin{itemize}
+        \item Will algorithms designed on this year's hardware work well next year?
+        \item <2-> Or on Mac ARM hardware rather than Intel / AMD x64?
+        \item <3-> On heterogeneous multi-core?
     \end{itemize}
 \end{frame}
 
