@@ -1262,13 +1262,107 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     }
 \end{frame}
 
-\begin{frame}{Supplemental Graphs}
+\begin{frame}{Supplemental Constraints}
+    \begin{center}\begin{tikzpicture}
+        \node[draw, circle, inner sep=0.5pt] (Na) at (0, 0) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of Na] (Nb) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, below=0.7 of Na] (Nc) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of Nc] (Nd) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of $(Nb)!0.5!(Nd)$] (Ne) {\phantom{0}};
+        \node[left=0 of Na] {$a$};
+        \node[right=0 of Nb] {$b$};
+        \node[left=0 of Nc] {$c$};
+        \node[right=0 of Nd] {$d$};
+        \node[right=0 of Ne] {$e$};
+        \node[anchor=east, left=0.5 of $(Na)!0.5!(Nc)$] { $P$: };
+        \draw (Na) -- (Nb);
+        \draw (Na) -- (Nc);
+        \draw (Na) -- (Nd);
+        \draw (Nb) -- (Nc);
+        \draw (Nb) -- (Nd);
+        \draw (Nd) -- (Ne);
+
+        \node[draw, circle, inner sep=0.5pt] (N1) at (6, 0) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of N1] (N2) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, below=0.7 of N1] (N5) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, below=0.7 of N2] (N6) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of $(N2)!0.5!(N6)$] (N4) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, left=0.7 of $(N1)!0.5!(N5)$] (N3) {\phantom{0}};
+        \node[left=0 of N1] {$1$};
+        \node[right=0 of N2] {$2$};
+        \node[left=0 of N3] {$3$};
+        \node[right=0 of N4] {$4$};
+        \node[left=0 of N5] {$5$};
+        \node[right=0 of N6] {$6$};
+        \node[anchor=east, left=0.5 of N3] { $T$: };
+        \draw (N1) -- (N2);
+        \draw (N1) -- (N3);
+        \draw (N1) -- (N5);
+        \draw (N2) -- (N4);
+        \draw (N2) -- (N6);
+        \draw (N3) -- (N5);
+        \draw (N4) -- (N6);
+        \draw (N5) -- (N6);
+    \end{tikzpicture}
+
+    \bigskip
+
+    \bigskip
+
+    \begin{tikzpicture}
+        \node[draw, circle, inner sep=0.5pt] (Ma) at (0, -2) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of Ma] (Mb) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, below=0.7 of Ma] (Mc) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of Mc] (Md) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of $(Mb)!0.5!(Md)$] (Me) {\phantom{0}};
+        \node[left=0 of Ma] {$a$};
+        \node[right=0 of Mb] {$b$};
+        \node[left=0 of Mc] {$c$};
+        \node[right=0 of Md] {$d$};
+        \node[right=0 of Me] {$e$};
+        \node[anchor=east, left=0.5 of $(Ma)!0.5!(Mc)$] { $P^{1{+}2}$: };
+        \draw (Ma) -- (Mb);
+        \draw (Ma) -- (Mc);
+        \draw (Ma) -- (Md);
+        \draw (Mb) -- (Mc);
+        \draw (Mb) -- (Md);
+
+        \node[draw, circle, inner sep=0.5pt] (M1) at (6, -2) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of M1] (M2) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, below=0.7 of M1] (M5) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, below=0.7 of M2] (M6) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, right=0.7 of $(M2)!0.5!(M6)$] (M4) {\phantom{0}};
+        \node[draw, circle, inner sep=0.5pt, left=0.7 of $(M1)!0.5!(M5)$] (M3) {\phantom{0}};
+        \node[left=0 of M1] {$1$};
+        \node[right=0 of M2] {$2$};
+        \node[left=0 of M3] {$3$};
+        \node[right=0 of M4] {$4$};
+        \node[left=0 of M5] {$5$};
+        \node[right=0 of M6] {$6$};
+        \node[anchor=east, left=0.5 of M3] { $T^{1{+}2}$: };
+        \draw (M1) -- (M3);
+        \draw (M1) -- (M5);
+        \draw (M2) -- (M4);
+        \draw (M2) -- (M6);
+        \draw (M3) -- (M5);
+        \draw (M4) -- (M6);
+    \end{tikzpicture}\end{center}
 \end{frame}
 
 \begin{frame}{Induced Subisomorphisms}
+    \begin{itemize}
+        \item Find something that is a non-induced subisomorphism \[
+                P \rightarrowtail T
+            \] and simultaneously a non-induced subisomorphism \[
+                \overline{P} \rightarrowtail \overline{T}
+            \]
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Partially Defined Graphs}
+    \begin{itemize}
+        \item Challenge for you!
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Clique Neighbourhood Filtering}
