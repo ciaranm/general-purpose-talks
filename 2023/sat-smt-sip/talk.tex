@@ -231,8 +231,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
         \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
 
-        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N7) at (9.5, -3) {\vphantom{1}};
-        \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N8) at (9.5, -1.5) {\vphantom{1}};
+        \node <1-6,8-> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N7) at (9.5, -3) {\vphantom{1}};
+        \node <1-4,6-> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N8) at (9.5, -1.5) {\vphantom{1}};
         \node [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N9) at (9.5, 0) {\vphantom{1}};
 
         \node <2-3> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
@@ -256,7 +256,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \node <5> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
         \node <5> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
         \node <5> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
-        \node <5> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+        \node <5> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofgcobalt, inner sep=1pt, font=\bfseries] (N6b) at (7.5, -3) {\vphantom{1}};
+        \node <5> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N8) at (9.5, -1.5) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofgcobalt, inner sep=1pt, font=\bfseries] (N8b) at (9.5, -1.5) {\vphantom{1}};
 
         \node <6> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
         \node <6> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
@@ -271,10 +274,13 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \node <7> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
         \node <7> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
         \node <7> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N3b) at (5.5, -1.5) {\vphantom{1}};
-        \node <7> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <7> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofgcobalt, inner sep=1pt, font=\bfseries] (N4b) at (7.5, -1.5) {\vphantom{1}};
         \node <7> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
         \node <7> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N5b) at (5.5, -3) {\vphantom{1}};
         \node <7> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+        \node <7> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N7) at (9.5, -3) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofgcobalt, inner sep=1pt, font=\bfseries] (N7b) at (9.5, -3) {\vphantom{1}};
 
         \node <8> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
         \node <8> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
@@ -379,8 +385,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \draw [thick, color=uofgsandstone!50] (N7) -- (N8);
         \draw [thick, color=uofgsandstone!50] (N8) -- (N9);
         \draw [thick, color=uofgsandstone!50] (N2) -- (N9);
-        \draw [thick, color=uofgsandstone!50] (N4) -- (N8);
-        \draw [thick, color=uofgsandstone!50] (N6) -- (N7);
+        \draw <1-4,6-> [thick, color=uofgsandstone!50] (N4) -- (N8);
+        \draw <5> [ultra thick] (N4) -- (N8);
+        \draw <1-6,8-> [thick, color=uofgsandstone!50] (N6) -- (N7);
+        \draw <7> [ultra thick] (N6) -- (N7);
     \end{tikzpicture}
 \end{frame}
 
@@ -598,6 +606,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \item Partially defined graphs?
         \item No need for injectivity (homomorphism), or only local injectivity.
         \item <2-> Don't forget about loops!
+        \item <3-> Might want all solutions, or a count.
     \end{itemize}
 \end{frame}
 
