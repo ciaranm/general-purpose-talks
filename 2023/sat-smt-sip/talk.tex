@@ -766,9 +766,60 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \section{Filtering}
 
 \begin{frame}{Degree Filtering}
+    \begin{itemize}
+        \item Can't map a vertex of degree $d$ to a vertex of degree less than $d$.
+    \end{itemize}
+
+    \bigskip
+
+    \centering
+    \begin{tikzpicture}
+        \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NO) {o};
+        \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NP) {p};
+        \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NQ) {q};
+        \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NR) {r};
+        \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NS) {s};
+        \draw (NO) -- (NQ);
+        \draw (NP) -- (NQ);
+        \draw (NP) -- (NR);
+        \draw (NP) -- (NS);
+        \draw (NQ) -- (NR);
+        \draw (NR) -- (NS);
+
+        \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NT) {t};
+        \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NU) {u};
+        \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NV) {v};
+        \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NX) {x};
+        \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NY) {y};
+        \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+        \node [anchor=center, font=\scriptsize] at (NZ) {z};
+        \draw (NT) -- (NU);
+        \draw (NT) -- (NV);
+        \draw (NU) -- (NV);
+        \draw (NU) -- (NX);
+        \draw (NU) -- (NY);
+        \draw (NV) -- (NY);
+        \draw (NX) -- (NY);
+        \draw (NY) -- (NZ);
+        \draw (NV) -- (NZ);
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Neighbourhood Degree Sequences}
+    \begin{itemize}
+        \item Can't map a vertex whose neighbours have degree 4, 3, 2 to a vertex whose neighbours
+            have degree 4, 2, 2, 2.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Dynamic Degrees?}
@@ -781,6 +832,11 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{Adjacency Filtering}
+    \begin{itemize}
+        \item When $P$ gets mapped to $t$, neighbours of $P$ can only be mapped to neighbours
+            of $t$.
+        \item Store domains and neighbourhoods as bitsets.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Injectivity Filtering}
