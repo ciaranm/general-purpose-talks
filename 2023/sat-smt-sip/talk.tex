@@ -291,14 +291,14 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \node <8> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
         \node <8> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N6b) at (7.5, -3) {\vphantom{1}};
 
-        \node <9> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
-        \node <9> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
-        \node <9> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N2b) at (7.5,  0) {\vphantom{1}};
-        \node <9> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
-        \node <9> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
-        \node <9> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N4b) at (7.5, -1.5) {\vphantom{1}};
-        \node <9> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
-        \node <9> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N2b) at (7.5,  0) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N4b) at (7.5, -1.5) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <9-> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
 
         \draw <1> [thick, color=uofgsandstone!50] (N1) -- (N2);
         \draw <1> [thick, color=uofgsandstone!50] (N1) -- (N3);
@@ -362,15 +362,15 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \draw <8> [ultra thick] (N5) -- (N6);
         \draw <8> [ultra thick] (N1) to [in=135, out=225] (N5);
 
-        \draw <9> [ultra thick] (N1) -- (N2);
-        \draw <9> [thick, color=uofgsandstone!50] (N1) -- (N3);
-        \draw <9> [ultra thick] (N1) -- (N4);
-        \draw <9> [ultra thick] (N2) -- (N4);
-        \draw <9> [thick, color=uofgsandstone!50] (N3) -- (N5);
-        \draw <9> [thick, color=uofgsandstone!50] (N3) -- (N6);
-        \draw <9> [thick, color=uofgsandstone!50] (N4) -- (N6);
-        \draw <9> [thick, color=uofgsandstone!50] (N5) -- (N6);
-        \draw <9> [ultra thick] (N1) to [in=135, out=225] (N5);
+        \draw <9-> [ultra thick] (N1) -- (N2);
+        \draw <9-> [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw <9-> [ultra thick] (N1) -- (N4);
+        \draw <9-> [ultra thick] (N2) -- (N4);
+        \draw <9-> [thick, color=uofgsandstone!50] (N3) -- (N5);
+        \draw <9-> [thick, color=uofgsandstone!50] (N3) -- (N6);
+        \draw <9-> [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw <9-> [thick, color=uofgsandstone!50] (N5) -- (N6);
+        \draw <9-> [ultra thick] (N1) to [in=135, out=225] (N5);
 
         \draw <2-3> [thick, dashed, color=uofgcobalt, arrows=->] (Na) to (N1);
         \draw <2-3> [thick, dashed, color=uofgpumpkin, arrows=->] (Nb) to (N3);
@@ -390,6 +390,13 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \draw <1-6,8-> [thick, color=uofgsandstone!50] (N6) -- (N7);
         \draw <7> [ultra thick] (N6) -- (N7);
     \end{tikzpicture}
+
+    \uncover<10->{
+
+        \bigskip
+
+        How many did I miss?
+    }
 \end{frame}
 
 \begin{frame}{Maximum Common Induced Subgraph}
@@ -959,14 +966,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \begin{frame}{Generalised Arc Consistency}
     \begin{itemize}
-        \item Arc Consistency (AC): for a binary constraint, each value is supported by at least one
-            value in the other variable.
-        \item Generalised Arc Consistency (GAC): for a global constraint, we can pick any value from any
+        \item Generalised Arc Consistency (GAC): for a given constraint, we can pick any value from any
             variable, and find a supporting set of values from each other variable in the constraint
             simultaneously.
-            \begin{itemize}
-                \item Each remaining value appears in at least one solution to the constraint.
-            \end{itemize}
+        \item Each remaining value appears in at least one solution to the constraint.
     \end{itemize}
 \end{frame}
 
@@ -1793,7 +1796,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             \node [anchor=center] {\tiny $G(16, x) \hookrightarrow G(150, y)$}; \&
             \node [anchor=center] {\tiny $G(20, x) \hookrightarrow G(150, y)$}; \&
             \\[0.1cm]
-                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Satisfiable?}; \&
+                \node [anchor=center, inner sep=2pt] [rotate=90] {\tiny Constrainedness}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-10-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-14-150.pdf}}; \&
             \node [anchor=center] {\includegraphics{gen-graph-induced-kappa-16-150.pdf}}; \&
