@@ -164,8 +164,9 @@ Matthew McIlree}
 \block{Constraint Programming}{
     We express a problem in terms of \textbf{variables} which have a \textbf{domain} of possible
     values, together with \textbf{constraints} and an \textbf{objective function}. The constraints
-    can be of many different, expressive types.
-    A \textcolor{uofgrust}{solver} works out the best answer, without being told how.
+    can be of different, expressive kinds, such as ``all different'', ``forms a tour'',
+    and ``can be packed inside a van with these dimensions''.
+    A \textcolor{uofgrust}{solver} works out the best answer.
 
     \bigskip
     \bigskip
@@ -174,7 +175,7 @@ Matthew McIlree}
     \begin{minipage}{10cm}
         \centering
         \begin{tikzpicture}
-        \begin{scope}[yscale=3.0, xscale=5.0]
+        \begin{scope}[yscale=2.6, xscale=5.0]
         \node (depot) [inner sep=3pt, draw, fill, circle] at (0,0) {};
 
         \node (RC1) [inner sep=3pt, draw, fill, circle, color=uofgcobalt] at (0.5,0.3) {};
@@ -237,16 +238,10 @@ Matthew McIlree}
 \end{minipage}\begin{minipage}{12cm}
     \truck{uofgrust} \drivera\driverb\raisebox{3mm}{:} \bed\parcel\chair\parcel
 
-    \medskip
-
     \truck{uofgcobalt} \driverb\drivera\raisebox{3mm}{:}
     \chair\trashpanda\parcel\parcel\present
 
-    \medskip
-
     \truck{uofgsunshine} \driverb\driverb\raisebox{3mm}{:} \tree\parcel\chair\present
-
-    \medskip
 
     \truck{uofgleaf} \drivera\phantom{\drivera}\raisebox{3mm}{:}
     \parcel\parcel\laptop\parcel\parcel
@@ -307,7 +302,7 @@ Matthew McIlree}
     }
 }
 
-\block{From Problem Description to a Trusted Solution}{
+\block{From a Human-Readable Problem Description to a Trusted Solution}{
     \begin{center}
     \begin{tikzpicture}
         \node (solver) [text centered, text width=14em, inner xsep=0.5em, inner ysep=1.6em, draw, rounded
