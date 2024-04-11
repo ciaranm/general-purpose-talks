@@ -296,9 +296,10 @@ Matthew McIlree}
     \colorlet{blockbodyfgcolor}{white}
     \colorlet{blocktitlebgcolor}{uofgrust}
     \block[bodyverticalshift=0cm, bodyinnersep=6mm]{}{
-        \centering\begin{minipage}{0.90\textwidth}
-\Huge \centering Algorithms contain bugs. Don't trust them!
-        \end{minipage}
+        \centering\begin{tikzpicture}
+            \useasboundingbox (0, 0);
+            \node [yshift=-0.5em] {\includegraphics[width=0.9\textwidth]{bugtext.pdf}};
+        \end{tikzpicture}\vspace*{1.7em}
     }
 }
 
