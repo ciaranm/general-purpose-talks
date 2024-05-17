@@ -1,0 +1,17 @@
+pseudo-Boolean proof version 2.0
+f 41
+soli x12 x7 x9
+rup 1 ~x12 1 ~x7 >= 1 ;
+\textcolor{uofgcobalt}{* bound, colour classes [ x1 x6 x9 ]}
+pol \textcolor{uofglawn}{7}$_{\textcolor{uofgheather}{1\notedge{}6}}$ \textcolor{uofglawn}{19}$_{\textcolor{uofgheather}{1\notedge{}9}}$ + \textcolor{uofglawn}{24}$_{\textcolor{uofgheather}{6\notedge{}9}}$ + \textcolor{uofgpumpkin}{2} d
+pol \textcolor{uofgpillarbox}{42}$_{\textcolor{uofgheather}{\text{obj}}}$ \textcolor{uofgpillarbox}{-1} +
+rup 1 ~x12 >= 1 ;
+\textcolor{uofgcobalt}{* bound, colour classes [ x1 x3 x9 ]}
+pol \textcolor{uofglawn}{1}$_{\textcolor{uofgheather}{1\notedge{}3}}$ \textcolor{uofglawn}{19}$_{\textcolor{uofgheather}{1\notedge{}9}}$ + \textcolor{uofglawn}{21}$_{\textcolor{uofgheather}{3\notedge{}9}}$ + \textcolor{uofgpumpkin}{2} d
+pol \textcolor{uofgpillarbox}{42}$_{\textcolor{uofgheather}{\text{obj}}}$ \textcolor{uofgpillarbox}{-1} +
+rup 1 ~x11 1 ~x10 >= 1 ;
+\textcolor{uofgcobalt}{* bound, colour classes [ x1 x3 x7 ]}
+\textcolor{uofgcobalt}{* [ x9 ]}
+pol \textcolor{uofglawn}{1}$_{\textcolor{uofgheather}{1\notedge{}3}}$ \textcolor{uofglawn}{10}$_{\textcolor{uofgheather}{1\notedge{}7}}$ + \textcolor{uofglawn}{12}$_{\textcolor{uofgheather}{3\notedge{}7}}$ + \textcolor{uofgpumpkin}{2} d
+pol \textcolor{uofgpillarbox}{42}$_{\textcolor{uofgheather}{\text{obj}}}$ \textcolor{uofgpillarbox}{-1} +
+rup 1 ~x11 >= 1 ;
