@@ -315,7 +315,7 @@
     \begin{center}\includegraphics[scale=0.18]{sudoku.png}\end{center}
 \end{frame}
 
-\newcommand{\truck}[1]{
+\newcommand{\truck}[1]{\raisebox{-2pt}{
     \begin{tikzpicture}[scale=0.5, inner sep=0pt, outer sep=0pt]
         \path[fill=uofgsandstone] (0.9525, -0.7144).. controls (0.9525, -0.7728) and (0.9051, -0.8202) .. (0.8467, -0.8202) -- (0.1058, -0.8202).. controls (0.0474, -0.8202) and (0.0, -0.7728) .. (0.0, -0.7144) -- (0.0, -0.635).. controls (0.0, -0.5766) and (0.0474, -0.5292) .. (0.1058, -0.5292) -- (0.8467, -0.5292).. controls (0.9051, -0.5292) and (0.9525, -0.5766) .. (0.9525, -0.635) -- (0.9525, -0.7144) -- cycle;
         \path[fill=uofgsandstone!60!white] (0.5027, -0.344) -- (0.4768, -0.3175) -- (0.1891, -0.3175).. controls (0.1058, -0.3175) and (0.0794, -0.3704) .. (0.0794, -0.3704) -- (0.0, -0.5281) -- (0.0, -0.6615) -- (0.5027, -0.6615) -- (0.5027, -0.344) -- cycle;
@@ -325,18 +325,18 @@
         \path[fill=uofgsandstone!40!white] (0.7144, -0.8202) circle (0.1058cm);
         \path[fill=black] (0.7144, -0.8202) circle (0.0529cm);
         \path[fill=#1] (0.8467, -0.2117) -- (0.4498, -0.2117).. controls (0.3913, -0.2117) and (0.344, -0.2591) .. (0.344, -0.3175) -- (0.344, -0.6615) -- (0.9525, -0.6615) -- (0.9525, -0.3175).. controls (0.9525, -0.2591) and (0.9051, -0.2117) .. (0.8467, -0.2117) -- cycle;
-    \end{tikzpicture}
+    \end{tikzpicture}}
 }
 
-\newcommand{\parcel}{\includegraphics[width=1.2em]{../../2024/a1-poster/parcel.pdf}\,}
-\newcommand{\trashpanda}{\includegraphics[width=1.2em]{../../2024/a1-poster/trashpanda.pdf}\,}
-\newcommand{\bed}{\includegraphics[width=1.2em]{../../2024/a1-poster/bed.pdf}\,}
-\newcommand{\chair}{\includegraphics[width=1.2em]{../../2024/a1-poster/chair.pdf}\,}
-\newcommand{\tree}{\includegraphics[width=1.2em]{../../2024/a1-poster/tree.pdf}\,}
-\newcommand{\present}{\includegraphics[width=1.2em]{../../2024/a1-poster/present.pdf}\,}
-\newcommand{\laptop}{\includegraphics[width=1.2em]{../../2024/a1-poster/laptop.pdf}\,}
-\newcommand{\drivera}{\includegraphics[width=1.2em]{../../2024/a1-poster/driver1.pdf}\,}
-\newcommand{\driverb}{\includegraphics[width=1.2em]{../../2024/a1-poster/driver2.pdf}\,}
+\newcommand{\parcel}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/parcel.pdf}\,}}
+\newcommand{\trashpanda}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/trashpanda.pdf}\,}}
+\newcommand{\bed}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/bed.pdf}\,}}
+\newcommand{\chair}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/chair.pdf}\,}}
+\newcommand{\tree}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/tree.pdf}\,}}
+\newcommand{\present}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/present.pdf}\,}}
+\newcommand{\laptop}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/laptop.pdf}\,}}
+\newcommand{\drivera}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/driver1.pdf}\,}}
+\newcommand{\driverb}{\raisebox{-2pt}{\includegraphics[width=1.2em]{../../2024/a1-poster/driver2.pdf}\,}}
 
 \begin{frame}{Industrial Applications}
     \begin{center}
@@ -404,21 +404,21 @@
         \end{scope}
     \end{tikzpicture}
 \end{minipage}\begin{minipage}{12cm}
-    \truck{uofgrust} \drivera\driverb\raisebox{1mm}{:} \bed\parcel\chair\parcel
+    \truck{uofgrust} \drivera\driverb: \bed\parcel\chair\parcel
 
     \medskip
 
-    \truck{uofgcobalt} \driverb\drivera\raisebox{1mm}{:}
+    \truck{uofgcobalt} \driverb\drivera:
     \chair\trashpanda\parcel\parcel\present
 
 
     \medskip
 
-    \truck{uofgsunshine} \driverb\driverb\raisebox{1mm}{:} \tree\parcel\chair\present
+    \truck{uofgsunshine} \driverb\driverb: \tree\parcel\chair\present
 
     \medskip
 
-    \truck{uofgleaf} \drivera\phantom{\drivera}\raisebox{1mm}{:}
+    \truck{uofgleaf} \drivera\phantom{\drivera}:
     \parcel\parcel\laptop\parcel\parcel
 \end{minipage}
 \end{center}
@@ -1137,31 +1137,31 @@ Combinatorial Optimisation. JAIR 77 (2023).}
         \end{scope}
     \end{tikzpicture}
 \end{minipage}\begin{minipage}{12cm}
-    \truck{uofgrust} \drivera\driverb\raisebox{1mm}{:} \bed\parcel\chair\parcel
+    \truck{uofgrust} \drivera\driverb: \bed\parcel\chair\parcel
 
     \medskip
 
-    \truck{uofgcobalt} \driverb\drivera\raisebox{1mm}{:}
+    \truck{uofgcobalt} \driverb\drivera:
     \chair\trashpanda\parcel\parcel\present
 
 
     \medskip
 
-    \truck{uofgsunshine} \driverb\driverb\raisebox{1mm}{:} \tree\parcel\chair\present
+    \truck{uofgsunshine} \driverb\driverb: \tree\parcel\chair\present
 
     \medskip
 
-    \truck{uofgleaf} \drivera\phantom{\drivera}\raisebox{1mm}{:}
+    \truck{uofgleaf} \drivera\phantom{\drivera}:
     \parcel\parcel\laptop\parcel\parcel
 
     \bigskip
 
     \begin{itemize}
-        \item<2-> $\operatorname{routes}(\raisebox{-2pt}{\truck{uofgrust}}, 0) < \operatorname{routes}(\raisebox{-2pt}{\truck{uofgcobalt}}, 0)$
-        \item<3-> $\operatorname{routes}(\raisebox{-2pt}{\truck{uofgcobalt}}, 0) < \operatorname{routes}(\raisebox{-2pt}{\truck{uofgsunshine}}, 0)$
-        \item<4-> $\operatorname{routes}(\raisebox{-2pt}{\truck{uofgsunshine}}, 0) < \operatorname{routes}(\raisebox{-2pt}{\truck{uofgleaf}}, 0)$ \only<5->{Maybe?}
-        \item<6-> $\operatorname{vehicle}(\raisebox{-2pt}{\drivera}) < \operatorname{vehicle}(\raisebox{-2pt}{\driverb})$ etc\ldots
-        \item<7-> $\operatorname{routes}(\raisebox{-2pt}{\truck{uofgrust}}, 0) < \operatorname{routes}(\raisebox{-2pt}{\truck{uofgrust}}, 1)$ \only<8->{Sus.}
+        \item<2-> $\operatorname{routes}(\truck{uofgrust}, 0) < \operatorname{routes}(\truck{uofgcobalt}, 0)$
+        \item<3-> $\operatorname{routes}(\truck{uofgcobalt}, 0) < \operatorname{routes}(\truck{uofgsunshine}, 0)$
+        \item<4-> $\operatorname{routes}(\truck{uofgsunshine}, 0) < \operatorname{routes}(\truck{uofgleaf}, 0)$ \only<5->{Maybe?}
+        \item<6-> $\operatorname{vehicle}(\drivera) < \operatorname{vehicle}(\driverb)$ etc\ldots
+        \item<7-> $\operatorname{routes}(\truck{uofgrust}, 0) < \operatorname{routes}(\truck{uofgrust}, 1)$ \only<8->{Sus.}
     \end{itemize}
 \end{minipage}
 \end{center}
@@ -1183,6 +1183,9 @@ Combinatorial Optimisation. JAIR 77 (2023).}
     \end{itemize}
 \end{frame}
 
+\subsection{Bogaerts, Gocht, McCreesh, Nordstr\"om: Certified Dominance and Symmetry Breaking for
+Combinatorial Optimisation. JAIR 77 (2023).}
+
 \begin{frame}{Reasoning Without Loss of Satisfaction}
     \begin{itemize}
         \item Allowed to introduce a new constraint $C$ into a decision problem $P$ if for all solutions $\rho$, either
@@ -1191,6 +1194,36 @@ Combinatorial Optimisation. JAIR 77 (2023).}
                 \item We can provide an efficiently-verifiable way of fixing $\rho$ to satisfy $C$.
             \end{itemize}
         \item So, only need to care about solutions that satisfy $P$ but not $C$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{For Example\ldots}
+    \[
+        \trashpanda \rightarrow \parcel_1 \oplus \parcel_2 \oplus \parcel_3 \oplus \parcel_4
+    \]
+
+    \pause
+    \begin{itemize}
+        \item Want to show: WLOS, $\trashpanda \mapsto \parcel_1$.
+            \pause
+        \item Show $\trashpanda \not\mapsto \parcel_4$:
+            \begin{itemize}
+                \item If you give me an assignment that satisfies all the constraints, but puts
+                    $\trashpanda \mapsto \parcel_4$
+                \item then I give you an assigment that satisfies all the
+            constraints and $\trashpanda \not\mapsto \parcel_4$ by $\parcel_3 \leftrightarrows
+            \parcel_4$.
+            \end{itemize}
+            \pause
+        \item Show $\trashpanda \not\mapsto \parcel_3$ using $\parcel_2 \leftrightarrows \parcel_3$.
+            \pause
+        \item Show $\trashpanda \not\mapsto \parcel_2$ using $\parcel_1 \leftrightarrows \parcel_2$.
+            \pause
+        \item Can now derive $\trashpanda \mapsto \parcel_1$ using resolution.
+            \pause
+        \item But a bit awkward: can't just go straight to $\trashpanda \mapsto \parcel_1$ because
+            we need to know where it is to specify the fixup.
+        \item Not clear how to handle e.g.\ symmetries on two generators this way.
     \end{itemize}
 \end{frame}
 
@@ -1204,6 +1237,39 @@ Combinatorial Optimisation. JAIR 77 (2023).}
             extend the objective for optimisation problems.
         \item <3-> Of all the (optimal?) solutions to the problem you care about, I'm going to find
             you the one that minimises the symmetry ordering.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Maybe This Will Make Things Clearer}
+    \[
+        \trashpanda \rightarrow \parcel_1 \oplus \parcel_2 \oplus \parcel_3 \oplus \parcel_4
+    \]
+
+    \pause
+    \begin{itemize}
+        \item Want to show: WLOS, $\trashpanda \mapsto \parcel_1$.
+            \pause
+        \item Introduce objective function to minimise $\sum_i 2^i \left(\trashpanda \overset{?}{\mapsto}
+            \parcel_i\right)$.
+            \pause
+        \item If you give me an assignment that satisfies all the constraints, but has
+            $\trashpanda \not\mapsto \parcel_1$
+        \item Then consider doing $\parcel_4 \rightarrow \parcel_3 \rightarrow \parcel_2 \rightarrow
+            \parcel_1 \rightarrow \parcel_4$, which reduces the objective.
+            \pause
+        \item Now either $\trashpanda \mapsto \parcel_1$, so we are done, or we apply the rotation
+            again, and reduce the objective.
+            \pause
+        \small \item Now either $\trashpanda \mapsto \parcel_1$, so we are done, or we apply the rotation
+            again, and reduce the objective.
+            \pause
+        \footnotesize \item Now either $\trashpanda \mapsto \parcel_1$, so we are done, or we apply the rotation
+            again, and reduce the objective.
+            \pause
+        \scriptsize \item Now either $\trashpanda \mapsto \parcel_1$, so we are done, or we apply the rotation
+            again, and reduce the objective.
+            \pause
+        \normalsize \item Objective function has only finitely many values, so we can't keep doing this forever.
     \end{itemize}
 \end{frame}
 
