@@ -1061,6 +1061,8 @@ Combinatorial Optimisation. JAIR 77 (2023).}
     \end{center}
     \bigskip
     \begin{itemize}
+        \item Produces proofs that interleave backtracking search with additional
+            justifications for propagators.
         \item MIT licence, written in fancy modern C++.
         \item All-different, integer linear inequality (including for variables
             with very large domains), smart table, minimum / maximum of an array,
@@ -1157,11 +1159,11 @@ Combinatorial Optimisation. JAIR 77 (2023).}
     \bigskip
 
     \begin{itemize}
-        \item<2-> $\operatorname{routes}(\truck{uofgrust}, 0) < \operatorname{routes}(\truck{uofgcobalt}, 0)$
-        \item<3-> $\operatorname{routes}(\truck{uofgcobalt}, 0) < \operatorname{routes}(\truck{uofgsunshine}, 0)$
-        \item<4-> $\operatorname{routes}(\truck{uofgsunshine}, 0) < \operatorname{routes}(\truck{uofgleaf}, 0)$ \only<5->{Maybe?}
+        \item<2-> $\operatorname{routes}(\truck{uofgrust}, 1) < \operatorname{routes}(\truck{uofgcobalt}, 1)$
+        \item<3-> $\operatorname{routes}(\truck{uofgcobalt}, 1) < \operatorname{routes}(\truck{uofgsunshine}, 1)$
+        \item<4-> $\operatorname{routes}(\truck{uofgsunshine}, 1) < \operatorname{routes}(\truck{uofgleaf}, 1)$ \only<5->{Maybe?}
         \item<6-> $\operatorname{vehicle}(\drivera) < \operatorname{vehicle}(\driverb)$ etc\ldots
-        \item<7-> $\operatorname{routes}(\truck{uofgrust}, 0) < \operatorname{routes}(\truck{uofgrust}, 1)$ \only<8->{Sus.}
+        \item<7-> $\operatorname{routes}(\truck{uofgrust}, 1) < \operatorname{routes}(\truck{uofgrust}, 2)$ \only<8->{Sus.}
     \end{itemize}
 \end{minipage}
 \end{center}
@@ -1191,8 +1193,10 @@ Combinatorial Optimisation. JAIR 77 (2023).}
         \item Allowed to introduce a new constraint $C$ into a decision problem $P$ if for all solutions $\rho$, either
             \begin{itemize}
                 \item $\rho$ satisfies $C$, or
+                    \pause
                 \item We can provide an efficiently-verifiable way of fixing $\rho$ to satisfy $C$.
             \end{itemize}
+            \pause
         \item So, only need to care about solutions that satisfy $P$ but not $C$.
     \end{itemize}
 \end{frame}
@@ -1210,7 +1214,7 @@ Combinatorial Optimisation. JAIR 77 (2023).}
             \begin{itemize}
                 \item If you give me an assignment that satisfies all the constraints, but puts
                     $\trashpanda \mapsto \parcel_4$
-                \item then I give you an assigment that satisfies all the
+                \item then I give you an assignment that satisfies all the
             constraints and $\trashpanda \not\mapsto \parcel_4$ by $\parcel_3 \leftrightarrows
             \parcel_4$.
             \end{itemize}
