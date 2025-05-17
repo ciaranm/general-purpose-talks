@@ -470,7 +470,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{The Problem}
+\begin{frame}{Why I'm Here\ldots}
 \end{frame}
 
 \section{Proof Logging}
@@ -985,7 +985,8 @@ Hint: Failed to show '1 ~x10 1 ~x11 >= 1' by reverse unit propagation.
             \begin{itemize}
                 \item The vertices 1, 3, and 9 can be coloured using one colour\ldots
                 \item And each colour class contributes at most one to the objective variable\ldots
-                \item So the ``find a clique with more than three vertices'' solution-improving constraint can't be satisfied.
+                \item So the ``find a clique with more than three vertices'' solution-improving constraint can't be satisfied
+                    if we have accepted both 10 and 11.
             \end{itemize}
     \end{itemize}
 \end{onlyenv}
@@ -1067,7 +1068,7 @@ Hint: Failed to show '1 ~x10 1 ~x11 >= 1' by reverse unit propagation.
 \begin{frame}[fragile]{Colour Classes are At-Most-One Constraints}
     \begin{onlyenv}<1>
         If we could take the ``objective improving'' constraint
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\},fontsize=\scriptsize]
 line 003: @obj soli x12 x7 x9
   ConstraintId 042 (@obj): 1 x1 1 x2 1 x3 1 x4 1 x5 1 x6 1 x7 1 x8 1 x9 1 x10 1 x11 1 x12 >= 4
 \end{Verbatim}
@@ -1090,26 +1091,22 @@ from which it is much easier to see that taking both vertices 10 and 11 isn't go
                     \item We'll end up using exponentially many colour classes sometimes.
                     \item How do we know the colour classes are still correct?
                 \end{itemize}
-            \item We could add the at-most-one constraints as assertions during the proof.
+            \item Could we add the at-most-one constraints during the proof?
         \end{itemize}
     \end{onlyenv}%
 \begin{onlyenv}<3>
-\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7},fontsize=\footnotesize]
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7}]
 pseudo-Boolean proof version 2.0
-@obj soli x7 x9 x12
+@objective soli x7 x9 x12
 rup 1 ~x12 1 ~x7 >= 1 ;
 rup 1 ~x12 >= 1 ;
-a 1 ~x1 1 ~x3 1 ~x9 >= 2 ;
-p -1 @obj +
+a 1 x2 1 x4 1 x5 1 x6 1 x7 1 x8 1 x10 1 x11 1 x12 >= 3 ;
 rup 1 ~x11 1 ~x10 >= 1 ;
 rup 1 ~x11 >= 1 ;
-@obj soli x1 x2 x5 x8
+@objective soli x1 x2 x5 x8
 rup 1 ~x8 1 ~x5 >= 1 ;
 rup 1 ~x8 >= 1 ;
-a 1 ~x1 1 ~x3 1 ~x5 1 ~x7 >= 3 ;
-a 1 ~x2 1 ~x4 1 ~x9 >= 2 ;
-a 1 ~x5 1 ~x6 1 ~x10 >= 2 ;
-p -1 -2 + -3 + @obj +
+a 1 x8 1 x11 1 x12 >= 2 ;
 rup >= 1 ;
 output NONE
 conclusion BOUNDS 8 8
@@ -1131,7 +1128,7 @@ This passes, but the checker complains about our use of the ``a'' rule.
 \end{frame}
 
 \begin{frame}[fragile]{Recovering At-Most-One Constraints}
-\begin{onlyenv}<1-3>
+\begin{onlyenv}<1-5>
     We can lazily recover at-most-one constraints for each colour class!
     \uncover<2->{
       \begin{align*}
@@ -1153,10 +1150,10 @@ This passes, but the checker complains about our use of the ``a'' rule.
 \hphantom{2} \overline{x}_1 +
 \hphantom{2} \overline{x}_6 +
 \hphantom{2} \overline{x}_9
-\ge 2 \\
- && \text{i.e.}~ & x_1 + x_6 + x_9 \le 1
+          \ge \only<2>{\frac{3}{2}\phantom{2}}\only<3->{2\phantom{\frac{3}{2}}}\phantom{\frac{3}{2}} \\
+          && \uncover<4->{\text{i.e.}~ & x_1 + x_6 + x_9 \le 1}
     \end{align*}}
-  \uncover<3->{
+  \uncover<5->{
     This generalises
     to colour classes of any size~$v$.
     \begin{itemize}
@@ -1168,7 +1165,7 @@ This passes, but the checker complains about our use of the ``a'' rule.
     Solvers don't need to ``understand'' why this works (or when exactly it is necessary) to
     write this derivation to proof log.
 }
-\end{onlyenv}\begin{onlyenv}<4>
+\end{onlyenv}\begin{onlyenv}<6>
 \vspace*{-0.3cm}
 \begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7},fontsize=\footnotesize]
 pseudo-Boolean proof version 2.0
@@ -1192,7 +1189,7 @@ output NONE
 conclusion BOUNDS 8 8
 end pseudo-Boolean proof
 \end{Verbatim}
-\end{onlyenv}\begin{onlyenv}<5>
+\end{onlyenv}\begin{onlyenv}<7>
 \begin{Verbatim}
 $ veripb example.opb example.pbp
 Running VeriPB version 2.2.2.post63+git.e70eaf1b
@@ -1202,7 +1199,17 @@ Verification succeeded.
 \end{onlyenv}
 \end{frame}
 
-\begin{frame}{Maximum Weighted Clique}
+\begin{frame}{Why a General-Purpose Proof System?}
+    Why not have a ``colouring bound'' rule directly in the proof format?
+    \begin{itemize}
+        \item Dozens of different colouring algorithms, and extensions using MaxSAT-like reasoning.
+        \item Even more when we look at problems like maximum weight clique.
+            Weighted colour class rules can be extremely clever (e.g. vertices can split their weights
+            between multiple colours), but it turns out they can all be handled by adding in an extra
+            multiplication in the proof step.
+        \item Don't really want to have a proof checker per solver if we can help it\ldots
+    \end{itemize}
+
 \end{frame}
 
 \section{VeriPB Proofs}
