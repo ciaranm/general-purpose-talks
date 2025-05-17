@@ -1,0 +1,14 @@
+pseudo-Boolean proof version 2.0
+@obj soli x12 x7 x9
+u 1 ~x12 1 ~x7 1 ~x9 >= 1 ;
+u 1 ~x12 1 ~x7 >= 1 ;
+u 1 ~x12 >= 1 ;
+u 1 ~x11 1 ~x10 >= 1 ;
+u 1 ~x11 >= 1 ;
+@obj soli x8 x5 x2 x1
+u 1 ~x8 1 ~x5 >= 1 ;
+u 1 ~x8 >= 1 ;
+u >= 0 ;
+output NONE
+conclusion BOUNDS 8 8
+end pseudo-Boolean proof
