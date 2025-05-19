@@ -1,19 +1,19 @@
 pseudo-Boolean proof version 2.0
 @obj soli x12 x7 x9
-u 1 ~x12 1 ~x7 1 ~x9 >= 1 ;
-u 1 ~x12 1 ~x7 >= 1 ;
-p @nonadj1_6 @nonadj1_9 + @nonadj6_9 + 2 d @obj +
-u 1 ~x12 >= 1 ;
-p @nonadj1_3 @nonadj1_9 + @nonadj3_9 + 2 d @obj +
-u 1 ~x11 1 ~x10 >= 1 ;
-p @nonadj1_3 @nonadj1_7 + @nonadj3_7 + 2 d @obj +
-u 1 ~x11 >= 1 ;
+rup 1 ~x12 1 ~x7 1 ~x9 >= 1 ;
+rup 1 ~x12 1 ~x7 >= 1 ;
+pol @nonadj1_6 @nonadj1_9 + @nonadj6_9 + 2 d @obj +
+rup 1 ~x12 >= 1 ;
+pol @nonadj1_3 @nonadj1_9 + @nonadj3_9 + 2 d @obj +
+rup 1 ~x11 1 ~x10 >= 1 ;
+pol @nonadj1_3 @nonadj1_7 + @nonadj3_7 + 2 d @obj +
+rup 1 ~x11 >= 1 ;
 @obj soli x8 x5 x2 x1
-u 1 ~x8 1 ~x5 >= 1 ;
-p @obj @nonadj1_9 +
-u 1 ~x8 >= 1 ;
-p @nonadj1_3 @nonadj1_7 + @nonadj3_7 + 2 d @nonadj2_4 @nonadj2_9 + @nonadj4_9 + 2 d + @nonadj5_6 @nonadj5_10 + @nonadj6_10 + 2 d + @obj +
-u >= 1 ;
+rup 1 ~x8 1 ~x5 >= 1 ;
+pol @obj @nonadj1_9 +
+rup 1 ~x8 >= 1 ;
+pol @nonadj1_3 @nonadj1_7 + @nonadj3_7 + 2 d @nonadj2_4 @nonadj2_9 + @nonadj4_9 + 2 d + @nonadj5_6 @nonadj5_10 + @nonadj6_10 + 2 d + @obj +
+rup >= 1 ;
 output NONE
 conclusion BOUNDS 8 8
 end pseudo-Boolean proof
