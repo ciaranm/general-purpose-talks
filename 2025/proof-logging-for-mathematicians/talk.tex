@@ -258,7 +258,42 @@
 \end{frame}
 
 \begin{frame}{The Most Famous Constraint Satisfaction Problem}
-    \begin{center}\includegraphics[scale=0.18]{sudoku.png}\end{center}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.65]
+            \draw (0, 0) grid (9, 9);
+            \draw [step=3, ultra thick, line cap=rect] (0, 0) grid (9, 9);
+
+            \node [anchor=center] at (0.5, 8.5) { 8 };
+            \node [anchor=center] at (2.5, 7.5) { 3 };
+            \node [anchor=center] at (1.5, 6.5) { 7 };
+
+            \node [anchor=center] at (3.5, 7.5) { 6 };
+            \node [anchor=center] at (4.5, 6.5) { 9 };
+
+            \node [anchor=center] at (6.5, 6.5) { 2 };
+
+            \node [anchor=center] at (1.5, 5.5) { 5 };
+
+            \node [anchor=center] at (5.5, 5.5) { 7 };
+            \node [anchor=center] at (4.5, 4.5) { 4 };
+            \node [anchor=center] at (5.5, 4.5) { 5 };
+            \node [anchor=center] at (3.5, 3.5) { 1 };
+
+            \node [anchor=center] at (6.5, 4.5) { 7 };
+            \node [anchor=center] at (7.5, 3.5) { 3 };
+
+            \node [anchor=center] at (2.5, 2.5) { 1 };
+            \node [anchor=center] at (2.5, 1.5) { 8 };
+            \node [anchor=center] at (1.5, 0.5) { 9 };
+
+            \node [anchor=center] at (3.5, 1.5) { 5 };
+
+            \node [anchor=center] at (7.5, 2.5) { 6 };
+            \node [anchor=center] at (8.5, 2.5) { 8 };
+            \node [anchor=center] at (7.5, 1.5) { 1 };
+            \node [anchor=center] at (6.5, 0.5) { 4 };
+        \end{tikzpicture}
+    \end{center}
 \end{frame}
 
 \newcommand{\truck}[1]{\raisebox{-2pt}{
@@ -543,21 +578,167 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{The Slide That Keeps Getting Me Into Trouble}
-    2021 MiniZinc challenge: for 1.28\% of instances, wrong solutions were claimed.
-    \\
-    \begin{itemize}
-        \item False claims of unsatisfiability.
-        \item False claims of optimality.
-        \item Infeasible solutions produced.
-        \item Not limited to a single solver, problem, or constraint.
-        \item Not even consistent---same solver on same hardware and same instance can give
-            different results on different runs.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{The World's Shortest Maths Paper}
+\begin{frame}[fragile]{The World's Shortest Maths Paper}
+    \only<1>{
     \begin{center}\includegraphics[scale=0.34]{shortest-math-paper.jpg}\end{center}
+    }
+%%%    \only<2>{
+%%%        \lstinputlisting[basicstyle=\ttfamily]{powers.mzn}
+%%%
+%%%        \lstinputlisting[basicstyle=\ttfamily]{powers.out}
+%%%    }%\only<3-4>{
+%%%    What's the smallest instance in which four fifth powers sum to a fifth power?
+%%%
+%%%    \scriptsize
+%%%    ChatGPT said:
+%%%    You're referring to a taxicab number-type problem, specifically for fifth powers:
+%%%
+%%%    What is the smallest positive integer solution to the equation $a^5 + b^5 + c^5 + d^5 = e^5$
+%%%    where $a, b, c, d, e$ are positive integers?
+%%%
+%%%    This is a well-known problem in number theory. The first known and smallest such solution was found
+%%%    in 1966 by L.J. Lander and T.R. Parkin:
+%%%    \[
+%%% 27^5 + 84^5 + 110^5 + 133^5 = 144^5
+%%%    \]
+%%%
+%%%      Let’s break that down:
+%%%
+%%%      \begin{align*}
+%%%          27^5 &= 14348907 \\
+%%%          84^5 &= 418211328 \\
+%%%          110^5 &= 1610510000 \\
+%%%          133^5 &= \only<3>{433494437}\only<4>{\textcolor{uofgpillarbox}{433494437}} & \uncover<4>{\text{\textcolor{uofgpillarbox}{WRONG!}}} \\
+%%%          14348907 + 418211328 + 1610510000 + 433494437 &= 6191730672 & \uncover<4>{\text{\textcolor{uofgpillarbox}{WRONG!}}} \\
+%%%          144^5 &= 6191730672
+%%%      \end{align*}
+%%%
+%%%      It checks out.
+%%%  }\only<5>{
+%%%How do you know that there aren't any smaller solutions?
+%%%
+%%%\scriptsize
+%%%ChatGPT said: Great question -- and it gets right into the heart of computational number theory.
+%%%
+%%%The short answer is: we don't know for sure that there are no smaller solutions. But here's why the solution
+%%%
+%%%27
+%%%5
+%%%+
+%%%84
+%%%5
+%%%+
+%%%110
+%%%5
+%%%+
+%%%133
+%%%5
+%%%=
+%%%144
+%%%5
+%%%27 
+%%%5
+%%% +84 
+%%%5
+%%% +110 
+%%%5
+%%% +133 
+%%%5
+%%% =144 
+%%%5
+%%% 
+%%%is considered the smallest known:
+%%%
+%%%1. Extensive Exhaustive Searches
+%%%Since the Lander–Parkin discovery in 1966, mathematicians and hobbyists have used computers to exhaustively search all possible combinations of four fifth powers below certain limits.
+%%%
+%%%These searches have tested billions of combinations, often up to values of 
+%%%𝑒
+%%%e (the fifth power on the right) in the thousands.
+%%%
+%%%No smaller integer solution has been found despite this effort.
+%%%
+%%%2. Nature of the Equation
+%%%The Diophantine equation 
+%%%𝑎
+%%%5
+%%%+
+%%%𝑏
+%%%5
+%%%+
+%%%𝑐
+%%%5
+%%%+
+%%%𝑑
+%%%5
+%%%=
+%%%𝑒
+%%%5
+%%%a 
+%%%5
+%%% +b 
+%%%5
+%%% +c 
+%%%5
+%%% +d 
+%%%5
+%%% =e 
+%%%5
+%%%  is extremely "sparse" in terms of having solutions.
+%%%
+%%%Fifth powers grow very rapidly, so the space of integers that can possibly match on both sides is tight.
+%%%
+%%%Most fifth powers don't come close to summing nicely with others to produce another fifth power.
+%%%
+%%%3. No Proof of Uniqueness or Minimality
+%%%Importantly, there is no proof that the Lander–Parkin solution is the smallest possible.
+%%%
+%%%It’s just the smallest one that has been discovered so far, meaning there could be a smaller solution that hasn't yet been found.
+%%%
+%%%4. Reference to OEIS and Other Resources
+%%%OEIS (Online Encyclopedia of Integer Sequences) has entries on this topic (like A023042) listing known solutions, but it only includes the one we’re discussing.
+%%%
+%%%No other minimal examples have appeared in academic literature, high-powered computational searches, or even anecdotal reports.
+
+%%%
+%%%As of now, no smaller solutions are known. The next smallest solution is:​
+%%%
+%%%14132
+%%%5
+%%%+
+%%%(
+%%%−
+%%%220
+%%%)
+%%%5
+%%%+
+%%%5027
+%%%5
+%%%+
+%%%6237
+%%%5
+%%%+
+%%%14068
+%%%5
+%%%=
+%%%14132
+%%%5
+%%%14132 
+%%%5
+%%% +(−220) 
+%%%5
+%%% +5027 
+%%%5
+%%% +6237 
+%%%5
+%%% +14068 
+%%%5
+%%% =14132 
+%%%5
+%%% 
+%%%This was found by Lander, Parkin, and Selfridge in 1967.
+%%%
+%%%     }
 \end{frame}
 
 \begin{frame}{Proof Logging}

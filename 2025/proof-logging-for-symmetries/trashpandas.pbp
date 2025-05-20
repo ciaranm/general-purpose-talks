@@ -1,0 +1,11 @@
+pseudo-Boolean proof version 2.0
+f 2
+red 1 ~x4 >= 1 ; x4 -> x1 x1 -> x4
+red 1 ~x3 >= 1 ; x3 -> x1 x1 -> x3
+red 1 ~x2 >= 1 ; x2 -> x1 x1 -> x2
+rup 1 x1 >= 1 ;
+solx x1
+rup >= 1 ;
+output NONE
+conclusion SAT
+end pseudo-Boolean proof
