@@ -519,6 +519,9 @@
   \end{enumerate}
 \end{frame}
 
+\begin{frame}{What is a Proof?}
+\end{frame}
+
 \begin{frame}[fragile,t]{What Might an Ad-Hoc Proof Look Like?}%
 \only<2>{\begin{tikzpicture}[overlay,remember picture] \coordinate (ahcliqueheader1space) at ($(pic cs:ahcliqueheader1)+(0pt,4pt)$); \node[rounded corners, fit = (ahcliqueheader1space) (pic cs:ahcliqueheader2), fill=uofgsunshine] {};\end{tikzpicture}}%
 \only<6>{\begin{tikzpicture}[overlay,remember picture] \coordinate (ahopt1space) at ($(pic cs:ahopt1a)+(0pt,4pt)$); \node[rounded corners, fit = (ahopt1space) (pic cs:ahopt1b), fill=uofgsunshine] {};\end{tikzpicture}}%
@@ -1414,19 +1417,17 @@ Verification succeeded.
 
 \section{VeriPB Proofs}
 
-\begin{frame}{What is a Proof?}
-\end{frame}
-
-\begin{frame}{RUP}
+\begin{frame}{What is RUP, Anyway?}
 \end{frame}
 
 \begin{frame}{Cutting Planes}
 \end{frame}
 
-\begin{frame}{Extension Variables}
-\end{frame}
-
-\begin{frame}{Deletions}
+\begin{frame}{Not Appearing in this Talk}
+    \begin{itemize}
+        \item Extension variables (and dominance and symmetries).
+        \item Deletions.
+    \end{itemize}
 \end{frame}
 
 \section{End-to-End Verification}
@@ -1496,25 +1497,30 @@ Verification succeeded.
     \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{End-to-End Verification of Subgraph-Finding}\vspace*{-0.3cm}
-\begin{Verbatim}
-$ glasgow_clique_solver brock200_4.clq --prove brock200_4 --proof-names --recover-proof-enc
+\begin{frame}[fragile]{End-to-End Verification for Maximum Clique}\vspace*{-0.3cm}
+\begin{Verbatim}[fontsize=\footnotesize]
+$ glasgow_clique_solver brock200_4.clq
+recursions = 56613
 omega = 17
 clique = 12 19 28 29 38 54 65 71 79 93 117 127 139 161 165 186 192
+runtime = 0.02153s
 
-$ veripb brock200_4.opb brock200_4.pbp
-Verification succeeded.
+$ glasgow_clique_solver brock200_4.clq --prove brock200_4
+runtime = 0.266475s
 
-$ grep conclusion brock200_4.pbp
-conclusion BOUNDS 183 183
+$ veripb --stats brock200_4.opb brock200_4.pbp
+s VERIFIED BOUNDS 183 <= obj <= 183
+c statistic: time total: 15.31s
 
 $ cake_pb_clique brock200_4.clq > brock200_4.verifiedopb
 
-$ veripb brock200_4.verifiedopb brock200_4.pbp --proofOutput brock200_4.corepb
-Verification succeeded.
+$ veripb --stats brock200_4.verifiedopb brock200_4.pbp --proofOutput brock200_4.corepb
+s VERIFIED BOUNDS 183 <= obj <= 183
+c statistic: time total: 17.28s
 
-$ cake_pb_clique brock200_4.clq brock200_4.corepb
+$ time cake_pb_clique brock200_4.clq brock200_4.corepb
 s VERIFIED MAX CLIQUE SIZE |CLIQUE| = 17
+real    0m2.260s
 \end{Verbatim}
 \end{frame}
 
