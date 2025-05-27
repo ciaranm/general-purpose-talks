@@ -1294,7 +1294,7 @@ Hint: Failed to show '1 ~x10 1 ~x11 >= 1' by reverse unit propagation.
 \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile,t]{Colour Classes are At-Most-One Constraints}%
+\begin{frame}[fragile,t]{Reasoning With Colour Classes}%
 \begin{onlyenv}<1-4>%
         If we could take the ``objective improving'' constraint
 \begin{Verbatim}[commandchars=\\\{\},fontsize=\scriptsize]
@@ -1429,18 +1429,6 @@ Still relying upon assertions, but ``these vertices form a colour class'' is eas
 \end{onlyenv}
 \end{frame}
 
-\begin{frame}{Why a General-Purpose Proof System?}
-    Why not have a ``colouring bound'' rule directly in the proof format?
-    \begin{itemize}
-        \item Dozens of different colouring algorithms, and extensions using MaxSAT-like reasoning.
-        \item Even more when we look at problems like maximum weight clique.
-            Weighted colour class rules can be extremely clever (e.g. vertices can split their weights
-            between multiple colours).
-        \item Don't really want to have a proof checker per solver if we can help it\ldots
-    \end{itemize}
-    Fortunately, this isn't necessary.
-\end{frame}
-
 \begin{frame}[fragile]{Recovering At-Most-One Constraints}
 \begin{onlyenv}<1-6>
     We can lazily recover at-most-one constraints for each colour class!
@@ -1535,12 +1523,23 @@ Verification succeeded.
 \end{onlyenv}
 \end{frame}
 
-\section{VeriPB Proofs}
-
-\begin{frame}{What is RUP, Anyway?}
+\begin{frame}{Why a General-Purpose Proof System?}
+    Why this, rather than having a ``colouring bound'' rule directly in the proof format?
+    \begin{itemize}
+        \item Dozens of different colouring algorithms, and extensions using MaxSAT-like reasoning.
+        \item Even more when we look at problems like maximum weight clique.
+            Weighted colour class rules can be extremely clever (e.g. vertices can split their weights
+            between multiple colours).
+        \item Don't really want to have a proof checker and format per solver if we can help it\ldots
+    \end{itemize}
 \end{frame}
 
+\section{VeriPB Proofs}
+
 \begin{frame}{Cutting Planes}
+\end{frame}
+
+\begin{frame}{What About RUP?}
 \end{frame}
 
 \begin{frame}{Not Appearing in this Talk}
