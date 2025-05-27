@@ -470,7 +470,35 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Why I'm Here\ldots}
+\begin{frame}{Demotivation}
+    My first experience of research: a summer internship reimplementing a clique enumeration
+    algorithm from the literature.
+
+    \medskip
+
+    My code produced the ``wrong'' answer on a few instances.
+
+    \medskip\pause
+
+    I spent a month trying to find and fix it.
+
+    \medskip\pause
+
+    The published answers were wrong.
+
+    \medskip\pause
+
+    Five years later, my first small grant: trying to use computational experiments to understand the
+    empirical hardness of maximum clique.
+
+    \medskip\pause
+
+    A billion problem instances solved using ``state of the art'' solver and \textsterling 20,000 of
+    supercomputer time.
+
+    \medskip\pause
+
+    For a thousand instances, the solver gave the wrong answer.
 \end{frame}
 
 \section{Proof Logging}
@@ -519,7 +547,84 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{What is a Proof?}
+\begin{frame}[fragile]{What is a Proof?}
+    \only<1>{
+    \begin{center}\includegraphics[scale=0.34]{shortest-math-paper.jpg}\end{center}
+    }
+    \only<2-4>{
+    What's the smallest instance in which four fifth powers sum to a fifth power?
+
+    \medskip
+
+    \scriptsize
+    ChatGPT said:
+    You're referring to a taxicab number-type problem, specifically for fifth powers:
+
+    What is the smallest positive integer solution to the equation $a^5 + b^5 + c^5 + d^5 = e^5$
+    where $a, b, c, d, e$ are positive integers?
+
+    This is a well-known problem in number theory. The first known and smallest such solution was found
+    in 1966 by L.J. Lander and T.R. Parkin:
+    \[
+ 27^5 + 84^5 + 110^5 + 133^5 = 144^5
+    \]
+      Let’s break that down:
+      \begin{align*}
+          27^5 &= 14348907 \\
+          84^5 &= 418211328 \\
+          110^5 &= 1610510000 \\
+          133^5 &= \only<2>{433494437}\only<3->{\textcolor{uofgpillarbox}{433494437}} & \uncover<3->{\text{\textcolor{uofgpillarbox}{WRONG!}}} \\
+          14348907 + 418211328 + 1610510000 + 433494437 &= 6191730672 & \uncover<4->{\text{\textcolor{uofgpillarbox}{WRONG!}}} \\
+          144^5 &= 6191730672
+      \end{align*}
+      It checks out.
+  }\only<5>{
+How do you know that there aren't any smaller solutions?
+
+\medskip
+
+\scriptsize
+ChatGPT said: Great question -- and it gets right into the heart of computational number theory.
+
+The short answer is: we don't know for sure that there are no smaller solutions. But here's why the
+    solution \[
+        27^5 +84^5 +110^5 +133^5 = 144^5
+    \]
+is considered the smallest known:
+
+1. Extensive Exhaustive Searches. Since the Lander-Parkin discovery in 1966, mathematicians and hobbyists have used computers to exhaustively search all possible combinations of four fifth powers below certain limits.
+These searches have tested billions of combinations, often up to values of e (the fifth power on the right) in the thousands.
+No smaller integer solution has been found despite this effort.
+
+2. Nature of the Equation. The Diophantine equation $a^5 + b^5 + c^5 + d^5 = e^5$ is extremely "sparse" in terms of having solutions.
+Fifth powers grow very rapidly, so the space of integers that can possibly match on both sides is tight.
+Most fifth powers don't come close to summing nicely with others to produce another fifth power.
+
+3. No Proof of Uniqueness or Minimality. Importantly, there is no proof that the Lander-Parkin solution is the smallest possible.
+It's just the smallest one that has been discovered so far, meaning there could be a smaller solution that hasn't yet been found.
+
+4. Reference to OEIS and Other Resources. OEIS (Online Encyclopedia of Integer Sequences) has entries on this topic (like A023042) listing known solutions, but it only includes the one we're discussing. No other minimal examples have appeared in academic literature, high-powered computational searches, or even anecdotal reports.
+
+As of now, no smaller solutions are known. The next smallest solution is: \[
+    14132^5 + (-220)^5 + 5027^5 + 6237^5 + 14068^5 = 14132^5\]
+This was found by Lander, Parkin, and Selfridge in 1967.
+     }\only<6->{
+         \begin{itemize}
+             \item Start with some axioms, which we assume are true facts.
+             \item At each step, derive a new fact from existing facts, in a way that is easily
+                 checkable if we agree with each previous fact.
+             \item Finish by deriving whatever we want to show.
+             \item <7-> For maximum clique:
+                 \begin{itemize}
+                     \item The axioms are the definition of a maximum clique, and the edges in the graph.
+                     \item Need to show two things:
+                         \begin{itemize}
+                             \item There is a solution with $\omega$ vertices.
+                             \item There is no solution with more than $\omega$ vertices.
+                         \end{itemize}
+                 \end{itemize}
+         \end{itemize}
+     }
 \end{frame}
 
 \begin{frame}[fragile,t]{What Might an Ad-Hoc Proof Look Like?}%
@@ -813,18 +918,32 @@ end maximum clique proof\tikzmark{ahcontb}
 
 \begin{frame}[fragile,t]{Pseudo-Boolean Problems}
 \begin{onlyenv}<1>%
+    Instead of an ad-hoc proof format, let's try using VeriPB, because it's cool.
+
+    \bigskip
+
+    \centering\url{https://gitlab.com/MIAOresearch/software/VeriPB}
+
+    \bigskip
+
+    VeriPB works with pseudo-Boolean problems, not cliques.
+\end{onlyenv}%
+\begin{onlyenv}<2>%
     \begin{itemize}
         \item We have a set of variables $x_i$ that must be given the value $0$ (often means ``false'') or $1$ (``true'').
         \item A literal $\ell_i$ is a variable $x_i$ or its negation $1 - x_i$, written as either $\text{\textasciitilde}x_i$
             or $\overline{x}_i$.
         \item Constraints are integer linear inequalities \[
-                \sum_i c_i \cdot x_i \ge A
+                \sum_i c_i \cdot \ell_i \ge A
             \] where $c_i$ and $A$ are integers.
+        \item These are a superset of CNF, because \[
+                x \lor \overline{y} \lor z \qquad \leftrightarrow \qquad x + \overline{y} + z \ge 1
+            \]
         \item We might have an objective to minimise, \[
-                \operatorname{min} \sum_i c_i \cdot x_i \]
+                \operatorname{min} \sum_i c_i \cdot \ell_i \]
     \end{itemize}
 \end{onlyenv}
-\begin{onlyenv}<2->
+\begin{onlyenv}<3->
 \begin{tikzpicture}[overlay,remember picture]
     \node [anchor=south east, rounded corners=3pt, yshift=1cm, xshift=-0.5cm] at (current page.south east) {
         \begin{tikzpicture}
@@ -898,11 +1017,12 @@ Variables $x_1$ to $x_{12}$, $x_i = 1$ means ``vertex $i$ is in the clique''.
 \only<3>{\begin{tikzpicture}[overlay,remember picture]
 \end{tikzpicture}}%
 \only<4>{\begin{tikzpicture}[overlay,remember picture]
-    \node [anchor=north east, text depth=3.2cm, rounded corners=3pt, fill=uofgsunshine, draw, yshift=-3.4cm, xshift=-4.6cm] at (current page.north east) {
+    \node [anchor=north east, text depth=3.8cm, rounded corners=3pt, fill=uofgsunshine, draw, yshift=-3.4cm, xshift=-4.6cm] at (current page.north east) {
         \begin{minipage}[t]{0.32\paperwidth}\raggedright
-            Has to be a minimisation problem.\\\medskip Tilde means negation.\\\medskip Multiplication and addition are implicit, so read this as \[
+            Has to be a minimisation problem.\\\medskip Multiplication and addition are implicit, so read this as \[
                 \operatorname{min} \sum_{i=1}^{12} 1 \cdot \overline{x}_i
             \]
+            i.e.\ minimise the number of vertices not selected.
         \end{minipage}
     };
 \end{tikzpicture}}%
@@ -1027,7 +1147,7 @@ end pseudo-Boolean proof\tikzmark{pbcontb}
         \only<7>{The ``output'' rule is for advanced features which we're not using, so we have no
             output.
             \\\medskip
-            Note we're minimising the number of unselected vertices, so the bound is $12 - 4 =
+            Recall we're minimising the number of unselected vertices, so the bound is $12 - 4 =
             8$.}
         \end{minipage}
     };
