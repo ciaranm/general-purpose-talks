@@ -588,13 +588,14 @@ at (current page.center) {
 \end{tikzpicture}\end{onlyenv}%
      }\only<7->{
          \begin{itemize}
-             \item Start with some axioms, which we assume are true facts.
+             \item Start with some facts about the problem, which we assume are true.
              \item At each step, derive a new fact from existing facts, in a way that is easily
                  checkable if we agree with each previous fact.
              \item Finish by deriving whatever we want to show.
              \item <8-> For maximum clique:
                  \begin{itemize}
-                     \item The axioms are the definition of a maximum clique, and the edges in the graph.
+                     \item Start with the definition of a maximum clique, and with the properties of
+                         our graph.
                      \item Need to show two things:
                          \begin{itemize}
                              \item There is a solution with $\omega$ vertices.
@@ -1519,10 +1520,150 @@ Verification succeeded.
 \subsection{Gocht: Certifying Correctness for Combinatorial Algorithms: by Using Pseudo-Boolean
 Reasoning. PhD Thesis, Lund University (2022)}
 
-\begin{frame}{Cutting Planes}
+\begin{frame}{What is a \veripb Proof?}
+        For unsatisfiable problem instances:
+        \begin{itemize}
+            \item Start by assuming the pseudo-Boolean constraints in the input.
+            \item At each step, derive a new additional constraint that must hold,
+                based upon what we know so far.
+                \begin{itemize}
+                    \item ``Must hold'' means ``equisatisfiable'': can't turn a satisfiable
+                        instance into an unsatisfiable instance, or vice-versa.
+                    \item Steps have to be efficiently computable, possibly with hints.
+                \end{itemize}
+            \item Finish by deriving $0 \ge 1$.
+        \end{itemize}
+
+        \bigskip\pause
+        For optimisation:
+        \begin{itemize}
+            \item Can give witnesses of solutions, which become a solution-improving constraint.
+            \item So we prove ``unsatisfiable, if you want something better than a
+                solution I told you was best''.
+            \item Now ``equisatisfiable'' becomes ``equioptimal'.
+        \end{itemize}
 \end{frame}
 
-\begin{frame}{What About RUP?}
+\begin{frame}{Cutting Planes Proofs 1: Linear Inequalities}
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Model axioms}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}
+        \centering From the input
+    \end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Addition}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \AxiomC{$\sum_i b_i \ell_i \ge B$}
+        \BinaryInfC{$\sum_i (a_i + b_i) \ell_i \ge A + B$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Multiplication}}\\
+        for any $c \in \mathbb{N^+}$
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \UnaryInfC{$\sum_i { c a_i \ell_i } \ge c A$}
+    \end{prooftree}\end{minipage}
+\end{frame}
+
+\begin{frame}{Cutting Planes Proofs 2: 0-1 Variables}
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Literal axioms}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{~}
+        \UnaryInfC{$\ell_i \ge 0$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Division}}\\
+        for any $c \in \mathbb{N^+}$ \\
+        assumes normalised form \\
+        with $a_i, A \in \mathbb{N}$
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \UnaryInfC{$\sum_i {\left\lceil \frac{a_i}{c} \right\rceil} \ell_i \ge \left\lceil \frac{A}{c} \right\rceil$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Saturation}}\\
+        assumes normalised form
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \UnaryInfC{$\sum_i \operatorname{min}\left(a_i, A\right) \ell_i \ge A$}
+    \end{prooftree}\end{minipage}
+\end{frame}
+
+\begin{frame}{Unit Propagation for Clauses}
+
+    Given the following,
+
+    \begin{align*}
+        & a \lor \overline{b} \lor c \\
+        & \overline{c} \lor d
+    \end{align*}
+
+    Suppose I tell you that $a$ must be false and $b$ must be true.
+
+    \bigskip
+    \pause
+
+    Must set $c$ to true to satisfy first clause.
+
+    \bigskip
+    \pause
+
+    Now must set $d$ to false to satisfy second clause.
+\end{frame}
+
+\begin{frame}{Unit Propagation for Pseudo-Boolean Constraints}
+    \begin{align*}
+        5a + 2b + 3c + d + e + f \ge 5
+    \end{align*}
+
+    Suppose I tell you that $a = 0$. Can't say anything yet.
+
+    \bigskip
+    \pause
+
+    Suppose I tell you that $b = 0$ as well. Then $c = 1$ must hold.
+
+    \bigskip
+    \pause
+
+    Suppose I tell you that $d = 0$ as well. Then $e = 1$ and $f = 1$ must hold.
+
+    \bigskip
+    \pause
+
+    In general: integer bounds consistency. We can do this \emph{efficiently}, but it's not quite as
+    simple as for clauses.
+\end{frame}
+
+\begin{frame}{Reverse Unit Propagation}
+    Let $C$ be any constraint. Suppose $\overline{C}$ unit propagates to contradiction. Then without
+    loss of satisfaction or optimality, we can add $C$ as a new constraint.
+
+    \bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{RUP}}\\
+        $C$ any constraint
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\overline{C}$ unit propagates to contradiction}
+        \UnaryInfC{$C$}
+    \end{prooftree}\end{minipage}
+\end{frame}
+
+\subsection{Elffers, Gocht, McCreesh, Nordstr\"om: Justifying All Differences Using Pseudo-Boolean Reasoning, AAAI 2020}
+
+\begin{frame}{Interleaving RUP and Other Inferences}
+    \begin{itemize}
+        \item RUP forms a good skeleton for DPLL (or CDCL) style searches.
+        \item However, many facts discovered by smarter algorithms do \emph{not} follow by RUP.
+        \item Key idea: can interleave RUP with additional cutting planes steps to help out.
+    \end{itemize}
 \end{frame}
 
 \subsection{Bogaerts, Gocht, McCreesh, Nordstr\"om: Certified Dominance and Symmetry Breaking for
