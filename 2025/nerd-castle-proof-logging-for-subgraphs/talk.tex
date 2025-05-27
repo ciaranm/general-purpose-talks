@@ -234,46 +234,11 @@
 \newcommand{\toolformat}[1]{\textit{#1}}
 \newcommand{\proofsystemformat}[1]{\textsc{#1}\@}
 
-\newcommand{\veripb}{\toolformat{VeriPB}\xspace}
-\renewcommand{\veripb}{\proofsystemformat{VeriPB}\xspace}
-\newcommand\veripbid[1]{\alertred{#1}}
-\newcommand\veripbConstraint[1]{\alertblue{#1}}
+\newcommand{\veripb}{\proofsystemformat{VeriPB}\xspace}
 
 \newcommand{\neighbourhood}{\operatorname{N}}
 \newcommand{\vertexset}{\operatorname{V}}
 \newcommand{\degree}{\operatorname{deg}}
-
-\providecommand{\reifvar}{r}
-\providecommand{\reifimpllft}{\Leftarrow}
-\providecommand{\reifimplrt}{\Rightarrow}
-\providecommand{\reifequiv}{\Leftrightarrow}
-\providecommand{\reifconstrlft}[2]{#1 \reifimpllft #2}
-\providecommand{\reifconstrrt}[2]{#1 \reifimplrt #2}
-\providecommand{\reifconstrequiv}[2]{#1 \reifequiv #2}
-
-\newcommand{\colorblue}[1]{\textcolor{uofgcobalt}{#1}}
-\newcommand{\colorred}[1]{\textcolor{uofgthistle}{#1}}
-\newcommand{\colorgreen}[1]{\textcolor{uofglawn}{#1}}
-
-% For highlighting in examples
-%   \newcommand<>{\alertred}[1]{{\color#2{red}#1}}
-\newcommand<>{\alertred}[1]{{\color#2{uofgthistle}#1}}
-\renewcommand<>{\alert}[1]{{\color#2{uofgthistle}#1}}
-%   \newcommand<>{\alertblue}[1]{{\color#2[rgb]{0,0,0.7}#1}}
-\newcommand<>{\alertblue}[1]{{\color#2{uofgcobalt}#1}}
-%   \newcommand<>{\alertgreen}[1]{{\color#2[rgb]{0,0.6,0}#1}}
-\newcommand<>{\alertgreen}[1]{{\color#2{uofglawn}#1}}
-
-%%% Extra alert command colours
-\newcommand<>{\alertlav}[1]{{\color#2{uofglavendar}#1}}
-% Pillarbox is kind of red
-\newcommand<>{\alertpillarbox}[1]{{\color#2{uofgpillarbox}#1}}
-% Pumpkin is kind of orange
-\newcommand<>{\alertpumpkin}[1]{{\color#2{uofgpumpkin}#1}}
-\newcommand<>{\alertorange}[1]{{\color#2{uofgpumpkin}#1}}
-
-%%% White text to reserve right amount of space
-\newcommand<>{\alertwhite}[1]{{\color#2{white}#1}}
 
 \author{Ciaran McCreesh}
 \title{Proof Logging for Subgraph-Finding Algorithms}
@@ -291,6 +256,8 @@
 }
 
 \section{Maximum Clique}
+
+\subsection{Prosser: Exact Algorithms for Maximum Clique: A Computational Study, Algorithms 5(4) (2012)}
 
 \begin{frame}{Maximum Clique}
     \centering
@@ -470,6 +437,8 @@
   \end{itemize}
 \end{frame}
 
+\subsection{}
+
 \begin{frame}{Demotivation}
     My first experience of research: a summer internship reimplementing a clique enumeration
     algorithm from the literature.
@@ -498,7 +467,7 @@
 
     \medskip\pause
 
-    For a thousand instances, the solver gave the wrong answer.
+    For around a thousand instances, the solver gave the wrong answer.
 \end{frame}
 
 \section{Proof Logging}
@@ -578,7 +547,7 @@
           144^5 &= 6191730672
       \end{align*}
       It checks out.
-  }\only<5>{
+  }\only<5-6>{
 How do you know that there aren't any smaller solutions?
 
 \medskip
@@ -608,13 +577,22 @@ It's just the smallest one that has been discovered so far, meaning there could 
 As of now, no smaller solutions are known. The next smallest solution is: \[
     14132^5 + (-220)^5 + 5027^5 + 6237^5 + 14068^5 = 14132^5\]
 This was found by Lander, Parkin, and Selfridge in 1967.
-     }\only<6->{
+\begin{onlyenv}<6>%
+  \begin{tikzpicture}[overlay,remember picture]
+\node [anchor=center, rotate=10]
+at (current page.center) {
+    \begin{minipage}[t]{0.8\paperwidth}
+        \centering\fontsize{288}{288}\selectfont\textcolor{uofgpillarbox}{WRONG!}
+    \end{minipage}
+};
+\end{tikzpicture}\end{onlyenv}%
+     }\only<7->{
          \begin{itemize}
              \item Start with some axioms, which we assume are true facts.
              \item At each step, derive a new fact from existing facts, in a way that is easily
                  checkable if we agree with each previous fact.
              \item Finish by deriving whatever we want to show.
-             \item <7-> For maximum clique:
+             \item <8-> For maximum clique:
                  \begin{itemize}
                      \item The axioms are the definition of a maximum clique, and the edges in the graph.
                      \item Need to show two things:
@@ -916,9 +894,11 @@ end maximum clique proof\tikzmark{ahcontb}
 \end{minipage}
 \end{frame}
 
+\subsection{Gocht, McBride, McCreesh, Nordstr\"om, Prosser, Trimble: Certifying Solvers for Clique and Maximum Common (Connected) Subgraph Problems, CP 2020}
+
 \begin{frame}[fragile,t]{Pseudo-Boolean Problems}
 \begin{onlyenv}<1>%
-    Instead of an ad-hoc proof format, let's try using VeriPB, because it's cool.
+    Instead of an ad-hoc proof format, let's try using \veripb, because it's cool.
 
     \bigskip
 
@@ -926,7 +906,7 @@ end maximum clique proof\tikzmark{ahcontb}
 
     \bigskip
 
-    VeriPB works with pseudo-Boolean problems, not cliques.
+    Except \veripb works with pseudo-Boolean problems, not cliques\ldots
 \end{onlyenv}%
 \begin{onlyenv}<2>%
     \begin{itemize}
@@ -1012,7 +992,7 @@ Variables $x_1$ to $x_{12}$, $x_i = 1$ means ``vertex $i$ is in the clique''.
 @nonadj2_9 -1 x9 -1 x2 >= -1 ;
 @nonadj2_11 -1 x11 -1 x2 >= -1 ;
 @nonadj2_12 -1 x12 -1 x2 >= -1 ;
-\colorblue{* \ldots{}and a further 29 similar lines for the remaining non-edges}
+\textcolor{uofgcobalt}{* \ldots{}and a further 29 similar lines for the remaining non-edges}
 \end{Verbatim}
 \only<3>{\begin{tikzpicture}[overlay,remember picture]
 \end{tikzpicture}}%
@@ -1085,7 +1065,7 @@ Variables $x_1$ to $x_{12}$, $x_i = 1$ means ``vertex $i$ is in the clique''.
     \end{center}
 \end{frame}
 
-\begin{frame}[fragile,t]{A VeriPB Proof, Attempt One}%
+\begin{frame}[fragile,t]{A \veripb Proof, Attempt One}%
 \only<2>{\begin{tikzpicture}[overlay,remember picture] \coordinate (cliqueheader1space) at ($(pic cs:cliqueheader1)+(0pt,4pt)$); \node[rounded corners, fit = (cliqueheader1space) (pic cs:cliqueheader2) (pic cs:pbcliqueheader1) (pic cs:pbcliqueheader2), fill=uofgsunshine] {};\end{tikzpicture}}%
 \only<3>{\begin{tikzpicture}[overlay,remember picture] \coordinate (opt1space) at ($(pic cs:opt1a)+(0pt,4pt)$); \node[rounded corners, fit = (opt1space) (pic cs:opt1b) (pic cs:pbopt1a) (pic cs:pbopt1b), fill=uofgsunshine] {};\end{tikzpicture}}%
 \only<3>{\begin{tikzpicture}[overlay,remember picture] \coordinate (opt2space) at ($(pic cs:opt2a)+(0pt,4pt)$); \node[rounded corners, fit = (opt2space) (pic cs:opt2b) (pic cs:pbopt2a) (pic cs:pbopt2b), fill=uofgsunshine] {};\end{tikzpicture}}%
@@ -1133,7 +1113,7 @@ end pseudo-Boolean proof\tikzmark{pbcontb}
     \node <1-> [anchor=south east, text depth=2.5cm, rounded corners=3pt, fill=uofgsunshine, draw, yshift=0.9cm, xshift=-0.5cm]
     at (current page.south east) {
         \begin{minipage}[t]{0.3\paperwidth}\raggedright
-        \only<1>{Let's try directly translating our ad-hoc proof into VeriPB syntax.}%
+        \only<1>{Let's try directly translating our ad-hoc proof into \veripb syntax.}%
         \only<2>{We still start with a header.}%
         \only<3>{The solution command is ``soli''.\\\medskip We put an ``x'' in front of vertex
             numbers, which are now Boolean variables.\\\medskip The
@@ -1534,7 +1514,10 @@ Verification succeeded.
     \end{itemize}
 \end{frame}
 
-\section{VeriPB Proofs}
+\section{\veripb Proofs}
+
+\subsection{Gocht: Certifying Correctness for Combinatorial Algorithms: by Using Pseudo-Boolean
+Reasoning. PhD Thesis, Lund University (2022)}
 
 \begin{frame}{Cutting Planes}
 \end{frame}
@@ -1542,9 +1525,12 @@ Verification succeeded.
 \begin{frame}{What About RUP?}
 \end{frame}
 
+\subsection{Bogaerts, Gocht, McCreesh, Nordstr\"om: Certified Dominance and Symmetry Breaking for
+Combinatorial Optimisation, JAIR 77 (2023)}
+
 \begin{frame}{Not Appearing in this Talk}
     \begin{itemize}
-        \item Extension variables (and dominance and symmetries).
+        \item Extension variables (redundance, dominance, and symmetries).
         \item Deletions.
     \end{itemize}
 \end{frame}
@@ -1699,32 +1685,681 @@ real    0m2.260s
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Code}
-  \begin{center}
-    \url{https://github.com/ciaranm/glasgow-subgraph-solver}
-
-      \bigskip
-
-    \url{https://gitlab.com/MIAOresearch/software/VeriPB}
-
-      \bigskip
-
-      \url{https://gitlab.com/MIAOresearch/software/CakePB}
-  \end{center}
-\end{frame}
-
 \section{Subgraph Isomorphism}
 
+\subsection{Gocht, McCreesh, Nordstr\"om: Subgraph Isomorphism Meets Cutting Planes: Solving With Certified Solutions, IJCAI 2020}
+
+\begin{frame}{Subgraph Isomorphism}
+    \only<1-8>{
+    \centering
+    \begin{tikzpicture}
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Na) at (1,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nb) at (1, -1.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nc) at (0, -3) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nd) at (2, -3) {\vphantom{1}};
+
+        \node <2-8> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (Na) at (1,  0) {\vphantom{1}};
+        \node <2-8> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (Nb) at (1, -1.5) {\vphantom{1}};
+        \node <2-8> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (Nc) at (0, -3) {\vphantom{1}};
+        \node <2-8> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (Nd) at (2, -3) {\vphantom{1}};
+
+        \draw [ultra thick] (Na) -- (Nb);
+        \draw [ultra thick] (Nb) -- (Nc);
+        \draw [ultra thick] (Nc) -- (Nd);
+        \draw [ultra thick] (Nb) -- (Nd);
+
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <2> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <2> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <2> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <2> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <3> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <3> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <3> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <3> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <3> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <3> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <4> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <4> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N1b) at (5.5,  0) {\vphantom{1}};
+        \node <4> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <4> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N2b) at (7.5,  0) {\vphantom{1}};
+        \node <4> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <4> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <4> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <4> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <5> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N2b) at (7.5,  0) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <5> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N4b) at (7.5, -1.5) {\vphantom{1}};
+        \node <5> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <5> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <6> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <6> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <6> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <6> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N3b) at (5.5, -1.5) {\vphantom{1}};
+        \node <6> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <6> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <6> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N5b) at (5.5, -3) {\vphantom{1}};
+        \node <6> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \node <7> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <7> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N3b) at (5.5, -1.5) {\vphantom{1}};
+        \node <7> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+        \node <7> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N6b) at (7.5, -3) {\vphantom{1}};
+
+        \node <8> [draw, circle, fill=uofgpumpkin, inner sep=4pt, font=\bfseries] (N1) at (5.5,  0) {\vphantom{1}};
+        \node <8> [draw, circle, fill=uofgthistle, inner sep=4pt, font=\bfseries] (N2) at (7.5,  0) {\vphantom{1}};
+        \node <8> [draw, circle, fill=uofglawn, inner sep=1pt, font=\bfseries] (N2b) at (7.5,  0) {\vphantom{1}};
+        \node <8> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (5.5, -1.5) {\vphantom{1}};
+        \node <8> [draw, circle, fill=uofglawn, inner sep=4pt, font=\bfseries] (N4) at (7.5, -1.5) {\vphantom{1}};
+        \node <8> [draw, circle, fill=uofgthistle, inner sep=1pt, font=\bfseries] (N4b) at (7.5, -1.5) {\vphantom{1}};
+        \node <8> [draw, circle, fill=uofgcobalt, inner sep=4pt, font=\bfseries] (N5) at (5.5, -3) {\vphantom{1}};
+        \node <8> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (7.5, -3) {\vphantom{1}};
+
+        \draw <1> [thick, color=uofgsandstone!50] (N1) -- (N2);
+        \draw <1> [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw <1> [thick, color=uofgsandstone!50] (N1) -- (N4);
+        \draw <1> [thick, color=uofgsandstone!50] (N2) -- (N4);
+        \draw <1> [thick, color=uofgsandstone!50] (N3) -- (N5);
+        \draw <1> [thick, color=uofgsandstone!50] (N3) -- (N6);
+        \draw <1> [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw <1> [thick, color=uofgsandstone!50] (N5) -- (N6);
+        \draw <1> [thick, color=uofgsandstone!50] (N1) to [in=135, out=225] (N5);
+
+        \draw <2-3> [thick, color=uofgsandstone!50] (N1) -- (N2);
+        \draw <2-3> [ultra thick] (N1) -- (N3);
+        \draw <2-3> [thick, color=uofgsandstone!50] (N1) -- (N4);
+        \draw <2-3> [thick, color=uofgsandstone!50] (N2) -- (N4);
+        \draw <2-3> [ultra thick] (N3) -- (N5);
+        \draw <2-3> [ultra thick] (N3) -- (N6);
+        \draw <2-3> [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw <2-3> [ultra thick] (N5) -- (N6);
+        \draw <2-3> [thick, color=uofgsandstone!50] (N1) to [in=135, out=225] (N5);
+
+        \draw <4> [ultra thick] (N1) -- (N2);
+        \draw <4> [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw <4> [ultra thick] (N1) -- (N4);
+        \draw <4> [ultra thick] (N2) -- (N4);
+        \draw <4> [thick, color=uofgsandstone!50] (N3) -- (N5);
+        \draw <4> [thick, color=uofgsandstone!50] (N3) -- (N6);
+        \draw <4> [ultra thick] (N4) -- (N6);
+        \draw <4> [thick, color=uofgsandstone!50] (N5) -- (N6);
+        \draw <4> [thick, color=uofgsandstone!50] (N1) to [in=135, out=225] (N5);
+
+        \draw <5> [ultra thick] (N1) -- (N2);
+        \draw <5> [ultra thick] (N1) -- (N3);
+        \draw <5> [ultra thick] (N1) -- (N4);
+        \draw <5> [ultra thick] (N2) -- (N4);
+        \draw <5> [thick, color=uofgsandstone!50] (N3) -- (N5);
+        \draw <5> [thick, color=uofgsandstone!50] (N3) -- (N6);
+        \draw <5> [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw <5> [thick, color=uofgsandstone!50] (N5) -- (N6);
+        \draw <5> [thick, color=uofgsandstone!50] (N1) to [in=135, out=225] (N5);
+
+        \draw <6> [thick, color=uofgsandstone!50] (N1) -- (N2);
+        \draw <6> [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw <6> [thick, color=uofgsandstone!50] (N1) -- (N4);
+        \draw <6> [thick, color=uofgsandstone!50] (N2) -- (N4);
+        \draw <6> [ultra thick] (N3) -- (N5);
+        \draw <6> [ultra thick] (N3) -- (N6);
+        \draw <6> [ultra thick] (N4) -- (N6);
+        \draw <6> [ultra thick] (N5) -- (N6);
+        \draw <6> [thick, color=uofgsandstone!50] (N1) to [in=135, out=225] (N5);
+
+        \draw <7> [thick, color=uofgsandstone!50] (N1) -- (N2);
+        \draw <7> [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw <7> [thick, color=uofgsandstone!50] (N1) -- (N4);
+        \draw <7> [thick, color=uofgsandstone!50] (N2) -- (N4);
+        \draw <7> [ultra thick] (N3) -- (N5);
+        \draw <7> [ultra thick] (N3) -- (N6);
+        \draw <7> [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw <7> [ultra thick] (N5) -- (N6);
+        \draw <7> [ultra thick] (N1) to [in=135, out=225] (N5);
+
+        \draw <8> [ultra thick] (N1) -- (N2);
+        \draw <8> [thick, color=uofgsandstone!50] (N1) -- (N3);
+        \draw <8> [ultra thick] (N1) -- (N4);
+        \draw <8> [ultra thick] (N2) -- (N4);
+        \draw <8> [thick, color=uofgsandstone!50] (N3) -- (N5);
+        \draw <8> [thick, color=uofgsandstone!50] (N3) -- (N6);
+        \draw <8> [thick, color=uofgsandstone!50] (N4) -- (N6);
+        \draw <8> [thick, color=uofgsandstone!50] (N5) -- (N6);
+        \draw <8> [ultra thick] (N1) to [in=135, out=225] (N5);
+
+        \draw <2> [thick, dashed, color=uofgcobalt, arrows=->] (Na) to (N1);
+        \draw <2> [thick, dashed, color=uofgpumpkin, arrows=->] (Nb) to (N3);
+        \draw <2> [thick, dashed, color=uofglawn, arrows=->] (Nc) to [out=20, in=160] (N5);
+        \draw <2> [thick, dashed, color=uofgthistle, arrows=->] (Nd) to [out=20, in=160] (N6);
+
+        \draw <3> [thick, dashed, color=uofgcobalt, arrows=->] (Na) to (N1);
+        \draw <3> [thick, dashed, color=uofgpumpkin, arrows=->] (Nb) to (N3);
+        \draw <3> [thick, dashed, color=uofglawn, arrows=->] (Nc) to [out=20, in=160] (N6);
+        \draw <3> [thick, dashed, color=uofgthistle, arrows=->] (Nd) to [out=20, in=160] (N5);
+    \end{tikzpicture}}
+
+  \begin{itemize}
+      \item Find the \textcolor{uofgcobalt}{pattern} inside the \textcolor{uofgcobalt}{target}.
+      \item Applications in compilers, biochemistry, model checking, pattern recognition, \ldots
+      \item Often want to find \textcolor{uofgcobalt}{all} matches.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Subgraph Isomorphism in Pseudo-Boolean Form}
+Each pattern vertex gets a target vertex: \begin{align*}
+    \sum_{t \in \vertexset(T)} x_{p{,}t}  & = 1 && p \in \vertexset(P)
+\end{align*}\pause
+Each target vertex may be used at most once:\begin{align*}
+    \sum_{p \in \vertexset(P)} -x_{p{,}t} & \ge -1 && t \in \vertexset(T)
+\end{align*}\pause
+Adjacency constraints, if $p$ is mapped to $t$, then $p$'s neighbours must
+be mapped to $t$'s neighbours: \begin{align*}
+    \overline{x}_{p{,}t} + \sum_{u \in \neighbourhood(t)} x_{q{,}u} & \ge 1 && p \in \vertexset(P),~q \in \neighbourhood(p),~t \in \vertexset(T)
+\end{align*}
+\end{frame}
+
+\subsection{Elffers, Gocht, McCreesh, Nordstr\"om: Justifying All Differences Using Pseudo-Boolean Reasoning, AAAI 2020}
+
+\begin{frame}[t]{Injectivity (All-Different) Reasoning}
+\only<2>{\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=south east, yshift=0cm, xshift=0.55cm] at (current page.south east) {
+        \begin{minipage}[t]{0.25\paperwidth}\raggedright
+        \tiny ChatGPT, can you draw me a picture of a \\
+            pigeon wearing a disguise? \\
+        \includegraphics[scale=0.1]{pigeonindisguise.png}
+        \end{minipage}
+    };
+\end{tikzpicture}}%
+  \begin{tabular}%
+    {r@{\hspace*{0mm}}c@{\hspace*{0.5mm}}c@{\hspace*{0.5mm}}c@{\hspace{0.5mm}}c@{\hspace*{0.5mm}}%
+    r@{\hspace*{3mm}}%
+    r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}%
+    ll}
+    $p \in \{$
+    & $1$
+    &
+    &
+    & $4$ \hspace*{1.2mm} $5$
+    & $\}$
+    & \phantom{$-x_{p{,}1}$}
+    &
+    & \phantom{$-x_{q{,}1}$}
+    &
+    & \phantom{$-x_{r{,}1}$}
+    &
+    & \phantom{$-x_{s{,}1}$}
+    &
+    & \phantom{$-x_{t{,}1}$}
+    &
+    \\
+
+    $\textcolor<2->{uofgpillarbox}{q} \in \{$
+      & $\textcolor<2->{uofgpillarbox}{1}$
+      & $\textcolor<2->{uofgpillarbox}{2}$
+      & $\textcolor<2->{uofgpillarbox}{3}$
+    &
+    & $\}$
+    & $\uncover<3->{x_{q{,}1}}$
+    & $\uncover<3->{+}$
+    & $\uncover<3->{x_{q{,}2}}$
+    & $\uncover<3->{+}$
+    & $\uncover<3->{x_{q{,}3}}$
+    &
+    &
+    &
+    &
+    & $\uncover<3->{\ge\phantom{-}1}$
+    & \uncover<3->{\textcolor{uofgcobalt}{vertex $q$ must be mapped}}
+    \\
+    $\textcolor<2->{uofgpillarbox}{r} \in \{$
+    &
+      & $\textcolor<2->{uofgpillarbox}{2}$
+      & $\textcolor<2->{uofgpillarbox}{3}$
+    &
+    & $\}$ &
+    &
+    & $\uncover<4->{x_{r{,}2}}$
+    & $\uncover<4->{+}$
+    & $\uncover<4->{x_{r{,}3}}$
+    &
+    &
+    &
+    &
+    & $\uncover<4->{\ge\phantom{-}1}$
+    & \uncover<4->{\textcolor{uofgcobalt}{vertex $r$ must be mapped}}
+    \\
+    $\textcolor<2->{uofgpillarbox}{s} \in \{$
+      & $\textcolor<2->{uofgpillarbox}{1}$
+    &
+    & $\textcolor<2->{uofgpillarbox}{3}$
+    &
+    & $\}$
+    & $\uncover<4->{x_{s{,}1}}$
+    &
+    &
+    & $\uncover<4->{+}$
+    & $\uncover<4->{x_{s{,}3}}$
+    &
+    &
+    &
+    &
+    & $\uncover<4->{ \ge\phantom{-}1}$
+    & \uncover<4->{\textcolor{uofgcobalt}{vertex $s$ must be mapped}}
+    \\
+    $\textcolor<2->{uofgpillarbox}{t} \in \{$
+    & $\textcolor<2->{uofgpillarbox}{1}$
+    &
+    & $\textcolor<2->{uofgpillarbox}{3}$
+    &
+    & $\}$
+    & $\uncover<4->{x_{t{,}1}}$
+    &
+    &
+    & $\uncover<4->{+}$
+    & $\uncover<4->{x_{t{,}3}}$
+    &
+    &
+    &
+    &
+    & $\uncover<4->{ \ge\phantom{-}1}$
+    & \uncover<4->{\textcolor{uofgcobalt}{vertex $t$ must be mapped}}
+    \\[0.5cm]
+
+    \only<5->{
+    &
+      $\rightarrow$
+    &
+    &
+    &
+    &
+    & $-x_{p{,}1}$
+    & $+$
+    & $-x_{q{,}1}$
+    & $+$
+    &
+    &
+    & $-x_{s{,}1}$
+    & $+$
+    & $-x_{t{,}1}$
+    & $\uncover<5->{\ge -1}$
+    & \textcolor{uofgcobalt}{use vertex 1 at most once}
+    \\
+
+    &
+    &
+      $\rightarrow$
+    &
+    &
+    &
+    &
+    &
+    & $-x_{q{,}2}$
+    & $+$
+    & $-x_{r{,}2}$
+    &
+    &
+    &
+    &
+    & $\uncover<5->{\ge -1}$
+    & \textcolor{uofgcobalt}{use vertex 2 at most once}
+    \\
+
+    &
+    &
+    &
+      $\rightarrow$
+    &
+    &
+    &
+    &
+    & $-x_{q{,}3}$
+    & $+$
+    & $-x_{r{,}3}$
+    & $+$
+    & $-x_{s{,}3}$
+    & $+$
+    & $-x_{t{,}3}$
+    & $\uncover<5->{\ge -1}$
+    & \textcolor{uofgcobalt}{use vertex 3 at most once}
+    \\[0.5cm]
+}
+\only<6->{
+    &
+    &
+    &
+    &
+    &
+    &
+      $-x_{p{,}1}$
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+    & $\uncover<6->{\ge \phantom{-}1}$
+    & \textcolor{uofgcobalt}{sum all of the above}
+    \\
+    }
+\only<7->{
+    &
+    &
+    &
+    &
+    &
+    &
+      $ x_{p{,}1}$
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+    & $\uncover<7->{\ge \phantom{-}0}$
+    & \textcolor{uofgcobalt}{variable $x_{p{,}1}$ non-negative}
+    \\[0.5cm]
+}
+\only<8->{
+    &
+    &
+    &
+    &
+    &
+    &
+      $0$
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+    &
+      $\uncover<8->{\ge \phantom{-}1}$
+    & \textcolor{uofgcobalt}{sum above two constraints}
+    \\
+}
+    &
+    $\phantom{\rightarrow}$ &
+    $\phantom{\rightarrow}$ &
+    $\phantom{\rightarrow}$ &
+    &
+    &
+    $\phantom{-v_{{=}1}}$ &
+    $\phantom{+}$ &
+    $\phantom{-w_{{=}1}}$ &
+    $\phantom{+}$ &
+    $\phantom{-y_{{=}1}}$ &
+    $\phantom{+}$ &
+    $\phantom{-y_{{=}1}}$ &
+    $\phantom{+}$ &
+    $\phantom{-z_{{=}1}}$ &
+    $\phantom{ \ge -1}$ \\
+    \end{tabular}
+\end{frame}
+
+\subsection{Gocht, McCreesh, Nordstr\"om: Subgraph Isomorphism Meets Cutting Planes: Solving With Certified Solutions, IJCAI 2020}
+
+\begin{frame}[fragile]{Degree Reasoning in Cutting Planes}
+%     A pattern
+  Pattern
+  vertex $p$ of degree $\degree(p)$ can never be mapped to
+%    a
+  target vertex $t$ of degree
+%     $\degree(p)-1$ or lower
+  $< \degree(p)$
+  in any subgraph isomorphism.
+
+  \medskip
+
+  Observe
+  $\neighbourhood(\textcolor{uofgcobalt}{p})
+  = \{ \textcolor{uofglawn}{q}, \textcolor{uofglawn}{r}, \textcolor{uofglawn}{s} \}$
+  and
+  $\neighbourhood(\textcolor{uofgcobalt}{t})
+  = \{ \textcolor{uofgthistle}{u}, \textcolor{uofgthistle}{v} \}$.
+
+  \medskip
+
+  We wish to derive $\overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} \ge 1$.
+\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=center, text depth=0.5cm, xshift=4.8cm, yshift=2.3cm]
+    at (current page.center) {
+        \begin{minipage}[t]{0.3\paperwidth}\raggedright
+            \begin{tikzpicture}
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NO) {o};
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NP) {p};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NQ) {q};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NR) {r};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NS) {s};
+                \draw (NO) -- (NQ);
+                \draw (NP) -- (NQ);
+                \draw (NP) -- (NR);
+                \draw (NP) -- (NS);
+                \draw (NQ) -- (NR);
+                \draw (NR) -- (NS);
+
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NT) {t};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NU) {u};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NV) {v};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NX) {x};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NY) {y};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NZ) {z};
+                \draw (NT) -- (NU);
+                \draw (NT) -- (NV);
+                \draw (NU) -- (NV);
+                \draw (NU) -- (NX);
+                \draw (NU) -- (NY);
+                \draw (NV) -- (NY);
+                \draw (NX) -- (NY);
+                \draw (NY) -- (NZ);
+                \draw (NV) -- (NZ);
+            \end{tikzpicture}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in Cutting Planes}
+\begin{align*}
+    &\textnormal{Adjacency:}&\overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{v}} &\ge\phantom{-}1
+    \hspace{0.3\textwidth} %% Leave space for tikz image
+    \\
+    &&\overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{v}} &\ge \phantom{-}1 \\
+    &&\overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{u}} + x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{v}} &\ge \phantom{-}1 \\
+     &\textnormal{Injectivity:}   &-x_{o{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{u}} + -x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{u}} &\ge -1 \\
+        &&-x_{o{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofglawn}{q}{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofglawn}{r}{,}\textcolor{uofgthistle}{v}} + -x_{\textcolor{uofglawn}{s}{,}\textcolor{uofgthistle}{v}} &\ge -1 \\
+    &\textnormal{Literal axioms:}&x_{o{,}\textcolor{uofgthistle}{u}} &\ge \phantom{-}0 \\
+    &&x_{o{,}\textcolor{uofgthistle}{v}} &\ge\phantom{-} 0 \\
+    &&x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{u}} &\ge\phantom{-} 0 \\
+    &&x_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgthistle}{v}} &\ge\phantom{-} 0 \\
+    &\rlap{\text{Add these together \only<.(1)>{\dots}\only<+(1)->{and divide by 3 to get}}} \\
+    &&\only<.>{3\cdot}\overline{x}_{\textcolor{uofgcobalt}{p}{,}\textcolor{uofgcobalt}{t}} &\ge\phantom{-} 1
+  \end{align*}
+\begin{tikzpicture}[overlay,remember picture]
+    \node [anchor=center, text depth=0.5cm, xshift=4.8cm, yshift=2.3cm]
+    at (current page.center) {
+        \begin{minipage}[t]{0.3\paperwidth}\raggedright
+            \begin{tikzpicture}
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NO) at (0, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NO) {o};
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NP) at (0, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NP) {p};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NQ) at (0.7, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NQ) {q};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NR) at (0.7, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NR) {r};
+                \node [draw, circle, fill=uofglawn, inner sep=2.5pt, font=\scriptsize] (NS) at (0.7, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NS) {s};
+                \draw (NO) -- (NQ);
+                \draw (NP) -- (NQ);
+                \draw (NP) -- (NR);
+                \draw (NP) -- (NS);
+                \draw (NQ) -- (NR);
+                \draw (NR) -- (NS);
+
+                \node [draw, circle, fill=uofgcobalt, inner sep=2.5pt, font=\scriptsize] (NT) at (1.75, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NT) {t};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NU) at (2.45, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NU) {u};
+                \node [draw, circle, fill=uofgthistle, inner sep=2.5pt, font=\scriptsize] (NV) at (2.45, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NV) {v};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NX) at (3.15, 0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NX) {x};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NY) at (3.15, 0) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NY) {y};
+                \node [draw, circle, fill=white, inner sep=2.5pt, font=\scriptsize] (NZ) at (3.15, -0.7) {\phantom{1}};
+                \node [anchor=center, font=\scriptsize] at (NZ) {z};
+                \draw (NT) -- (NU);
+                \draw (NT) -- (NV);
+                \draw (NU) -- (NV);
+                \draw (NU) -- (NX);
+                \draw (NU) -- (NY);
+                \draw (NV) -- (NY);
+                \draw (NX) -- (NY);
+                \draw (NY) -- (NZ);
+                \draw (NV) -- (NZ);
+            \end{tikzpicture}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Degree Reasoning in \veripb}
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7\catcode`_=8}]
+pol @adj\_p\_t\_q @adj\_p\_t\_r + @adj\_p\_t\_s +    \textcolor{uofgcobalt}{* sum adjacency constraints}
+    @inj\_u + @inj\_v +                       \textcolor{uofgcobalt}{* sum injectivity constraints}
+    xo\_u + xo\_v +                           \textcolor{uofgcobalt}{* cancel stray xo\_*}
+    xp\_u + xp\_v +                           \textcolor{uofgcobalt}{* cancel stray xp\_*}
+    \textcolor{uofgpumpkin}{3} d                                     \textcolor{uofgcobalt}{* divide, and we're done}
+\end{Verbatim}
+
+\medskip
+
+Or we can ask \veripb to do the last bit of simplification automatically:
+
+\medskip
+
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`^=7\catcode`_=8}]
+pol @adj\_p\_t\_q @adj\_p\_t\_r + @adj\_p\_t\_s +    \textcolor{uofgcobalt}{* sum adjacency constraints}
+    @inj\_u + @inj\_v +                       \textcolor{uofgcobalt}{* sum injectivity constraints}
+ia \textcolor{uofgpillarbox}{-1} : 1 ~xp\_t >= 1 ;                      \textcolor{uofgcobalt}{* desired conclusion is syntactically implied}
+\end{Verbatim}
+\end{frame}
+
+\begin{frame}{Other Forms of Reasoning}
+    We can also log (almost) all of the other things state of the art subgraph solvers do:
+\begin{itemize}
+\item
+  Conditional injectivity reasoning and filtering,
+\item
+  Distance filtering,
+\item
+  Neighbourhood degree sequences,
+\item
+  Path filtering,
+\item
+  Supplemental graphs.
+\end{itemize}
+
+\medskip
+
+\uncover<2->{
+  Proof steps are ``efficient'' using cutting planes:
+  \begin{itemize}
+  \item
+%       The length of the proof steps are no worse than the time
+%       complexity of the reasoning algorithms
+    Length of proof $\approx$
+    time complexity of the reasoning algorithms.
+
+  \item
+    Most proof steps require only trivial additional computations.
+  \end{itemize}}
+\end{frame}
+
 \section{Tricker Things}
+
+\subsection{Gocht, McBride, McCreesh, Nordstr\"om, Prosser, Trimble: Certifying Solvers for Clique and Maximum Common (Connected) Subgraph Problems, CP 2020}
+
+\begin{frame}{Reformulation}
+\end{frame}
+
+\subsection{Bogaerts, Gocht, McCreesh, Nordstr\"om: Certified Dominance and Symmetry Breaking for
+Combinatorial Optimisation, JAIR 77 (2023)}
+
+\begin{frame}{Symmetries}
+\end{frame}
+
+\subsection{Yang, Ge, Nguyen, Molitor, Moorman, Bertozzi: Structural Equivalence in Subgraph Matching. IEEE Trans. Netw. Sci. Eng. 10(4) (2023)}
+
+\begin{frame}{Conditional Symmetries}
+\end{frame}
+
+\subsection{Kraiczy, McCreesh: Solving Graph Homomorphism and Subgraph Isomorphism Problems Faster Through Clique Neighbourhood Constraints, IJCAI 2021}
+
+\begin{frame}{Lemmas, Maybe?}
+\end{frame}
 
 \section{Conclusion}
 
 \begin{frame}{Conclusion}
-    \begin{itemize}
-        \item Need to be able to express a wide range of reasoning rules, efficiently.
-        \item Cutting planes can do this (which is somewhat mysterious).
-        \item Mixing RUP and explicit inference rules makes proofs much easier to write.
-    \end{itemize}
+    \begin{minipage}[t]{0.7\paperwidth}
+\begin{itemize}
+    \item Need to be able to express a wide range of reasoning rules, efficiently.
+        \begin{itemize}
+            \item Much more variety of reasoning between solvers in other areas, compared to SAT
+                solving.
+            \item Cutting planes can do this (which is somewhat mysterious).
+        \end{itemize}
+    \item Mixing RUP and explicit derivations makes proofs much easier to write.
+    \item No need for a close coupling between how the solver works and how the proof system
+        works.
+    \item <2-> ChatGPT is much better at drawing pigeons than it is at maths.
+\end{itemize}%
+\end{minipage}%
+\begin{tikzpicture}[overlay,remember picture]
+    \node <2-> [anchor=south east, yshift=0cm, xshift=0.55cm] at (current page.south east) {
+        \begin{minipage}[t]{0.25\paperwidth}\raggedright
+        \tiny ChatGPT, can you draw me a picture of a \\
+            wise pigeon? \\
+        \includegraphics[scale=0.1]{wisepigeon.png}
+        \end{minipage}
+    };
+\end{tikzpicture}%
 \end{frame}
 
 {
