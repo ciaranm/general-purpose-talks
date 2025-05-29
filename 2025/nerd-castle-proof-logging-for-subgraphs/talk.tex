@@ -2465,6 +2465,62 @@ Combinatorial Optimisation, JAIR 77 (2023)}
 \begin{frame}{Symmetries}
 \end{frame}
 
+\subsection{McCreesh, Prosser: Finding Maximum $k$-Cliques Faster Using Lazy Global Domination, SoCS 2016}
+
+\begin{frame}{Dominance}
+    \begin{center}\vspace*{-1em}
+    \begin{tikzpicture}
+        \begin{scope}[scale=1]
+        \newcount \myc
+        \foreach \n in {1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}{
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 60
+            \node[anchor=center] (L\n) at (\the\myc:1.7) {\n};
+            \node[anchor=center, circle, fill=black, inner sep=2pt] (N\n) at (\the\myc:1.42) {};
+        }
+        \foreach \n in {2}{
+            \myc=\n \advance\myc by -1 \multiply\myc by -360 \divide\myc by 12 \advance\myc by 67
+            \node[anchor=center] (L\n) at (\the\myc:1.7) {\n};
+            \node[anchor=center, circle, fill=uofgcobalt, inner sep=2pt] (N\n) at (\the\myc:1.42) {};
+        }
+            \node[anchor=center] (L2b) at (22.5:1.75) {2b};
+            \node[anchor=center, circle, fill=uofglawn, inner sep=2pt] (N2b) at (22.5:1.42) {};
+        \draw <1> (N1) -- (N5);
+        \draw <1> (N1) -- (N8);
+        \draw (N1) -- (N10);
+        \draw (N1) -- (N11);
+        \draw (N1) -- (N12);
+        \draw (N3) -- (N4);
+        \draw (N3) -- (N6);
+        \draw (N3) -- (N10);
+        \draw (N3) -- (N11);
+        \draw (N4) -- (N6);
+        \draw <1> (N5) -- (N8);
+        \draw (N6) -- (N7);
+        \draw (N6) -- (N12);
+        \draw (N7) -- (N9);
+        \draw (N7) -- (N11);
+        \draw (N7) -- (N12);
+        \draw (N8) -- (N9);
+        \draw (N9) -- (N10);
+        \draw (N9) -- (N11);
+        \draw (N9) -- (N12);
+        \draw (N10) -- (N11);
+            \draw [ultra thick, color=uofgcobalt] (N1) -- (N2);
+            \draw [ultra thick, color=uofgcobalt] (N2) -- (N5);
+            \draw [ultra thick, color=uofgcobalt] (N2) -- (N8);
+            \draw [ultra thick, color=uofgcobalt] (N2) -- (N10);
+            \draw [ultra thick, color=uofglawn] (N2b) -- (N5);
+            \draw [ultra thick, color=uofglawn] (N2b) -- (N8);
+            \draw [ultra thick, color=uofglawn] (N2b) -- (N10);
+    \end{scope}
+    \end{tikzpicture}
+\end{center}
+\medskip
+    Can ignore vertex 2b.
+    \begin{itemize}\item Every neighbour of 2b is also a neighbour of 2.
+    \end{itemize}
+\end{frame}
+
 \subsection{Yang, Ge, Nguyen, Molitor, Moorman, Bertozzi: Structural Equivalence in Subgraph Matching. IEEE Trans. Netw. Sci. Eng. 10(4) (2023)}
 
 \begin{frame}{Conditional Symmetries}
