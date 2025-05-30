@@ -463,7 +463,7 @@
     \medskip\pause
 
     A billion problem instances solved using ``state of the art'' solver and \textsterling 20,000 of
-    supercomputer time.
+    supercomputer time (which used to be a lot, before ChatGPT came along).
 
     \medskip\pause
 
@@ -1479,7 +1479,7 @@ end pseudo-Boolean proof
     at (current page.north east) {
         \begin{minipage}[t]{0.4\paperwidth}\raggedright
             It turns out we do colour-class reasoning in each of these three places, although the
-            verifier actually doesn't need help with the first two.\\ \medskip
+            verifier doesn't actually need help for two of them.\\ \medskip
             In each case, we add together three non-adjacency constraints, divide by two, and then
             add the result to the solution-\\improving constraint.
         \end{minipage}
@@ -1743,27 +1743,52 @@ Combinatorial Optimisation, JAIR 77 (2023)}
     \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{End-to-End Verification for Maximum Clique}\vspace*{-0.3cm}
+\begin{frame}[fragile,t]{End-to-End Verification for Maximum Clique}\vspace*{-0.3cm}
 \begin{Verbatim}[fontsize=\scriptsize]
 $ glasgow_clique_solver brock200_4.clq
 recursions = 56613
-omega = 17
-clique = 12 19 28 29 38 54 65 71 79 93 117 127 139 161 165 186 192
+clique = 17 (12 19 28 29 38 54 65 71 79 93 117 127 139 161 165 186 192)
 runtime = 0.02153s
-
+\end{Verbatim}
+\smallskip
+\begin{Verbatim}[fontsize=\scriptsize]
 $ glasgow_clique_solver brock200_4.clq --prove brock200_4
 runtime = 0.266475s
-
+\end{Verbatim}
+\smallskip
+\begin{onlyenv}<1>
+\begin{Verbatim}[fontsize=\scriptsize]
 $ veripb --stats brock200_4.opb brock200_4.pbp
 s VERIFIED BOUNDS 183 <= obj <= 183
 c statistic: time total: 15.31s
-
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<2>
+\begin{Verbatim}[fontsize=\scriptsize]
+$ time pboxide_veripb brock200_4.opb brock200_4.pbp
+s VERIFIED BOUNDS 183 <= obj <= 183
+real    0m1.740s
+\end{Verbatim}
+\end{onlyenv}
+\smallskip
+\begin{Verbatim}[fontsize=\scriptsize]
 $ cake_pb_clique brock200_4.clq > brock200_4.verifiedopb
-
+\end{Verbatim}
+\smallskip
+\begin{onlyenv}<1>
+\begin{Verbatim}[fontsize=\scriptsize]
 $ veripb --stats brock200_4.verifiedopb brock200_4.pbp --proofOutput brock200_4.corepb
 s VERIFIED BOUNDS 183 <= obj <= 183
 c statistic: time total: 17.28s
-
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<2>
+\begin{Verbatim}[fontsize=\scriptsize]
+$ time pboxide_veripb -e brock200_4.corepb brock200_4.verifiedopb brock200_4.pbp
+s VERIFIED BOUNDS 183 <= obj <= 183
+real    0m2.139s
+\end{Verbatim}
+\end{onlyenv}
+\smallskip
+\begin{Verbatim}[fontsize=\scriptsize]
 $ time cake_pb_clique brock200_4.clq brock200_4.corepb
 s VERIFIED MAX CLIQUE SIZE |CLIQUE| = 17
 real    0m2.260s
@@ -2397,6 +2422,22 @@ be mapped to $t$'s neighbours: \begin{align*}
         \end{minipage}
     };
 \end{tikzpicture}
+\begin{tikzpicture}[overlay,remember picture]
+    \node <3> [anchor=south east, yshift=0cm] at (current page.south east) {
+        \begin{minipage}[t]{0.25\paperwidth}\raggedright
+        \tiny ChatGPT, can you draw me a picture of a \\
+             sophisticated pigeon? \\
+        \includegraphics[scale=0.1]{sophisticatedpigeon.png}
+        \end{minipage}
+    };
+    \node <4> [anchor=south east, yshift=0cm] at (current page.south east) {
+        \begin{minipage}[t]{0.25\paperwidth}\raggedright
+        \tiny I think a sophisticated pigeon should have a monocle and a twirly mustache, rather
+            than glasses and a beard. \\
+        \includegraphics[scale=0.1]{monoclepigeon.png}
+        \end{minipage}
+    };
+\end{tikzpicture}%
 \end{frame}
 
 \begin{frame}[fragile]{Degree Reasoning in \veripb}
@@ -2422,7 +2463,8 @@ ia \textcolor{uofgpillarbox}{-1} : 1 ~xp\_t >= 1 ;                      \textcol
 \end{frame}
 
 \begin{frame}{Other Forms of Reasoning}
-    We can also log (almost) all of the other things state of the art subgraph solvers do:
+    We can also log (almost) all of the other things state of the art subgraph solvers do,
+    many of which do not involve pigeons:
 \begin{itemize}
 \item
   Conditional injectivity reasoning and filtering,
@@ -2568,7 +2610,80 @@ ia \textcolor{uofgpillarbox}{-1} : 1 ~xp\_t >= 1 ;                      \textcol
 \subsection{Bogaerts, Gocht, McCreesh, Nordstr\"om: Certified Dominance and Symmetry Breaking for
 Combinatorial Optimisation, JAIR 77 (2023)}
 
-\begin{frame}{Symmetries}
+\begin{frame}{Pattern Graph Symmetries}
+\begin{minipage}{0.6\paperwidth}
+    \begin{itemize}
+        \item If a solution exists, a solution where $C < D$ exists.
+        \item Might want to decide the constraint $C < D$ dynamically during search, or even to
+            change constraint to $F < E$ for different subproblems.
+        \item Enumeration proofs: ``unsatisfiable, except for all the solutions I listed''. But what
+            does it mean to count or enumerate solutions under symmetries?
+    \end{itemize}
+\end{minipage}\hfill\begin{minipage}{0.3\paperwidth}
+    \begin{center}
+    \begin{tikzpicture}
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Na) at (1,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nb) at (1, -1.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nc) at (0, -3) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nd) at (2, -3) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Ne) at (0, -4.5) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (Nf) at (2, -4.5) {\vphantom{1}};
+        \node at (Na) {A};
+        \node at (Nb) {B};
+        \node at (Nc) {C};
+        \node at (Nd) {D};
+        \node at (Ne) {E};
+        \node at (Nf) {F};
+
+        \draw [ultra thick] (Na) -- (Nb);
+        \draw [ultra thick] (Nb) -- (Nc);
+        \draw [ultra thick] (Nc) -- (Nd);
+        \draw [ultra thick] (Nb) -- (Nd);
+        \draw [ultra thick] (Ne) -- (Nf);
+        \draw [ultra thick] (Nc) -- (Ne);
+        \draw [ultra thick] (Nd) -- (Nf);
+    \end{tikzpicture}
+    \end{center}
+\end{minipage}%
+\end{frame}
+
+\subsection{Yang, Ge, Nguyen, Molitor, Moorman, Bertozzi: Structural Equivalence in Subgraph Matching. IEEE Trans. Netw. Sci. Eng. 10(4) (2023)}
+
+\begin{frame}{Target Graph (Conditional) Symmetries}
+    \begin{center}
+    \begin{tikzpicture}
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N1) at (0,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N2) at (1,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N3) at (2,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N4) at (3,  0) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N5) at (0,  -1) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N6) at (1,  -1) {\vphantom{1}};
+        \node <1> [draw, circle, fill=white, inner sep=4pt, font=\bfseries] (N7) at (2,  -1) {\vphantom{1}};
+        \node at (N1) {1};
+        \node at (N2) {2};
+        \node at (N3) {3};
+        \node at (N4) {4};
+        \node at (N5) {5};
+        \node at (N6) {6};
+        \node at (N7) {7};
+
+        \draw [ultra thick] (N1) -- (N2);
+        \draw [ultra thick] (N2) -- (N3);
+        \draw [ultra thick] (N3) -- (N4);
+        \draw [ultra thick] (N5) -- (N6);
+        \draw [ultra thick] (N6) -- (N7);
+        \draw [ultra thick] (N1) -- (N5);
+        \draw [ultra thick] (N2) -- (N6);
+    \end{tikzpicture}
+    \end{center}
+
+    \begin{itemize}
+        \item If $4$ removed from all domains dynamically during search (all pattern vertices of
+            degree $1$ already assigned elsewhere?), a symmetry appears.
+        \item If $3$ and $7$ removed, even more symmetries appear.
+        \item We can still count when exploiting target symmetries, but we now seem to need
+            non-trivial amounts of group theory to explain correctness efficiently.
+    \end{itemize}
 \end{frame}
 
 \subsection{McCreesh, Prosser: Finding Maximum $k$-Cliques Faster Using Lazy Global Domination, SoCS 2016}
@@ -2624,17 +2739,21 @@ Combinatorial Optimisation, JAIR 77 (2023)}
 \medskip
     Can ignore vertex 2b.
     \begin{itemize}\item Every neighbour of 2b is also a neighbour of 2.
+            \item Too expensive to detect upfront, so we catch it on backtrack instead.
     \end{itemize}
-\end{frame}
-
-\subsection{Yang, Ge, Nguyen, Molitor, Moorman, Bertozzi: Structural Equivalence in Subgraph Matching. IEEE Trans. Netw. Sci. Eng. 10(4) (2023)}
-
-\begin{frame}{Conditional Symmetries}
 \end{frame}
 
 \subsection{Kraiczy, McCreesh: Solving Graph Homomorphism and Subgraph Isomorphism Problems Faster Through Clique Neighbourhood Constraints, IJCAI 2021}
 
 \begin{frame}{Lemmas, Maybe?}
+    \begin{itemize}
+        \item If pattern vertex $P$ and its neighbourhood form a $5$-clique,
+            can't map to any vertex $T$ whose neighbourhood does not form at
+            least a $5$-clique.
+        \item Can combine all of the techniques discussed to justify this efficiently in terms of
+            work done, but only for a specific choice of $P$ and $T$.
+        \item Solvers can reuse clique computations, though\ldots
+    \end{itemize}
 \end{frame}
 
 \section{Conclusion}
@@ -2651,7 +2770,7 @@ Combinatorial Optimisation, JAIR 77 (2023)}
     \item Mixing RUP and explicit derivations makes proofs much easier to write.
     \item No need for a close coupling between how the solver works and how the proof system
         works.
-    \item <2-> ChatGPT is much better at drawing pigeons than it is at maths.
+    \item <2-> ChatGPT is somewhat better at drawing pigeons than it is at maths.
 \end{itemize}%
 \end{minipage}%
 \begin{tikzpicture}[overlay,remember picture]
