@@ -22,6 +22,7 @@
 \usepackage{pifont}
 \usepackage{marvosym}
 \usepackage{cancel}
+\usepackage{fontspec}
 
 \usefonttheme{professionalfonts}
 
@@ -464,8 +465,7 @@
 
     \medskip
 
-    \scriptsize
-    ChatGPT said:
+    \scriptsize\fontspec{Comic Sans MS}
     You're referring to a taxicab number-type problem, specifically for fifth powers:
 
     What is the smallest positive integer solution to the equation $a^5 + b^5 + c^5 + d^5 = e^5$
@@ -491,8 +491,8 @@ How do you know that there aren't any smaller solutions?
 
 \medskip
 
-\scriptsize
-ChatGPT said: Great question -- and it gets right into the heart of computational number theory.
+\scriptsize\fontspec{Comic Sans MS}
+Great question -- and it gets right into the heart of computational number theory.
 
 The short answer is: we don't know for sure that there are no smaller solutions. But here's why the
     solution \[
@@ -613,6 +613,76 @@ at (current page.center) {
             \node [above=0cm of verinputlabel, xshift=-0.5cm, visible on=<4>] { Verified Input };
         \end{tikzpicture}
     \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Combine This with LLMs?}
+    \begin{onlyenv}<1>
+Can you express this as a constraint optimization problem, written in the MiniZinc language?
+
+\medskip
+\scriptsize\fontspec{Comic Sans MS}
+
+
+Yes — this fits very naturally into a constraint optimization formulation.
+The idea is to search over integers and minimize $e$ subject to the equality constraint.
+Below is a clean, standard MiniZinc model that expresses:
+
+    Find positive integers $a \le b \le c \le d < e$ such that
+    $a^5 + b^5 + c^5 + d^5 = e^5$, while minimizing $e$
+    (so the solver finds the smallest solution).
+
+\begin{Verbatim}
+% Upper bound for search (adjust as needed)
+int: MAX = 200;
+
+% Decision variables
+var 1..MAX: a; var 1..MAX: b; var 1..MAX: c; var 1..MAX: d; var 1..MAX: e;
+
+% Symmetry-breaking constraints
+constraint a <= b; constraint b <= c; constraint c <= d; constraint d < e;
+
+% Main equation: sum of four fifth powers equals a fifth power
+constraint a^5 + b^5 + c^5 + d^5 = e^5;
+
+% Objective: minimize e to find the smallest solution
+solve minimize e;
+
+% Output results
+output [ "a = ", show(a), "\n", "b = ", show(b), "\n", "c = ", show(c), "\n",
+      "d = ", show(d), "\n", "e = ", show(e), "\n" ];
+\end{Verbatim}
+\end{onlyenv}\begin{onlyenv}<2-3>
+Why are you allowed to assume that none of the variables will be zero or negative?
+
+\medskip
+\scriptsize\fontspec{Comic Sans MS}
+Short answer: you’re not automatically allowed to assume that — it’s a modeling choice, and it needs justification. Let's unpack it carefully.
+
+        ...
+
+2) Negative values can be excluded by symmetry.
+
+This part is more subtle but very standard. Because the exponent is odd:
+
+        ...
+
+So any equation with negative terms can be rearranged by moving those terms to the other side.
+
+        ...
+
+Therefore we can, without loss of generality, restrict all variables to be positive and keep exactly four terms on the left and one on the right.
+
+This is called:
+
+canonical form or symmetry breaking
+\end{onlyenv}%
+\begin{onlyenv}<3>%
+  \begin{tikzpicture}[overlay,remember picture]
+\node [anchor=center, rotate=10]
+at (current page.center) {
+        \includegraphics[keepaspectratio=true,scale=0.24]{wrong.png}
+};
+\end{tikzpicture}\end{onlyenv}%
 \end{frame}
 
 {

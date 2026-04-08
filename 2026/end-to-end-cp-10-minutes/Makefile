@@ -1,5 +1,5 @@
 all : graphs
-	latexmk -pdf -pdflatex='pdflatex -interaction=nonstopmode %O %S' talk
+	latexmk -pdf -xelatex talk
 
 GRAPHS =
 
