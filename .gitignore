@@ -12,4 +12,5 @@ gen-*
 *.toc
 *.vrb
 *.vrm
+*.xdv
 !images/*.pdf
