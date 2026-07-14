@@ -1,0 +1,8 @@
+$ gcc -o dfmax -O2 dfmax.c
+<several screens full of compiler warnings>
+
+$ time dfmax r500.5
+real    0m2.377s
+
+$ time glasgow_clique_solver r500.5
+real    0m0.434s
