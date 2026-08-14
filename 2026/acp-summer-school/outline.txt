@@ -1,0 +1,37 @@
+Software to Install
+
+Proof Logging Recap
+
+Proofs for CP, Problems in PB
+
+Encoding Variables
+
+Encoding Constraints
+
+Design Philosophy
+
+Kindling
+
+Linear Inequalities
+
+All-Different
+
+Table Constraints
+
+Proofs
+
+Search Trees
+
+Assertions for Propagations
+
+VeriPB Interactive Mode
+
+Justifying Table Constraints
+
+Justifying Linear Inequalities
+
+Justifying All-Different
+
+Assumptions Don't Matter
+
+What We Can Do, and What Remains
