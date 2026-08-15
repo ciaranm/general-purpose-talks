@@ -570,27 +570,27 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     All this effort goes on integer variables, so that propagators and search become easy to write.
 
     \begin{itemize}
-        \item<2->
+        \item
             \alertblue{It stays small.} A \texttt{var int} in \toolname{MiniZinc} has astronomical bounds.
             A direct or an order encoding would not survive the declaration.
 
-        \item<3->
+        \item
             \alertblue{The layers stay in step.} Anything said in one is mirrored into the others by
             unit propagation alone: fix some bits and the order and direct literals follow; assert an
             order literal and the bits follow, and so does everything that bound implies.
 
-        \item<4->
+        \item
             So a propagator says what it means in whichever layer suits it, and nothing has to be
             maintained: the order chain is already unit propagation, and ``takes at least one
             value'' is a line of cutting planes rather than an axiom.
 
-        \item<5->
+        \item
             This is a \alertblue{pseudo-Boolean} property, not a Boolean one. One constraint compares
             a bit vector against a number, and propagates the moment a coefficient exceeds the
             slack. This is a big problem for CNF-based solvers.
     \end{itemize}
 
-    \uncover<6->{\small Stated properly in Matthew McIlree's PhD thesis, chapter 3. If anyone is
+    \uncover{\scriptsize Stated properly in Matthew McIlree's PhD thesis, chapter 3. If anyone is
     really good at Lean and wants to try formalising this, please talk to me.}
 \end{frame}
 
@@ -617,7 +617,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     {\centering\small\url{https://github.com/ciaranm/glasgow-constraint-solver}}
 \end{frame}
 
-\begin{frame}{\toolname{kindling}: a Vibe-Coded Solver, with Proof Logging, for Teaching}
+\begin{frame}{\toolname{Kindling}: a Vibe-Coded Solver, with Proof Logging, for Teaching}
     Under two thousand lines of Python, with no dependencies. Non-negative bounded integer
     variables, three constraints, depth-first search by cloning, no learning, and unsatisfiable
     instances only. Deliberately unpolished.
@@ -851,9 +851,8 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
 
     \onslide<5->{Each column is $c\,x + c\,\overline{x} = \alertblue{c}$, so the bits leave $21$
     behind and only $1$ of the degree survives.}
-    \onslide<6->{Now the \texttt{rup} finishes on its own: assume all three literals, and what is
-    left reads $0 \ge 1$. Saturating would land exactly on the clause, but a \texttt{pol} only has
-    to get close enough for the \texttt{rup}.}
+    \onslide<6->{Now the \proofrule{rup} finishes on its own: assume all three literals, and what is
+    left reads $0 \ge 1$.}
 \end{frame}
 
 \begin{frame}[t]{Justifying All-Different Failures}
@@ -1193,7 +1192,7 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
 \end{frame}
 
 \begin{frame}{Reasons, Explanations, and Lazy Clause Generation}
-    Every inference kindling logs is guarded by \alertblue{every guess} made on the way to the node.
+    Every inference \toolname{kindling} logs is guarded by \alertblue{every guess} made on the way to the node.
     Always legal, because between them the guesses determine the whole node---and often more
     than was needed.
 
@@ -1213,8 +1212,6 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
             can be hard to debug\ldots
     \end{itemize}
 \end{frame}
-
-\section{What Remains}
 
 \begin{frame}{What Else Can We Do?}
     \toolname{Glasgow} has thirty-seven constraints, and every inference every one of them makes is justified:
@@ -1273,30 +1270,32 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
             \alertblue{Flow arguments.} Theoretically possible, unclear if they're practical yet.
     \end{itemize}
 
-    \uncover<2->{Every propagator on the last slide needs two or three of these put together
-    cleverly.}
+    Every propagator on the last slide needs two or three of these put together
+    cleverly.
 \end{frame}
 
-\begin{frame}{Doable, But Not Pretty}
+\begin{frame}{Multiplication: Doable, But Not Pretty}
     Multiplication, division and modulus are all certified. Nobody enjoyed it.
 
     \begin{itemize}
-        \item<2->
+        \item
             A product is awkward in \alertblue{both} views at once. The bits do not add up into
             anything the order literals can see, and a bound on a product is not a bound on anything
             linear, so neither of the two things that rescue everything else is available.
-        \item<3->
+        \item
             What comes out is bit-level case analysis and a long, specific derivation per
             propagation rule, rather than one recipe you could explain in a slide. This one took a
             chapter.
-        \item<4->
+        \item
             We do not know whether that ugliness is \alertblue{inherent}. No lower bound says a
             short certificate cannot exist; nobody has found one.
-        \item<5->
+        \item
             Which is where every one of these has started. Parity looked impossible until 2021, and
             then it was four ingredients and only one of them was hard.
     \end{itemize}
 \end{frame}
+
+\section{What Remains}
 
 \begin{frame}{Other Approaches: Assert Everything, Up Front}
     Everybody working on this has the same problem---a propagator knows something the checker does
@@ -1306,15 +1305,15 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
     \medskip
 
     \begin{itemize}
-        \item<2->
+        \item
             Gange, Chu and Stuckey, \emph{Certifying Optimality in Constraint Programming}: take a
             lazy clause generation solver, write out the resolution proof it already had, and
             introduce each propagator's explanations as \alertblue{axioms} saying what that
             propagator does.
-        \item<3->
+        \item
             A certified inference checker per constraint then rules on whether those axioms were
             allowed.
-        \item<4->
+        \item
             In our vocabulary: put every \texttt{a} into the model file and leave it there. Then
             wonder why the checker ran out of memory.
     \end{itemize}
@@ -1322,18 +1321,18 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
 
 \begin{frame}{Other Approaches: Assert Everything, Then Trim}
     \begin{itemize}
-        \item<1->
+        \item
             DRCP, and the Pumpkin solver: Flippo, Sidorov, Marijnissen, Smits and Demirovi\'c, CP
             2024. At runtime the solver logs only a \alertblue{scaffold}: what it did, in terms
             of literal constraints on domains, and not why.
-        \item<2->
+        \item
             Afterwards a proof processor \alertblue{trims} the scaffold, throwing away everything the
             answer turned out not to depend upon, and expands what is left into something a checker
             will take.
-        \item<3->
+        \item
             In our vocabulary: assert the lot, cheaply, and work out afterwards which of those
             assertions you actually have to pay for.
-        \item<4->
+        \item
             Somewhere, something still has to know what a \texttt{cumulative} is. We put it in the
             solver's derivation, where a checker that has never heard of scheduling can read it.
             They put it between the solver and the checker. Which you prefer depends on what you
@@ -1347,18 +1346,18 @@ rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
     generation solver which is not ours either.
 
     \begin{itemize}
-        \item<2->
+        \item
             The solver emits \texttt{a} lines and nothing else, but fills in the \alertblue{reason}
             and the hints, in the annotation fields we have spent all afternoon leaving blank.
-        \item<3->
+        \item
             \alertblue{Trim first.} Elaborate the skeleton, throw away every inference the conclusion
             turned out not to need, and only then start working out justifications.
-        \item<4->
+        \item
             Justify \alertblue{outside} the solver. Every derivation in this talk needs only the
             reason, plus occasionally something small like an automaton's state, so a justifier can
             do it afterwards rather than every solver doing it for itself. His is lifted from the
             \toolname{Glasgow} solver.
-        \item<5->
+        \item
             And when nothing in the library fits: fall back on a decomposition, an LP relaxation, or
             handing the goal to a proof logging pseudo-Boolean or SAT solver to find the argument
             for you.
