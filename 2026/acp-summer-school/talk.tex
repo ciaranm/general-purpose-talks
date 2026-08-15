@@ -868,17 +868,21 @@ pseudo-Boolean proof version 3.0
         \end{center}
 
         \begin{semiverbatim}\footnotesize
+pseudo-Boolean proof version 3.0
 rup x1eq0 ==> >= 1 ;
 rup ~x1eq0 ==> >= 1 ;
 rup >= 1 ;
+output NONE;
+conclusion UNSAT;
+end pseudo-Boolean proof;
         \end{semiverbatim}
     \end{minipage}\hfill
     \begin{minipage}[t]{0.60\framewidth}
         \begin{itemize}
             \item<2->
-                Ten guesses became two, and eleven lines became three.
+                Ten guesses became two, and eleven \texttt{rup} lines became three.
             \item<3->
-                And the three lines are \alertred{\texttt{REJECTED}}. Bounding $X_2$, $X_3$, $X_4$
+                And those three are \alertred{\texttt{REJECTED}}. Bounding $X_2$, $X_3$, $X_4$
                 by $1$ unit propagation \alertblue{can} redo, since deciding $X_1$ forces a bit of
                 each. That three of them then do not fit in two values, it \alertred{cannot}:
                 nothing is unit, and counting is a cutting planes argument.
@@ -895,7 +899,7 @@ rup >= 1 ;
     far it got:
 
     \begin{semiverbatim}\footnotesize
-Error: Checking error at search.pbp:10, not implied by RUP
+Error: Checking error at search.pbp:2, not implied by RUP
 \uncover<2->{
 Propagation check failed! The propagation had the following trail:
     x1eq0    (1 x1eq0 >= 1)
@@ -908,8 +912,8 @@ Propagation check failed! The propagation had the following trail:
 
     \begin{itemize}
         \item<3->
-            Line $10$ is where we \alertblue{claimed} something, which is rarely where the problem
-            is: everything above it is what should have made the claim follow.
+            It names where we \alertblue{claimed} something, which is rarely where the problem is.
+            Here there is nothing above it at all.
         \item<4->
             The trail is the checker's best effort: it assumed our decision, went down to the bits,
             used the inequality to rule out the twos, and came back up with
@@ -920,29 +924,41 @@ Propagation check failed! The propagation had the following trail:
 \end{frame}
 
 \begin{frame}[fragile]{Assertions for Propagations}
-    The cheat: \texttt{a} adds a constraint without checking it. Same proof, with the two
-    all-different failures asserted rather than derived:
+    The cheat: \texttt{a} adds a constraint without checking it:
 
-    \begin{semiverbatim}\footnotesize
-% decide x1 = 0
-rup x1eq0 ==> 1 ~x2ge2 >= 1 ;     \textrm{\emph{and the same for x3 and x4}}
-a   x1eq0 ==> >= 1 : : all_different_hall ;
+    \begin{minipage}[t]{0.52\framewidth}
+        \begin{semiverbatim}\scriptsize
+pseudo-Boolean proof version 3.0
+rup x1eq0 ==> 1 ~x2ge2 >= 1 ;
+rup x1eq0 ==> 1 ~x3ge2 >= 1 ;
+rup x1eq0 ==> 1 ~x4ge2 >= 1 ;
+a x1eq0 ==> >= 1 : : all_different_hall ;
 rup x1eq0 ==> >= 1 ;
-% decide x1 != 0                  \textrm{\emph{\ldots and symmetrically over here}}
+rup ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
+rup ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
+rup ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
+a ~x1eq0 ==> >= 1 : : all_different_hall ;
+rup ~x1eq0 ==> >= 1 ;
 rup >= 1 ;
-    \end{semiverbatim}
-
-    \begin{itemize}
-        \item<2->
-            \texttt{UNDER ASSERTIONS} rather than \texttt{VERIFIED}. Useful for development, not a
-            full proof: most solver bugs are in the propagators.
-        \item<3->
-            The annotations are meant for tools rather than for people, so the solver can tell you
-            what is left to do.
-        \item<4->
-            \texttt{REJECTED} means something is \alertred{wrong}. \texttt{UNDER ASSERTIONS} means
-            something is \alertblue{missing}.
-    \end{itemize}
+output NONE;
+conclusion UNSAT;
+end pseudo-Boolean proof;
+        \end{semiverbatim}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.44\framewidth}
+        \begin{itemize}
+            \item<2->
+                \texttt{UNDER ASSERTIONS}, not \texttt{VERIFIED}: fine for development, not a
+                proof.
+            \item<3->
+                The bounds are logged although nobody needed telling. A solver justifies every
+                inference, not the ones it thinks are hard.
+            \item<4->
+                The annotations are for tools, so the solver can say what is left to do.
+                \texttt{REJECTED} means something is \alertred{wrong}; \texttt{UNDER ASSERTIONS}
+                means something is \alertblue{missing}.
+        \end{itemize}
+    \end{minipage}
 \end{frame}
 
 \section{Propagation}
