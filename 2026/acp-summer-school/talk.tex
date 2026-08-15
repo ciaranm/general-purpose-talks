@@ -672,7 +672,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \item
             It propagates almost nothing, which is still fine.
         \item
-            \toolname{kindling} refuses any coefficient but $\pm 1$. Putting the coefficients back is one of
+            \toolname{Kindling} refuses any coefficient but $\pm 1$. Putting the coefficients back is one of
             the exercises.
     \end{itemize}
 \end{frame}
@@ -715,7 +715,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     The tuple Booleans are proof-only. They don't (necessarily) exist inside the solver.
 \end{frame}
 
-\begin{frame}{All-Different (\toolname{kindling} Version)}
+\begin{frame}{All-Different (\toolname{Kindling} Version)}
     One at-most-one constraint per \alertblue{value}, over the direct literals:
     \begin{equation*}
         \text{for each value } v: \qquad x_{1=v} + x_{2=v} + \cdots + x_{n=v} \le 1
@@ -898,7 +898,7 @@ end pseudo-Boolean proof;
     \begin{minipage}[t]{0.60\framewidth}
         \begin{itemize}
             \item<2->
-                Ten guesses became two, and eleven \texttt{rup} lines became three.
+                Ten guesses became two, and eleven \proofrule{rup} lines became three.
             \item<3->
                 And those three are \alertred{\texttt{REJECTED}}. Bounding $X_2$, $X_3$, $X_4$
                 by $1$ unit propagation \alertblue{can} redo, since deciding $X_1$ forces a bit of
@@ -942,7 +942,7 @@ Propagation check failed! The propagation had the following trail:
 \end{frame}
 
 \begin{frame}[fragile]{Assertions for Propagations}
-    The cheat: \texttt{a} adds a constraint without checking it:
+    The cheat: \proofrule{a} adds a constraint without checking it:
 
     \begin{minipage}[t]{0.52\framewidth}
         \begin{semiverbatim}\scriptsize
@@ -1601,7 +1601,7 @@ end pseudo-Boolean proof;
 
     \begin{itemize}
         \item
-            The solver emits \texttt{a} lines and nothing else, but fills in the \alertblue{reason}
+            The solver emits \proofrule{a} lines and nothing else, but fills in the \alertblue{reason}
             and the hints, in the annotation fields we have spent all afternoon leaving blank.
         \item
             \alertblue{Trim first.} Elaborate the skeleton, throw away every inference the conclusion
@@ -1706,7 +1706,7 @@ end pseudo-Boolean proof;
 
 \section{Exercises}
 
-\begin{frame}[fragile]{Installing \toolname{kindling}}
+\begin{frame}[fragile]{Installing \toolname{Kindling}}
     \begin{Verbatim}[fontsize=\small]
 git clone https://github.com/ciaranm/kindling.git
 cd kindling
@@ -1827,7 +1827,7 @@ python3 -m kindling too-small --prove /tmp/t --check
 
     \medskip
 
-    \uncover<2->{You will also want \texttt{w}, which weakens a constraint by dropping a term. Work out
+    \uncover<2->{You will also want \proofrule{w}, which weakens a constraint by dropping a term. Work out
     what needs dropping, and why the checker accepts the proof without it anyway.}
 \end{frame}
 
