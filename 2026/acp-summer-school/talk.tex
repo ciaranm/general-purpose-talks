@@ -1369,6 +1369,48 @@ end pseudo-Boolean proof;
     \end{tabular}
 \end{frame}
 
+\begin{frame}[fragile]{The Same Proof, With Nothing Asserted}
+    \begin{minipage}[t]{0.58\framewidth}
+        \begin{semiverbatim}\scriptsize
+pseudo-Boolean proof version 3.0
+@atleast2 \proofrule{pol} @x2eq0_dn @x2eq1_dn + @x2eq2_dn + ;
+@atleast3 \proofrule{pol} @x3eq0_dn @x3eq1_dn + @x3eq2_dn + ;
+@atleast4 \proofrule{pol} @x4eq0_dn @x4eq1_dn + @x4eq2_dn + ;
+\proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{pol} @amo1_0 @amo1_1 + @atleast2 +
+    @atleast3 + @atleast4 + ;
+\proofrule{rup} x1eq0 ==> >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{pol} @amo1_0 @amo1_1 + @atleast2 +
+    @atleast3 + @atleast4 + ;
+\proofrule{rup} ~x1eq0 ==> >= 1 ;
+\proofrule{rup} >= 1 ;
+output NONE;
+conclusion UNSAT;
+end pseudo-Boolean proof;
+        \end{semiverbatim}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.38\framewidth}
+        \begin{itemize}
+            \item<2->
+                The two \proofrule{a} lines have become two \proofrule{pol} lines. Nothing else
+                moved.
+            \item<3->
+                Each is the derivation from the previous slide: the at-most-ones for the two
+                values, plus an at-least-one per variable.
+            \item<4->
+                Those at-least-ones say what the literals mean rather than what the model said, so
+                they are derived at the top and used twice.
+            \item<5->
+                \alertgreen{\texttt{VERIFIED}}.
+        \end{itemize}
+    \end{minipage}
+\end{frame}
+
 \begin{frame}{Recovering At-Most-One}
     \toolname{Glasgow} has no at-most-one constraint to add up: its all-different is a clique of not-equals. So
     we need to derive them.
