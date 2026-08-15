@@ -660,7 +660,27 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{Equals and Not-Equals}
-    ?? use the $f \Rightarrow X > Y$ form for readability
+    $X = Y$ is two inequalities, and we have just done inequalities:
+    \begin{equation*}
+        X \le Y \qquad\text{and}\qquad X \ge Y
+    \end{equation*}
+
+    \medskip
+
+    $X \ne Y$ is not an inequality at all. So introduce a flag $f$ saying which way round the two
+    variables go, and half-reify an inequality for each way:
+    \begin{align*}
+        f &\Rightarrow X < Y\\
+        \overline{f} &\Rightarrow X > Y
+    \end{align*}
+    Either way round is allowed, but $f$ has to pick one, and neither of them is $X = Y$.
+
+    For $X, Y \in \{0 \ldots 3\}$, that is two pseudo-Boolean constraints:
+    \begin{align*}
+        4 \overline{f} + 1 \overline{x}_{b0} + 2 \overline{x}_{b1} + 1 y_{b0} + 2 y_{b1} &\ge 4\\
+        4 f + 1 x_{b0} + 2 x_{b1} + 1 \overline{y}_{b0} + 2 \overline{y}_{b1} &\ge 4
+    \end{align*}
+    where the $4$ is the degree: one for the strict $<$, three from the flipped signs.
 \end{frame}
 
 \begin{frame}{Table Constraints}
@@ -698,7 +718,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     A clique of not-equals instead. One flag per pair, saying which way round that pair goes, and
     two half-reified constraints over the \alertblue{bits}:
     \begin{align*}
-        s_{ij} &\Rightarrow X_j < X_i\\
+        s_{ij} &\Rightarrow X_i < X_j\\
         \overline{s}_{ij} &\Rightarrow X_i > X_j
     \end{align*}
 
