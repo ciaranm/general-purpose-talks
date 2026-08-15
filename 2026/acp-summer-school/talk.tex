@@ -840,20 +840,45 @@ rup >= 1 ;
     \end{minipage}
 \end{frame}
 
-\begin{frame}{Debugging a Failed Proof}
-    ?? todo
+\begin{frame}[fragile]{Debugging a Failed Proof}
+    \toolname{VeriPB} names the line it could not get past, and \texttt{-{}-trace-failed} says how
+    far it got:
+
+    \begin{semiverbatim}\footnotesize
+Error: Checking error at search.pbp:10, not implied by RUP
+\uncover<2->{
+Propagation check failed! The propagation had the following trail:
+    x1eq0    (1 x1eq0 >= 1)
+    ~x1b0    (1 ~x1b0 1 x1ge1 >= 1)
+    ~x2b1    (1 x1b0 2 ~x2b1 1 ~x2b0 2 ~x3b1 1 ~x3b0 2 ~x4b1 1 ~x4b0 >= 8)
+    ~x3b1 ~x4b1        \textrm{\emph{(the same constraint)}}
+    ~x2ge2   (2 x2b1 1 x2b0 2 ~x2ge2 >= 2)
+    ~x3ge2 ~x4ge2      \textrm{\emph{(and so on)}}}
+    \end{semiverbatim}
+
+    \begin{itemize}
+        \item<3->
+            Line $10$ is where we \alertblue{claimed} something, which is rarely where the problem
+            is: everything above it is what should have made the claim follow.
+        \item<4->
+            The trail is the checker's best effort: it assumed our decision, went down to the bits,
+            used the inequality to rule out the twos, and came back up with
+            $X_2, X_3, X_4 \le 1$.
+        \item<5->
+            Then it stopped: nothing else is unit. The counting step is ours to supply.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Assertions for Propagations}
-    The cheat: \texttt{a} adds a constraint without checking it. Same example, with the two Hall
-    violations asserted rather than derived:
+    The cheat: \texttt{a} adds a constraint without checking it. Same proof, with the two
+    all-different failures asserted rather than derived:
 
     \begin{semiverbatim}\footnotesize
-% decide W = 0
-rup x1eq0 ==> 1 ~x2ge2 >= 1 ;      \textrm{\emph{and the same for Y and Z}}
+% decide x1 = 0
+rup x1eq0 ==> 1 ~x2ge2 >= 1 ;     \textrm{\emph{and the same for x3 and x4}}
 a   x1eq0 ==> >= 1 : : all_different_hall ;
 rup x1eq0 ==> >= 1 ;
-% decide W != 0                    \textrm{\emph{\ldots and symmetrically over here}}
+% decide x1 != 0                  \textrm{\emph{\ldots and symmetrically over here}}
 rup >= 1 ;
     \end{semiverbatim}
 
