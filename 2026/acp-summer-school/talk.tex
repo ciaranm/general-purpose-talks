@@ -745,26 +745,31 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \newcommand{\deadend}{\textcolor{uofgpillarbox}{\Lightning}}
 
 \begin{frame}[fragile]{Backtracking Search}
-    $X, Y, Z \in \{0, 1\}$, all different, and no propagation yet: a clash is noticed only once two
-    of them have values.
+    \begin{minipage}[t]{0.44\framewidth}
+        $X_1 \in \{0,1\}$ and $X_2, X_3, X_4 \in \{0,1,2\}$, with
+        \begin{align*}
+            &X_2 \ne X_3, \quad X_2 \ne X_4, \quad X_3 \ne X_4 \\
+            &X_1 + X_2 + X_3 + X_4 \le 2 \\
+            &X_2 + X_3 + X_4 \le 1 + X_1
+        \end{align*}
 
-    \begin{minipage}[t]{0.42\framewidth}
-        \vspace{0.3em}
+        \vspace{-0.7em}
+
         \begin{center}
             \begin{tikzpicture}[
-                level 1/.style={level distance=0.75cm, sibling distance=2.6cm},
-                level 2/.style={level distance=0.75cm, sibling distance=1.3cm},
-                level 3/.style={level distance=0.75cm, sibling distance=0.7cm}]
-                \node [treenode] {$X$}
-                    child { node [treenode] {$Y$}
-                        child { node {\deadend} edge from parent [takesit] }
-                        child { node [treenode] {$Z$}
+                level 1/.style={level distance=0.65cm, sibling distance=2.6cm},
+                level 2/.style={level distance=0.65cm, sibling distance=1.3cm},
+                level 3/.style={level distance=0.65cm, sibling distance=0.7cm}]
+                \node [treenode] {$X_1$}
+                    child { node [treenode] {$X_2$}
+                        child { node [treenode] {$X_3$}
                             child { node {\deadend} edge from parent [takesit] }
                             child { node {\deadend} edge from parent [losesit] }
-                            edge from parent [losesit] }
+                            edge from parent [takesit] }
+                        child { node {\deadend} edge from parent [losesit] }
                         edge from parent [takesit] }
-                    child { node [treenode] {$Y$}
-                        child { node [treenode] {$Z$}
+                    child { node [treenode] {$X_2$}
+                        child { node [treenode] {$X_3$}
                             child { node {\deadend} edge from parent [takesit] }
                             child { node {\deadend} edge from parent [losesit] }
                             edge from parent [takesit] }
@@ -772,15 +777,15 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
                         edge from parent [losesit] }
                 ;
             \end{tikzpicture}
-
-            {\scriptsize solid is the guess $= 0$, dotted is $\ne 0$}
         \end{center}
+
+        {\scriptsize solid is the guess $= 0$, dotted is $\ne 0$}
     \end{minipage}\hfill
-    \begin{minipage}[t]{0.54\framewidth}
+    \begin{minipage}[t]{0.52\framewidth}
         \begin{semiverbatim}\footnotesize
-\uncover<2->{rup x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<3->{rup x1eq0 ~x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<4->{rup x1eq0 ~x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<2->{rup x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<3->{rup x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<4->{rup x1eq0 x2eq0 ==> >= 1 ;}
 \uncover<5->{rup x1eq0 ~x2eq0 ==> >= 1 ;}
 \uncover<6->{rup x1eq0 ==> >= 1 ;}
 \uncover<7->{rup ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
@@ -790,54 +795,47 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \uncover<7->{rup ~x1eq0 ==> >= 1 ;}
 \uncover<8->{rup >= 1 ;}
         \end{semiverbatim}
-    \end{minipage}
 
-    \onslide<9->{A guess needs no justification. Only a \deadend{} does, and it is one line: those
-    decisions cannot all hold. So the proof is the tree, rotated a quarter turn, and the last dead
-    end is the root.}
+        \onslide<9->{Only a \deadend{} needs justifying: one line saying those decisions cannot
+        all hold. The proof is the tree, rotated a quarter turn.}
+        \onslide<10->{No propagator said a word, and \toolname{VeriPB} accepts it anyway.}
+    \end{minipage}
 \end{frame}
 
 \begin{frame}[fragile]{Propagations Aren't Necessarily RUP}
-    \begin{minipage}[t]{0.44\framewidth}
-        $W \in \{0,1\}$ and $X, Y, Z \in \{0,1,2\}$, with
-        \begin{align*}
-            &\operatorname{all\_different}(X, Y, Z) \\
-            &W + X + Y + Z \le 2 \\
-            &X + Y + Z - W \le 1
-        \end{align*}
+    Now say $\operatorname{all\_different}(X_2, X_3, X_4)$ instead of three not-equals: same
+    problem, better propagator, which fails as soon as those three are stuck in two values.
 
-        \vspace{-0.5em}
-
-        Neither inequality prunes anything at the root, and three variables over three values are
-        not a violated Hall set, so we have to guess.
-
+    \begin{minipage}[t]{0.36\framewidth}
+        \vspace{0.5em}
         \begin{center}
             \begin{tikzpicture}[level 1/.style={level distance=0.8cm, sibling distance=2.0cm}]
-                \node [treenode] {$W$}
+                \node [treenode] {$X_1$}
                     child { node {\deadend} edge from parent [takesit] }
                     child { node {\deadend} edge from parent [losesit] }
                 ;
             \end{tikzpicture}
         \end{center}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.52\framewidth}
-        The search, and nothing else:
 
-        \begin{semiverbatim}\small
+        \begin{semiverbatim}\footnotesize
 rup x1eq0 ==> >= 1 ;
 rup ~x1eq0 ==> >= 1 ;
 rup >= 1 ;
         \end{semiverbatim}
-
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.60\framewidth}
         \begin{itemize}
             \item<2->
-                \alertred{\texttt{REJECTED}}: the checker cannot reach those contradictions.
+                Ten guesses became two, and eleven lines became three.
             \item<3->
-                Each branch bounds $X$, $Y$, $Z$ by $1$, which unit propagation \alertblue{can}
-                redo, since deciding $W$ forces a bit of each.
+                And the three lines are \alertred{\texttt{REJECTED}}. Bounding $X_2$, $X_3$, $X_4$
+                by $1$ unit propagation \alertblue{can} redo, since deciding $X_1$ forces a bit of
+                each. That three of them then do not fit in two values, it \alertred{cannot}:
+                nothing is unit, and counting is a cutting planes argument.
             \item<4->
-                That leaves three variables in two values, which it \alertred{cannot}: nothing is
-                unit, and counting is a cutting planes argument.
+                A better propagator searches less and claims more, and the difference is exactly
+                what somebody now has to justify. Decompose your globals and the checker will
+                follow you anywhere --- which is not a recommendation.
         \end{itemize}
     \end{minipage}
 \end{frame}
