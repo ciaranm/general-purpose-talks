@@ -851,17 +851,17 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \begin{minipage}[t]{0.52\framewidth}
         \begin{semiverbatim}\footnotesize
 pseudo-Boolean proof version 3.0
-\uncover<2->{rup x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<3->{rup x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
-\uncover<4->{rup x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<5->{rup x1eq0 ~x2eq0 ==> >= 1 ;}
-\uncover<6->{rup x1eq0 ==> >= 1 ;}
-\uncover<7->{rup ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<7->{rup ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
-\uncover<7->{rup ~x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<7->{rup ~x1eq0 ~x2eq0 ==> >= 1 ;}
-\uncover<7->{rup ~x1eq0 ==> >= 1 ;}
-\uncover<8->{rup >= 1 ;}
+\uncover<2->{\proofrule{rup} x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<3->{\proofrule{rup} x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<4->{\proofrule{rup} x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<5->{\proofrule{rup} x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<6->{\proofrule{rup} x1eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} ~x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} ~x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} ~x1eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} >= 1 ;}
 \uncover<9->{output NONE;}
 \uncover<9->{conclusion UNSAT;}
 \uncover<9->{end pseudo-Boolean proof;}
@@ -886,9 +886,9 @@ pseudo-Boolean proof version 3.0
 
         \begin{semiverbatim}\footnotesize
 pseudo-Boolean proof version 3.0
-rup x1eq0 ==> >= 1 ;
-rup ~x1eq0 ==> >= 1 ;
-rup >= 1 ;
+\proofrule{rup} x1eq0 ==> >= 1 ;
+\proofrule{rup} ~x1eq0 ==> >= 1 ;
+\proofrule{rup} >= 1 ;
 output NONE;
 conclusion UNSAT;
 end pseudo-Boolean proof;
@@ -946,17 +946,17 @@ Propagation check failed! The propagation had the following trail:
     \begin{minipage}[t]{0.52\framewidth}
         \begin{semiverbatim}\scriptsize
 pseudo-Boolean proof version 3.0
-rup x1eq0 ==> 1 ~x2ge2 >= 1 ;
-rup x1eq0 ==> 1 ~x3ge2 >= 1 ;
-rup x1eq0 ==> 1 ~x4ge2 >= 1 ;
-a x1eq0 ==> >= 1 : : all_different_hall ;
-rup x1eq0 ==> >= 1 ;
-rup ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
-rup ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
-rup ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
-a ~x1eq0 ==> >= 1 : : all_different_hall ;
-rup ~x1eq0 ==> >= 1 ;
-rup >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{a} x1eq0 ==> >= 1 : : all_different_hall ;
+\proofrule{rup} x1eq0 ==> >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{a} ~x1eq0 ==> >= 1 : : all_different_hall ;
+\proofrule{rup} ~x1eq0 ==> >= 1 ;
+\proofrule{rup} >= 1 ;
 output NONE;
 conclusion UNSAT;
 end pseudo-Boolean proof;
@@ -986,8 +986,8 @@ end pseudo-Boolean proof;
 
     \bigskip
 
-    \begin{Verbatim}[fontsize=\small]
-rup x1eq0 ==> 1 ~x2eq1 >= 1 ;
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+\proofrule{rup} x1eq0 ==> 1 ~x2eq1 >= 1 ;
     \end{Verbatim}
 
     \bigskip
@@ -1010,9 +1010,9 @@ rup x1eq0 ==> 1 ~x2eq1 >= 1 ;
     $X_1 + X_2 + X_3 \le 9$, and something has already established $X_2 \ge 3$ and $X_3 \ge 3$. So
     $X_1 \le 3$.
 
-    \begin{Verbatim}[fontsize=\small]
-pol @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + ;
-rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+\proofrule{pol} @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + ;
+\proofrule{rup} x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
     \end{Verbatim}
 
     Normalising flipped the $\le 9$ into a $\ge 12$ over negated bits, and every channelling
@@ -1693,7 +1693,7 @@ python3 -m unittest discover -s tests -t .
     Type a line, and find out what it did:
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
-pbp> pol @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + s ;
+pbp> \proofrule{pol} @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + s ;
 pbp> :show x1ge4
 pbp> :undo
 \alertred{(line rejected, state unchanged)}
