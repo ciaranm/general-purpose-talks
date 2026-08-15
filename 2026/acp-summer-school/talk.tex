@@ -197,6 +197,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \newcommand<>{\alertblue}[1]{{\color#2{uofgcobalt}#1}}
 \newcommand<>{\alertgreen}[1]{{\color#2{uofglawn}#1}}
 \newcommand<>{\proofrule}[1]{{\color#2{uofglawn}#1}}
+\newcommand<>{\prooflabel}[1]{{\color#2{uofgpumpkin}#1}}
 \newcommand<>{\toolname}[1]{{\color#2{uofgthistle}#1}}
 
 \author{Ciaran McCreesh}
@@ -758,42 +759,42 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
     \begin{minipage}[t]{0.46\framewidth}
         \begin{semiverbatim}\linespread{0.82}\scriptsize
-@x1ge1_up 1 x1b0 1 ~x1ge1 >= 1 ;
-@x1ge1_dn 1 ~x1b0 1 x1ge1 >= 1 ;
-@x1eq0_up0 1 ~x1eq0 1 ~x1ge1 >= 1 ;
-@x1eq0_dn 1 x1eq0 1 x1ge1 >= 1 ;
-@x1eq1_up0 1 ~x1eq1 1 x1ge1 >= 1 ;
-@x1eq1_dn 1 x1eq1 1 ~x1ge1 >= 1 ;
-@x2_ub 2 x2b1 1 x2b0 <= 2 ;
-@x2ge1_up 2 x2b1 1 x2b0 1 ~x2ge1 >= 1 ;
-@x2ge1_dn 2 ~x2b1 1 ~x2b0 3 x2ge1 >= 3 ;
-@x2ge2_up 2 x2b1 1 x2b0 2 ~x2ge2 >= 2 ;
-@x2ge2_dn 2 ~x2b1 1 ~x2b0 2 x2ge2 >= 2 ;
-@x2eq0_up0 1 ~x2eq0 1 ~x2ge1 >= 1 ;
-@x2eq0_dn 1 x2eq0 1 x2ge1 >= 1 ;
-@x2eq1_up0 1 ~x2eq1 1 x2ge1 >= 1 ;
-@x2eq1_up1 1 ~x2eq1 1 ~x2ge2 >= 1 ;
-@x2eq1_dn 1 x2eq1 1 ~x2ge1 1 x2ge2 >= 1 ;
-@x2eq2_up0 1 ~x2eq2 1 x2ge2 >= 1 ;
-@x2eq2_dn 1 x2eq2 1 ~x2ge2 >= 1 ;
+\prooflabel{@x1ge1_up} 1 x1b0 1 ~x1ge1 >= 1 ;
+\prooflabel{@x1ge1_dn} 1 ~x1b0 1 x1ge1 >= 1 ;
+\prooflabel{@x1eq0_up0} 1 ~x1eq0 1 ~x1ge1 >= 1 ;
+\prooflabel{@x1eq0_dn} 1 x1eq0 1 x1ge1 >= 1 ;
+\prooflabel{@x1eq1_up0} 1 ~x1eq1 1 x1ge1 >= 1 ;
+\prooflabel{@x1eq1_dn} 1 x1eq1 1 ~x1ge1 >= 1 ;
+\prooflabel{@x2_ub} 2 x2b1 1 x2b0 <= 2 ;
+\prooflabel{@x2ge1_up} 2 x2b1 1 x2b0 1 ~x2ge1 >= 1 ;
+\prooflabel{@x2ge1_dn} 2 ~x2b1 1 ~x2b0 3 x2ge1 >= 3 ;
+\prooflabel{@x2ge2_up} 2 x2b1 1 x2b0 2 ~x2ge2 >= 2 ;
+\prooflabel{@x2ge2_dn} 2 ~x2b1 1 ~x2b0 2 x2ge2 >= 2 ;
+\prooflabel{@x2eq0_up0} 1 ~x2eq0 1 ~x2ge1 >= 1 ;
+\prooflabel{@x2eq0_dn} 1 x2eq0 1 x2ge1 >= 1 ;
+\prooflabel{@x2eq1_up0} 1 ~x2eq1 1 x2ge1 >= 1 ;
+\prooflabel{@x2eq1_up1} 1 ~x2eq1 1 ~x2ge2 >= 1 ;
+\prooflabel{@x2eq1_dn} 1 x2eq1 1 ~x2ge1 1 x2ge2 >= 1 ;
+\prooflabel{@x2eq2_up0} 1 ~x2eq2 1 x2ge2 >= 1 ;
+\prooflabel{@x2eq2_dn} 1 x2eq2 1 ~x2ge2 >= 1 ;
         \end{semiverbatim}
     \end{minipage}\hfill
     \begin{minipage}[t]{0.50\framewidth}
         \begin{semiverbatim}\linespread{0.82}\scriptsize
 \textrm{\emph{... and twelve more each for x3, x4}}
 
-@amo1_0 1 x2eq0 1 x3eq0 <= 1 ;
-@amo1_1 1 x2eq1 1 x3eq1 <= 1 ;
-@amo1_2 1 x2eq2 1 x3eq2 <= 1 ;
-@amo2_0 1 x2eq0 1 x4eq0 <= 1 ;
-@amo2_1 1 x2eq1 1 x4eq1 <= 1 ;
-@amo2_2 1 x2eq2 1 x4eq2 <= 1 ;
-@amo3_0 1 x3eq0 1 x4eq0 <= 1 ;
-@amo3_1 1 x3eq1 1 x4eq1 <= 1 ;
-@amo3_2 1 x3eq2 1 x4eq2 <= 1 ;
-@lin4 1 x1b0 2 x2b1 1 x2b0
+\prooflabel{@amo1_0} 1 x2eq0 1 x3eq0 <= 1 ;
+\prooflabel{@amo1_1} 1 x2eq1 1 x3eq1 <= 1 ;
+\prooflabel{@amo1_2} 1 x2eq2 1 x3eq2 <= 1 ;
+\prooflabel{@amo2_0} 1 x2eq0 1 x4eq0 <= 1 ;
+\prooflabel{@amo2_1} 1 x2eq1 1 x4eq1 <= 1 ;
+\prooflabel{@amo2_2} 1 x2eq2 1 x4eq2 <= 1 ;
+\prooflabel{@amo3_0} 1 x3eq0 1 x4eq0 <= 1 ;
+\prooflabel{@amo3_1} 1 x3eq1 1 x4eq1 <= 1 ;
+\prooflabel{@amo3_2} 1 x3eq2 1 x4eq2 <= 1 ;
+\prooflabel{@lin4} 1 x1b0 2 x2b1 1 x2b0
       2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 2 ;
-@lin5 -1 x1b0 2 x2b1 1 x2b0
+\prooflabel{@lin5} -1 x1b0 2 x2b1 1 x2b0
       2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 1 ;
         \end{semiverbatim}
 
@@ -1011,7 +1012,7 @@ end pseudo-Boolean proof;
     $X_1 \le 3$.
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
-\proofrule{pol} @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + ;
+\proofrule{pol} \prooflabel{@lin1} \prooflabel{@x2ge3_up} + \prooflabel{@x3ge3_up} + \prooflabel{@x1ge4_up} + ;
 \proofrule{rup} x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
     \end{Verbatim}
 
@@ -1021,24 +1022,24 @@ end pseudo-Boolean proof;
     {\footnotesize\setlength{\arraycolsep}{1.5pt}
     \begin{equation*}
         \begin{array}{r@{\quad}*{12}{c}@{\quad}r}
-            \texttt{@lin1}
+            \prooflabel{\texttt{@lin1}}
                 & 4\overline{x}_{1b2} & 2\overline{x}_{1b1} & 1\overline{x}_{1b0} &
                 & 4\overline{x}_{2b2} & 2\overline{x}_{2b1} & 1\overline{x}_{2b0} &
                 & 4\overline{x}_{3b2} & 2\overline{x}_{3b1} & 1\overline{x}_{3b0} &
                 & \ge 12 \\
-            \cell{2}{\texttt{@x2ge3\_up}}
+            \cell{2}{\prooflabel{\texttt{@x2ge3\_up}}}
                 & & & &
                 & \cell{2}{4x_{2b2}} & \cell{2}{2x_{2b1}} & \cell{2}{1x_{2b0}}
                 & \cell{2}{3\overline{x}_{2\ge3}}
                 & & & &
                 & \cell{2}{\ge 3} \\
-            \cell{3}{\texttt{@x3ge3\_up}}
+            \cell{3}{\prooflabel{\texttt{@x3ge3\_up}}}
                 & & & &
                 & & & &
                 & \cell{3}{4x_{3b2}} & \cell{3}{2x_{3b1}} & \cell{3}{1x_{3b0}}
                 & \cell{3}{3\overline{x}_{3\ge3}}
                 & \cell{3}{\ge 3} \\
-            \cell{4}{\texttt{@x1ge4\_up}}
+            \cell{4}{\prooflabel{\texttt{@x1ge4\_up}}}
                 & \cell{4}{4x_{1b2}} & \cell{4}{2x_{1b1}} & \cell{4}{1x_{1b0}}
                 & \cell{4}{4\overline{x}_{1\ge4}}
                 & & & &
@@ -1373,20 +1374,20 @@ end pseudo-Boolean proof;
     \begin{minipage}[t]{0.58\framewidth}
         \begin{semiverbatim}\scriptsize
 pseudo-Boolean proof version 3.0
-@atleast2 \proofrule{pol} @x2eq0_dn @x2eq1_dn + @x2eq2_dn + ;
-@atleast3 \proofrule{pol} @x3eq0_dn @x3eq1_dn + @x3eq2_dn + ;
-@atleast4 \proofrule{pol} @x4eq0_dn @x4eq1_dn + @x4eq2_dn + ;
+\prooflabel{@atleast2} \proofrule{pol} \prooflabel{@x2eq0_dn} \prooflabel{@x2eq1_dn} + \prooflabel{@x2eq2_dn} + ;
+\prooflabel{@atleast3} \proofrule{pol} \prooflabel{@x3eq0_dn} \prooflabel{@x3eq1_dn} + \prooflabel{@x3eq2_dn} + ;
+\prooflabel{@atleast4} \proofrule{pol} \prooflabel{@x4eq0_dn} \prooflabel{@x4eq1_dn} + \prooflabel{@x4eq2_dn} + ;
 \proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
 \proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
 \proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
-\proofrule{pol} @amo1_0 @amo1_1 + @atleast2 +
-    @atleast3 + @atleast4 + ;
+\proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} +
+    \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
 \proofrule{rup} x1eq0 ==> >= 1 ;
 \proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
 \proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
 \proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
-\proofrule{pol} @amo1_0 @amo1_1 + @atleast2 +
-    @atleast3 + @atleast4 + ;
+\proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} +
+    \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
 \proofrule{rup} ~x1eq0 ==> >= 1 ;
 \proofrule{rup} >= 1 ;
 output NONE;
@@ -1735,7 +1736,7 @@ python3 -m unittest discover -s tests -t .
     Type a line, and find out what it did:
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
-pbp> \proofrule{pol} @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + s ;
+pbp> \proofrule{pol} \prooflabel{@lin1} \prooflabel{@x2ge3_up} + \prooflabel{@x3ge3_up} + \prooflabel{@x1ge4_up} + s ;
 pbp> :show x1ge4
 pbp> :undo
 \alertred{(line rejected, state unchanged)}
@@ -1790,9 +1791,9 @@ python3 -m kindling too-small --prove /tmp/t --check
     \alertblue{one thing} changed, because a term that counts downwards needs its variable bounded
     from the other side. Look at \texttt{channelling}, and at the two constraints every variable has:
 
-    \begin{Verbatim}[fontsize=\small]
-@x1ge3_up 4 x1b2 2 x1b1 1 x1b0 3 ~x1ge3 >= 3 ;
-@x1ge3_dn 4 ~x1b2 2 ~x1b1 1 ~x1b0 5 x1ge3 >= 5 ;
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+\prooflabel{@x1ge3_up} 4 x1b2 2 x1b1 1 x1b0 3 ~x1ge3 >= 3 ;
+\prooflabel{@x1ge3_dn} 4 ~x1b2 2 ~x1b1 1 ~x1b0 5 x1ge3 >= 5 ;
     \end{Verbatim}
 
     Make \texttt{over-budget} verify.
@@ -1815,9 +1816,9 @@ python3 -m kindling too-small --prove /tmp/t --check
 
     \begin{itemize}
         \item
-            \texttt{@amo\{c\}\_\{v\}}: for each value, at most one of these variables takes it.
+            \prooflabel{\texttt{@amo\{c\}\_\{v\}}}: for each value, at most one of these variables takes it.
         \item
-            \texttt{@atleast\{i\}}: each variable takes at least one value. Derived in the
+            \prooflabel{\texttt{@atleast\{i\}}}: each variable takes at least one value. Derived in the
             preamble rather than asserted in the \texttt{.opb}, because it is a consequence of what
             the literals mean rather than something the model says.
     \end{itemize}
