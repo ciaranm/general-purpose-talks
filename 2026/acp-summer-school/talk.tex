@@ -387,7 +387,39 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \section{Encoding CP Variables}
 
 \begin{frame}{Pseudo-Boolean Notation Recap}
-    ?? literals, less than / greater than, etc. Logic and the connection to CNF.
+    A \alertblue{pseudo-Boolean constraint} is an integer linear inequality over Booleans,
+    \begin{equation*}
+        \sum_i c_i \ell_i \ge d
+    \end{equation*}
+    where a \alertblue{literal} $\ell_i$ is a variable $x$ or its negation $\overline{x} = 1 - x$,
+    and a Boolean is a $1$ or a $0$ that we may do arithmetic with.
+
+    \medskip
+
+    Throughout: upper case $X$, $Y$ for constraint programming variables, lower case $x$, $y$ for
+    pseudo-Boolean literals.
+
+    \medskip
+
+    A clause is the special case where every coefficient is one, and coefficients let us count:
+    \begin{equation*}
+        x \vee \overline{y} \vee z
+        \quad\text{is}\quad
+        x + \overline{y} + z \ge 1
+        \qquad
+        \text{at most one of them}
+        \quad\text{is}\quad
+        \overline{x} + \overline{y} + \overline{z} \ge 2
+    \end{equation*}
+
+    \toolname{VeriPB} \alertblue{normalises} everything to a $\ge$ with positive coefficients: a
+    $\le$ is negated, an $=$ becomes two, and $-c\,x$ becomes $c\,\overline{x} - c$. It shows you
+    what it stored, not what you wrote:
+    \begin{equation*}
+        1 x_{b0} + 2 x_{b1} + 4 x_{b2} \le 4
+        \quad\text{is}\quad
+        1 \overline{x}_{b0} + 2 \overline{x}_{b1} + 4 \overline{x}_{b2} \ge 3
+    \end{equation*}
 \end{frame}
 
 \begin{frame}{Pseudo-Boolean Reification Recap}
@@ -396,12 +428,26 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \qquad\text{becomes}\qquad
         M \overline{b} + \sum_i c_i x_i \ge d
     \end{equation*}
-    for an $M$ big enough that the constraint says nothing at all when $b$ is false.
+    for an $M$ big enough that the constraint says nothing at all when $b$ is false. Once everything
+    is normalised, the smallest $M$ that works is the degree $d$.
+
+    \medskip
+
+    \toolname{VeriPB} writes it for you: \texttt{b ==> \ldots} and \texttt{b <== \ldots} normalise to
+    precisely that constraint. Several literals on the left of \texttt{==>} is a conjunction, each
+    contributing its own $M \overline{b}_i$, and $\Leftrightarrow$ is just both directions.
 
     \bigskip
 
-    \toolname{VeriPB} writes it for you: \texttt{b ==> \ldots} and \texttt{b <== \ldots} normalise to
-    precisely that constraint.
+    This is why we may write down things that are not literally pseudo-Boolean constraints:
+    \begin{itemize}
+        \item
+            $x \Leftrightarrow y \wedge z$, because a conjunction \alertblue{is} a pseudo-Boolean
+            constraint, $y + z \ge 2$. Reify it in both directions and we are done.
+        \item
+            $f \Rightarrow X < Y$, because once $X$ and $Y$ are encoded, $X < Y$ is a pseudo-Boolean
+            constraint too. Reifying it is the same rewrite again.
+    \end{itemize}
 \end{frame}
 
 
@@ -411,8 +457,6 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     It does \alertred{not} have to propagate well: this is only for checking, not solving.
 
     \medskip
-
-    Upper case $X$ for a constraint programming variable, lower case for pseudo-Boolean literals.
 
     For $X \in \{0 \ldots 8\}$, one PB variable per value, with $x_{=v}$ meaning $X = v$:
     \begin{equation*}
