@@ -735,6 +735,56 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{That Is the Entire Encoding}
+    For $X_1 \in \{0,1\}$, $X_2, X_3, X_4 \in \{0,1,2\}$, pairwise different, with
+    $X_1 + X_2 + X_3 + X_4 \le 2$ and $X_2 + X_3 + X_4 \le 1 + X_1$:
+
+    \begin{minipage}[t]{0.46\framewidth}
+        \begin{semiverbatim}\linespread{0.82}\scriptsize
+@x1ge1_up 1 x1b0 1 ~x1ge1 >= 1 ;
+@x1ge1_dn 1 ~x1b0 1 x1ge1 >= 1 ;
+@x1eq0_up0 1 ~x1eq0 1 ~x1ge1 >= 1 ;
+@x1eq0_dn 1 x1eq0 1 x1ge1 >= 1 ;
+@x1eq1_up0 1 ~x1eq1 1 x1ge1 >= 1 ;
+@x1eq1_dn 1 x1eq1 1 ~x1ge1 >= 1 ;
+@x2_ub 2 x2b1 1 x2b0 <= 2 ;
+@x2ge1_up 2 x2b1 1 x2b0 1 ~x2ge1 >= 1 ;
+@x2ge1_dn 2 ~x2b1 1 ~x2b0 3 x2ge1 >= 3 ;
+@x2ge2_up 2 x2b1 1 x2b0 2 ~x2ge2 >= 2 ;
+@x2ge2_dn 2 ~x2b1 1 ~x2b0 2 x2ge2 >= 2 ;
+@x2eq0_up0 1 ~x2eq0 1 ~x2ge1 >= 1 ;
+@x2eq0_dn 1 x2eq0 1 x2ge1 >= 1 ;
+@x2eq1_up0 1 ~x2eq1 1 x2ge1 >= 1 ;
+@x2eq1_up1 1 ~x2eq1 1 ~x2ge2 >= 1 ;
+@x2eq1_dn 1 x2eq1 1 ~x2ge1 1 x2ge2 >= 1 ;
+@x2eq2_up0 1 ~x2eq2 1 x2ge2 >= 1 ;
+@x2eq2_dn 1 x2eq2 1 ~x2ge2 >= 1 ;
+        \end{semiverbatim}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.50\framewidth}
+        \begin{semiverbatim}\linespread{0.82}\scriptsize
+\textrm{\emph{... and twelve more each for x3, x4}}
+
+@amo1_0 1 x2eq0 1 x3eq0 <= 1 ;
+@amo1_1 1 x2eq1 1 x3eq1 <= 1 ;
+@amo1_2 1 x2eq2 1 x3eq2 <= 1 ;
+@amo2_0 1 x2eq0 1 x4eq0 <= 1 ;
+@amo2_1 1 x2eq1 1 x4eq1 <= 1 ;
+@amo2_2 1 x2eq2 1 x4eq2 <= 1 ;
+@amo3_0 1 x3eq0 1 x4eq0 <= 1 ;
+@amo3_1 1 x3eq1 1 x4eq1 <= 1 ;
+@amo3_2 1 x3eq2 1 x4eq2 <= 1 ;
+@lin4 1 x1b0 2 x2b1 1 x2b0
+      2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 2 ;
+@lin5 -1 x1b0 2 x2b1 1 x2b0
+      2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 1 ;
+        \end{semiverbatim}
+
+        \onslide<2->{Fifty-three constraints, forty-two of them only saying what the variables
+        mean. Eleven lines are the problem.}
+    \end{minipage}
+\end{frame}
+
 \section{Proofs}
 
 \tikzset{
@@ -783,6 +833,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \end{minipage}\hfill
     \begin{minipage}[t]{0.52\framewidth}
         \begin{semiverbatim}\footnotesize
+pseudo-Boolean proof version 3.0
 \uncover<2->{rup x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
 \uncover<3->{rup x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
 \uncover<4->{rup x1eq0 x2eq0 ==> >= 1 ;}
@@ -794,11 +845,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \uncover<7->{rup ~x1eq0 ~x2eq0 ==> >= 1 ;}
 \uncover<7->{rup ~x1eq0 ==> >= 1 ;}
 \uncover<8->{rup >= 1 ;}
+\uncover<9->{output NONE;}
+\uncover<9->{conclusion UNSAT;}
+\uncover<9->{end pseudo-Boolean proof;}
         \end{semiverbatim}
-
-        \onslide<9->{Only a \deadend{} needs justifying: one line saying those decisions cannot
-        all hold. The proof is the tree, rotated a quarter turn.}
-        \onslide<10->{No propagator said a word, and \toolname{VeriPB} accepts it anyway.}
     \end{minipage}
 \end{frame}
 
