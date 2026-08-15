@@ -795,17 +795,54 @@ rup x1eq0 ==> 1 ~x2eq1 >= 1 ;
     $X_1 + X_2 + X_3 \le 9$, and something has already established $X_2 \ge 3$ and $X_3 \ge 3$. So
     $X_1 \le 3$.
 
-    \bigskip
-
     \begin{Verbatim}[fontsize=\small]
 pol @lin1 @x2ge3_up + @x3ge3_up + @x1ge4_up + ;
 rup x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
     \end{Verbatim}
 
-    \bigskip
+    Normalising flipped the $\le 9$ into a $\ge 12$ over negated bits, and every channelling
+    constraint brings the same bits back the other way up:
 
-    ?? show the actual calculation and why the rup succeeds
+    {\footnotesize\setlength{\arraycolsep}{1.5pt}
+    \begin{equation*}
+        \begin{array}{r@{\quad}*{12}{c}@{\quad}r}
+            \texttt{@lin1}
+                & 4\overline{x}_{1b2} & 2\overline{x}_{1b1} & 1\overline{x}_{1b0} &
+                & 4\overline{x}_{2b2} & 2\overline{x}_{2b1} & 1\overline{x}_{2b0} &
+                & 4\overline{x}_{3b2} & 2\overline{x}_{3b1} & 1\overline{x}_{3b0} &
+                & \ge 12 \\
+            \texttt{@x2ge3\_up}
+                & & & &
+                & 4x_{2b2} & 2x_{2b1} & 1x_{2b0} & 3\overline{x}_{2\ge3}
+                & & & &
+                & \ge 3 \\
+            \texttt{@x3ge3\_up}
+                & & & &
+                & & & &
+                & 4x_{3b2} & 2x_{3b1} & 1x_{3b0} & 3\overline{x}_{3\ge3}
+                & \ge 3 \\
+            \texttt{@x1ge4\_up}
+                & 4x_{1b2} & 2x_{1b1} & 1x_{1b0} & 4\overline{x}_{1\ge4}
+                & & & &
+                & & & &
+                & \ge 4 \\[0.3em] \hline \\[-0.8em]
+            \text{sum}
+                & \alertblue{4} & \alertblue{2} & \alertblue{1} & 4\overline{x}_{1\ge4}
+                & \alertblue{4} & \alertblue{2} & \alertblue{1} & 3\overline{x}_{2\ge3}
+                & \alertblue{4} & \alertblue{2} & \alertblue{1} & 3\overline{x}_{3\ge3}
+                & \ge 22 \\
+            \text{i.e.}
+                & & & & 4\overline{x}_{1\ge4}
+                & & & & 3\overline{x}_{2\ge3}
+                & & & & 3\overline{x}_{3\ge3}
+                & \ge 1
+        \end{array}
+    \end{equation*}}
 
+    Each column is $c\,x + c\,\overline{x} = \alertblue{c}$, so the bits leave $21$ behind and only
+    $1$ of the degree survives. Now the \texttt{rup} finishes on its own: assume all three literals,
+    and what is left reads $0 \ge 1$. Saturating would land exactly on the clause, but a
+    \texttt{pol} only has to get close enough for the \texttt{rup}.
 \end{frame}
 
 \begin{frame}[t]{Justifying All-Different Failures}
