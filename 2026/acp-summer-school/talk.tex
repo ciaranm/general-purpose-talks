@@ -737,12 +737,109 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \section{Proofs}
 
-\begin{frame}{Backtracking Search}
-    ?? todo
+\tikzset{
+    treenode/.style={inner sep=1pt},
+    takesit/.style={solid, thick},
+    losesit/.style={dotted, thick},
+}
+\newcommand{\deadend}{\textcolor{uofgpillarbox}{\Lightning}}
+
+\begin{frame}[fragile]{Backtracking Search}
+    $X, Y, Z \in \{0, 1\}$, all different, and no propagation yet: a clash is noticed only once two
+    of them have values.
+
+    \begin{minipage}[t]{0.42\framewidth}
+        \vspace{0.3em}
+        \begin{center}
+            \begin{tikzpicture}[
+                level 1/.style={level distance=0.75cm, sibling distance=2.6cm},
+                level 2/.style={level distance=0.75cm, sibling distance=1.3cm},
+                level 3/.style={level distance=0.75cm, sibling distance=0.7cm}]
+                \node [treenode] {$X$}
+                    child { node [treenode] {$Y$}
+                        child { node {\deadend} edge from parent [takesit] }
+                        child { node [treenode] {$Z$}
+                            child { node {\deadend} edge from parent [takesit] }
+                            child { node {\deadend} edge from parent [losesit] }
+                            edge from parent [losesit] }
+                        edge from parent [takesit] }
+                    child { node [treenode] {$Y$}
+                        child { node [treenode] {$Z$}
+                            child { node {\deadend} edge from parent [takesit] }
+                            child { node {\deadend} edge from parent [losesit] }
+                            edge from parent [takesit] }
+                        child { node {\deadend} edge from parent [losesit] }
+                        edge from parent [losesit] }
+                ;
+            \end{tikzpicture}
+
+            {\scriptsize solid is the guess $= 0$, dotted is $\ne 0$}
+        \end{center}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.54\framewidth}
+        \begin{semiverbatim}\footnotesize
+\uncover<2->{rup x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<3->{rup x1eq0 ~x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<4->{rup x1eq0 ~x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<5->{rup x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<6->{rup x1eq0 ==> >= 1 ;}
+\uncover<7->{rup ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<7->{rup ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<7->{rup ~x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<7->{rup ~x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<7->{rup ~x1eq0 ==> >= 1 ;}
+\uncover<8->{rup >= 1 ;}
+        \end{semiverbatim}
+    \end{minipage}
+
+    \onslide<9->{A guess needs no justification. Only a \deadend{} does, and it is one line: those
+    decisions cannot all hold. So the proof is the tree, rotated a quarter turn, and the last dead
+    end is the root.}
 \end{frame}
 
-\begin{frame}{Propagations Aren't Necessarily RUP}
-    ?? todo
+\begin{frame}[fragile]{Propagations Aren't Necessarily RUP}
+    \begin{minipage}[t]{0.44\framewidth}
+        $W \in \{0,1\}$ and $X, Y, Z \in \{0,1,2\}$, with
+        \begin{align*}
+            &\operatorname{all\_different}(X, Y, Z) \\
+            &W + X + Y + Z \le 2 \\
+            &X + Y + Z - W \le 1
+        \end{align*}
+
+        \vspace{-0.5em}
+
+        Neither inequality prunes anything at the root, and three variables over three values are
+        not a violated Hall set, so we have to guess.
+
+        \begin{center}
+            \begin{tikzpicture}[level 1/.style={level distance=0.8cm, sibling distance=2.0cm}]
+                \node [treenode] {$W$}
+                    child { node {\deadend} edge from parent [takesit] }
+                    child { node {\deadend} edge from parent [losesit] }
+                ;
+            \end{tikzpicture}
+        \end{center}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.52\framewidth}
+        The search, and nothing else:
+
+        \begin{semiverbatim}\small
+rup x1eq0 ==> >= 1 ;
+rup ~x1eq0 ==> >= 1 ;
+rup >= 1 ;
+        \end{semiverbatim}
+
+        \begin{itemize}
+            \item<2->
+                \alertred{\texttt{REJECTED}}: the checker cannot reach those contradictions.
+            \item<3->
+                Each branch bounds $X$, $Y$, $Z$ by $1$, which unit propagation \alertblue{can}
+                redo, since deciding $W$ forces a bit of each.
+            \item<4->
+                That leaves three variables in two values, which it \alertred{cannot}: nothing is
+                unit, and counting is a cutting planes argument.
+        \end{itemize}
+    \end{minipage}
 \end{frame}
 
 \begin{frame}{Debugging a Failed Proof}
@@ -750,9 +847,17 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}[fragile]{Assertions for Propagations}
-    The cheat: \texttt{a} adds a constraint without checking it.
+    The cheat: \texttt{a} adds a constraint without checking it. Same example, with the two Hall
+    violations asserted rather than derived:
 
-    ?? todo
+    \begin{semiverbatim}\footnotesize
+% decide W = 0
+rup x1eq0 ==> 1 ~x2ge2 >= 1 ;      \textrm{\emph{and the same for Y and Z}}
+a   x1eq0 ==> >= 1 : : all_different_hall ;
+rup x1eq0 ==> >= 1 ;
+% decide W != 0                    \textrm{\emph{\ldots and symmetrically over here}}
+rup >= 1 ;
+    \end{semiverbatim}
 
     \begin{itemize}
         \item<2->
