@@ -23,6 +23,7 @@
 \usepackage{marvosym}
 \usepackage{cancel}
 \usepackage{nicefrac}
+\usepackage{qrcode}                    % vector QR codes; slows the build
 
 \usefonttheme{professionalfonts}
 
@@ -595,6 +596,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{The \toolname{Glasgow Constraint Solver}}
+    \begin{minipage}[t]{0.70\framewidth}
     A fairly serious conventional CP solver, performance-competitive on certain classes of problems.
     C++, around forty constraints, and every inference every one of them makes is justified.
 
@@ -611,6 +613,13 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             Optimisation and enumeration as well as satisfaction, so the proof has to justify the
             bounds and solutions too, and not only the failures.
     \end{itemize}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.26\framewidth}
+        \vspace{0.5em}
+        \begin{center}
+            \qrcode[height=2.8cm]{https://github.com/ciaranm/glasgow-constraint-solver}
+        \end{center}
+    \end{minipage}
 
     \medskip
 
@@ -618,6 +627,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{\toolname{Kindling}: a Vibe-Coded Solver, with Proof Logging, for Teaching}
+    \begin{minipage}[t]{0.70\framewidth}
     Under two thousand lines of Python, with no dependencies. Non-negative bounded integer
     variables, three constraints, depth-first search by cloning, no learning, and unsatisfiable
     instances only. Deliberately unpolished.
@@ -630,6 +640,13 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             Written entirely by Claude---design, proofs, tests---and it steals heavily
             from the \toolname{Glasgow Constraint Solver}.
     \end{itemize}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.26\framewidth}
+        \vspace{0.5em}
+        \begin{center}
+            \qrcode[height=2.8cm]{https://github.com/ciaranm/kindling}
+        \end{center}
+    \end{minipage}
 
     \medskip
 
