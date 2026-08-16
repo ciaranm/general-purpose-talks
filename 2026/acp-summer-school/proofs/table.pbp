@@ -1,0 +1,6 @@
+pseudo-Boolean proof version 3.0
+% no tuple of the first table supports x2 = 1 once x1 = 0
+rup x1eq0 ==> 1 ~x2eq1 >= 1 ;
+output NONE;
+conclusion NONE;
+end pseudo-Boolean proof;

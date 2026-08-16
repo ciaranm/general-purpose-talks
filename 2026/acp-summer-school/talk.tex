@@ -200,6 +200,16 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \newcommand<>{\prooflabel}[1]{{\color#2{uofgpumpkin}#1}}
 \newcommand<>{\toolname}[1]{{\color#2{uofgthistle}#1}}
 
+% The name of the .opb / .pbp pair under proofs/ that this frame is showing, so it
+% can be run live. Overlaid rather than placed, so it costs the frame no height.
+\newcommand{\proofsource}[1]{%
+    \par\vspace*{-\baselineskip}\vspace*{-\parskip}\noindent
+    \begin{tikzpicture}[remember picture, overlay]
+        \node [anchor=south east, inner sep=0pt, text=uofgsandstone, font=\tiny]
+            at ([shift={(-3mm,13mm)}]current page.south east) {#1};
+    \end{tikzpicture}%
+}
+
 \author{Ciaran McCreesh}
 \title{Proof Logging for Constraint Programming}
 
@@ -801,6 +811,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \onslide<2->{Fifty-three constraints, forty-two of them only saying what the variables
         mean. Eleven lines are the problem.}
     \end{minipage}
+    \proofsource{encoding}
 \end{frame}
 
 \section{Proofs}
@@ -868,11 +879,14 @@ pseudo-Boolean proof version 3.0
 \uncover<9->{end pseudo-Boolean proof;}
         \end{semiverbatim}
     \end{minipage}
+    \proofsource{backtracking}
 \end{frame}
 
 \begin{frame}[fragile]{Propagations Aren't Necessarily RUP}
     Now say $\operatorname{all\_different}(X_2, X_3, X_4)$ instead of three not-equals: same
-    problem, better propagator, which fails as soon as those three are stuck in two values.
+    problem, better propagator, which fails as soon as those three are stuck in two values. It is a
+    smaller encoding too, since the nine pairwise at-most-ones collapse into three three-way ones,
+    which renumbers the inequalities to \prooflabel{@lin2} and \prooflabel{@lin3}.
 
     \begin{minipage}[t]{0.36\framewidth}
         \vspace{0.5em}
@@ -900,16 +914,53 @@ end pseudo-Boolean proof;
             \item<2->
                 Ten guesses became two, and eleven \proofrule{rup} lines became three.
             \item<3->
-                And those three are \alertred{\texttt{REJECTED}}. Bounding $X_2$, $X_3$, $X_4$
-                by $1$ unit propagation \alertblue{can} redo, since deciding $X_1$ forces a bit of
-                each. That three of them then do not fit in two values, it \alertred{cannot}:
-                nothing is unit, and counting is a cutting planes argument.
+                And those three are \alertred{\texttt{REJECTED}}. Which step is the problem, and
+                why, is not something the file will tell you.
             \item<4->
                 A better propagator searches less and claims more, and the difference is exactly
                 what somebody now has to justify. Decompose your globals and the checker will
                 follow you anywhere --- which is not a recommendation.
         \end{itemize}
     \end{minipage}
+    \proofsource{not-rup}
+\end{frame}
+
+\begin{frame}[fragile]{Justifying Every Propagation}
+    So put the propagations in the file too. Each one claims that if the guesses hold then the bound
+    holds, and each one claims it as \proofrule{rup}:
+
+    \begin{minipage}[t]{0.48\framewidth}
+        \begin{semiverbatim}\linespread{0.82}\scriptsize
+pseudo-Boolean proof version 3.0
+\proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{rup} x1eq0 ==> >= 1 ;\uncover<2->{  \alertred{\textrm{\emph{rejected}}}}
+\proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{rup} ~x1eq0 ==> >= 1 ;
+\proofrule{rup} >= 1 ;
+output NONE;
+conclusion UNSAT;
+end pseudo-Boolean proof;
+        \end{semiverbatim}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\framewidth}
+        \begin{itemize}
+            \item<3->
+                Unit propagation \alertblue{can} redo all six bounds, since deciding $X_1$ forces a
+                bit of each of $X_2$, $X_3$, $X_4$.
+            \item<4->
+                That the three of them then do not fit in two values, it \alertred{cannot}: nothing
+                is unit, and counting is a cutting planes argument.
+            \item<5->
+                So the rejected line is one the \alertblue{search} wrote, and all-different
+                contributed nothing at all --- a propagator that kills a node has no claim of its
+                own to make. The one thing that cannot justify itself is the one thing not there.
+        \end{itemize}
+    \end{minipage}
+    \proofsource{everything-rup}
 \end{frame}
 
 \begin{frame}[fragile]{Debugging a Failed Proof}
@@ -917,7 +968,7 @@ end pseudo-Boolean proof;
     far it got:
 
     \begin{semiverbatim}\footnotesize
-Error: Checking error at search.pbp:2, not implied by RUP
+Error: Checking error at debugging.pbp:13, not implied by RUP
 \uncover<2->{
 Propagation check failed! The propagation had the following trail:
     x1eq0    (1 x1eq0 >= 1)
@@ -930,8 +981,8 @@ Propagation check failed! The propagation had the following trail:
 
     \begin{itemize}
         \item<3->
-            It names where we \alertblue{claimed} something, which is rarely where the problem is.
-            Here there is nothing above it at all.
+            It names where we \alertblue{claimed} something, which is rarely where the problem is:
+            all-different, which is what cannot justify itself, is not mentioned anywhere.
         \item<4->
             The trail is the checker's best effort: it assumed our decision, went down to the bits,
             used the inequality to rule out the twos, and came back up with
@@ -939,6 +990,7 @@ Propagation check failed! The propagation had the following trail:
         \item<5->
             Then it stopped: nothing else is unit. The counting step is ours to supply.
     \end{itemize}
+    \proofsource{debugging}
 \end{frame}
 
 \begin{frame}[fragile]{Assertions for Propagations}
@@ -977,6 +1029,7 @@ end pseudo-Boolean proof;
                 means something is \alertblue{missing}.
         \end{itemize}
     \end{minipage}
+    \proofsource{assertions}
 \end{frame}
 
 \section{Propagation}
@@ -1001,6 +1054,7 @@ end pseudo-Boolean proof;
             selectors fall over one at a time. When the last one goes, the constraints saying some tuple is
             in use has nothing left to satisfy it.
     \end{itemize}
+    \proofsource{table}
 \end{frame}
 
 % one cell of the cancellation array below, appearing from step #1 onwards and
@@ -1065,6 +1119,9 @@ end pseudo-Boolean proof;
     behind and only $1$ of the degree survives.}
     \onslide<6->{Now the \proofrule{rup} finishes on its own: assume all three literals, and what is
     left reads $0 \ge 1$.}
+    \onslide<7->{Back in the tree the bounds went through as \proofrule{rup} alone; this one will
+    not, and nothing you can see says which is which. So a propagator never guesses.}
+    \proofsource{linear}
 \end{frame}
 
 \begin{frame}[t]{Justifying All-Different Failures}
@@ -1371,45 +1428,43 @@ end pseudo-Boolean proof;
 \end{frame}
 
 \begin{frame}[fragile]{The Same Proof, With Nothing Asserted}
-    \begin{minipage}[t]{0.58\framewidth}
-        \begin{semiverbatim}\scriptsize
+    \begin{minipage}[t]{0.54\framewidth}
+        \begin{semiverbatim}\linespread{0.82}\scriptsize
 pseudo-Boolean proof version 3.0
 \prooflabel{@atleast2} \proofrule{pol} \prooflabel{@x2eq0_dn} \prooflabel{@x2eq1_dn} + \prooflabel{@x2eq2_dn} + ;
 \prooflabel{@atleast3} \proofrule{pol} \prooflabel{@x3eq0_dn} \prooflabel{@x3eq1_dn} + \prooflabel{@x3eq2_dn} + ;
 \prooflabel{@atleast4} \proofrule{pol} \prooflabel{@x4eq0_dn} \prooflabel{@x4eq1_dn} + \prooflabel{@x4eq2_dn} + ;
+\proofrule{pol} \prooflabel{@lin3} \prooflabel{@x1ge1_dn} + \prooflabel{@x2ge2_up} + s ;
 \proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{pol} \prooflabel{@lin3} \prooflabel{@x1ge1_dn} + \prooflabel{@x3ge2_up} + s ;
 \proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{pol} \prooflabel{@lin3} \prooflabel{@x1ge1_dn} + \prooflabel{@x4ge2_up} + s ;
 \proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
 \proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} +
     \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
 \proofrule{rup} x1eq0 ==> >= 1 ;
-\proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
-\proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
-\proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
-\proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} +
-    \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
-\proofrule{rup} ~x1eq0 ==> >= 1 ;
+    \textrm{\emph{... and eight more for the other branch,}}
+    \textrm{\emph{reading \prooflabel{@lin2} and \prooflabel{@x1ge1_up} instead}}
 \proofrule{rup} >= 1 ;
 output NONE;
 conclusion UNSAT;
 end pseudo-Boolean proof;
         \end{semiverbatim}
     \end{minipage}\hfill
-    \begin{minipage}[t]{0.38\framewidth}
+    \begin{minipage}[t]{0.42\framewidth}
         \begin{itemize}
             \item<2->
-                The two \proofrule{a} lines have become two \proofrule{pol} lines. Nothing else
-                moved.
+                The two \proofrule{a} lines have become \proofrule{pol} lines: the derivation from
+                two slides ago, over at-least-ones that say what the literals mean rather than what
+                the model said, and so are derived once at the top and used twice.
             \item<3->
-                Each is the derivation from the previous slide: the at-most-ones for the two
-                values, plus an at-least-one per variable.
+                Six more \proofrule{pol} lines are new. We had been claiming those bounds bare and
+                getting away with it; a finished propagator does not rely on that.
             \item<4->
-                Those at-least-ones say what the literals mean rather than what the model said, so
-                they are derived at the top and used twice.
-            \item<5->
                 \alertgreen{\texttt{VERIFIED}}.
         \end{itemize}
     \end{minipage}
+    \proofsource{justified}
 \end{frame}
 
 \begin{frame}{Recovering At-Most-One}
