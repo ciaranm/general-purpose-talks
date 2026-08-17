@@ -122,6 +122,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \leavevmode{\usebeamerfont{author in head/foot}\insertshortauthor}%
         \hfill%
         {\usebeamerfont{institute in head/foot}\usebeamercolor[fg]{institute in head/foot}\insertshortinstitute}%
+        {\tiny\theproofsource}\gdef\theproofsource{}%
     \end{beamercolorbox}%
     \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,%
         leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
@@ -201,14 +202,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \newcommand<>{\toolname}[1]{{\color#2{uofgthistle}#1}}
 
 % The name of the .opb / .pbp pair under proofs/ that this frame is showing, so it
-% can be run live. Overlaid rather than placed, so it costs the frame no height.
-\newcommand{\proofsource}[1]{%
-    \par\vspace*{-\baselineskip}\vspace*{-\parskip}\noindent
-    \begin{tikzpicture}[remember picture, overlay]
-        \node [anchor=south east, inner sep=0pt, text=uofgsandstone, font=\tiny]
-            at ([shift={(-3mm,13mm)}]current page.south east) {#1};
-    \end{tikzpicture}%
-}
+% can be run live. Printed at the right of the footer's author bar, so it costs the
+% frame no height. The footer clears it again once it has been shown.
+\newcommand{\theproofsource}{}
+\newcommand{\proofsource}[1]{\gdef\theproofsource{#1}\ignorespaces}
 
 \author{Ciaran McCreesh}
 \title{Proof Logging for Constraint Programming}
