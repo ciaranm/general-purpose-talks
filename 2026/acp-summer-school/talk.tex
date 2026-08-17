@@ -1492,8 +1492,38 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Assumptions Don't Matter}
-    ?? todo
+\begin{frame}[fragile]{Assumptions Don't Matter}
+    Every derivation in this section was worked out as if nothing had been guessed. Inside the tree,
+    everything is conditional on the guesses above it---and that is not a second problem to solve.
+
+    \medskip
+
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+\proofrule{rup} 1 ~x2ge2 >= 1 ;             \textrm{\emph{if the guess were part of the problem}}
+\proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;   \textrm{\emph{what we actually write}}
+    \end{Verbatim}
+
+    \medskip
+
+    \begin{itemize}
+        \item<2->
+            \alertblue{Whatever we can prove without assumptions we can prove with them}, using the
+            same rules in the same order, for a constant amount of extra work per step.
+        \item<3->
+            For \proofrule{rup}, put the assumptions on the line. Negating the implication makes the
+            checker set every one of them, leaving exactly the problem we knew how to refute.
+        \item<4->
+            For \proofrule{pol}, do nothing whatsoever: add two conditional constraints and their
+            conditions add too, divide and the condition divides with it. The assumptions come along
+            for free.
+        \item<5->
+            So a propagator works out what to say from the constraints alone, and never thinks about
+            where in the tree it is. Every \proofrule{pol} here was written bare; only the
+            \proofrule{rup} using it knows there is a search going on.
+    \end{itemize}
+
+    \uncover{\scriptsize Matthew McIlree's thesis again, chapter 2, where the division and
+    saturation are done properly.}
 \end{frame}
 
 \begin{frame}{Reasons, Explanations, and Lazy Clause Generation}

@@ -1,7 +1,7 @@
 # Proofs shown on the slides
 
-One `.opb` / `.pbp` pair per example, named after the stamp in the bottom right
-corner of the slide, so that
+One `.opb` / `.pbp` pair per example, named after the stamp at the right of the
+slide's footer, so that
 
     veripb <name>.opb <name>.pbp
 
