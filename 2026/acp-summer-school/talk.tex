@@ -669,9 +669,9 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     Substitute the bits, and there is nothing left to do. For $X, Y, Z \in \{0 \ldots 7\}$, the
     constraint $2X + 3Y - Z \le 12$ is
     \begin{align*}
-        2x_{b0} + 4x_{b1} + 8x_{b2}
-        + 3y_{b0} + 6y_{b1} + 12y_{b2}
-        - z_{b0} - 2z_{b1} - 4z_{b2} \le 12
+        \underbrace{2x_{b0} + 4x_{b1} + 8x_{b2}}_{2X}
+        \;+\; \underbrace{3y_{b0} + 6y_{b1} + 12y_{b2}}_{3Y}
+        \;\underbrace{{} - z_{b0} - 2z_{b1} - 4z_{b2}}_{-Z} \;\le 12
     \end{align*}
 
     \begin{itemize}
