@@ -1424,7 +1424,7 @@ end pseudo-Boolean proof;
 \end{frame}
 
 \begin{frame}[fragile]{The Same Proof, With Nothing Asserted}
-    \begin{minipage}[t]{0.54\framewidth}
+    \begin{minipage}[t]{0.56\framewidth}
         \begin{semiverbatim}\linespread{0.82}\scriptsize
 pseudo-Boolean proof version 3.0
 \prooflabel{@atleast2} \proofrule{pol} \prooflabel{@x2eq0_dn} \prooflabel{@x2eq1_dn} + \prooflabel{@x2eq2_dn} + ;
@@ -1436,11 +1436,16 @@ pseudo-Boolean proof version 3.0
 \proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
 \proofrule{pol} \prooflabel{@lin3} \prooflabel{@x1ge1_dn} + \prooflabel{@x4ge2_up} + s ;
 \proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
-\proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} +
-    \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
+\proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} + \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
 \proofrule{rup} x1eq0 ==> >= 1 ;
-    \textrm{\emph{... and eight more for the other branch,}}
-    \textrm{\emph{reading }}\prooflabel{@lin2}\textrm{\emph{ and }}\prooflabel{@x1ge1_up}\textrm{\emph{ instead}}
+\proofrule{pol} \prooflabel{@lin2} \prooflabel{@x1ge1_up} + \prooflabel{@x2ge2_up} + s ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
+\proofrule{pol} \prooflabel{@lin2} \prooflabel{@x1ge1_up} + \prooflabel{@x3ge2_up} + s ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
+\proofrule{pol} \prooflabel{@lin2} \prooflabel{@x1ge1_up} + \prooflabel{@x4ge2_up} + s ;
+\proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
+\proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} + \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
+\proofrule{rup} ~x1eq0 ==> >= 1 ;
 \proofrule{rup} >= 1 ;
 output NONE;
 conclusion UNSAT;
