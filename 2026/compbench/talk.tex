@@ -1189,20 +1189,11 @@ e 3 10                   e 10 11
     \includegraphics<3>{graph-find-prove-1.pdf}%
 \end{frame}
 
-\begin{frame}{Difficulty by Solution Size}
-    \includegraphics<1>{graph-by-omega.pdf}%
-    \includegraphics<2>{graph-by-omega-1.pdf}%
-    \includegraphics<3>{graph-by-omega-2.pdf}%
-    \includegraphics<4>{graph-by-omega-3.pdf}%
-    \includegraphics<5>{graph-by-omega-4.pdf}%
-\end{frame}
-
 \begin{frame}{Difficulty by Optimal Solution Frequency}
     \includegraphics<1>{graph-omega-20-0.pdf}%
     \includegraphics<2>{graph-omega-20-1.pdf}%
     \includegraphics<3>{graph-omega-20-2.pdf}%
     \includegraphics<4>{graph-omega-20-3.pdf}%
-    \includegraphics<5>{graph-omega-60-3.pdf}%
 \end{frame}
 
 \begin{frame}{Search Order}
@@ -1263,7 +1254,7 @@ e 3 10                   e 10 11
     \end{itemize}
 \end{frame}
 
-\section{Other Clique Problems}
+\section{Other Graph Problems}
 
 \begin{frame}{Enumeration}
     \begin{itemize}
@@ -1283,8 +1274,6 @@ e 3 10                   e 10 11
         \item Why this is bad, and better instances: McCreesh et al, CP 2017.
     \end{itemize}
 \end{frame}
-
-\section{Subgraph Isomorphism}
 
 \begin{frame}{Crimes Too Gory For This Talk}
     \begin{itemize}
@@ -1308,19 +1297,32 @@ e 3 10                   e 10 11
     \end{itemize}
 \end{frame}
 
+\begin{frame}{Special Award-Winning Crime That Gets a Slide of its Own}
+    \begin{itemize}
+        \item Take one of my solvers.
+        \item Modify the timing code to report CPU time instead of wallclock time.
+        \item Make the code five times longer with features that literally do nothing.
+        \item Claim it's better by benchmarking against the original solver with its original timing
+            code.
+        \item Publish in top AI venue by resubmitting over and over again until you win the reviewer
+            competence lottery.
+    \end{itemize}
+\end{frame}
+
 \section{Conclusion}
 
 \begin{frame}{A Summary of Crimes Witnessed}
     \begin{itemize}
-        \item Buggy solvers
-        \item Excessive parameter tuning
-        \item Hard-coding parameters based upon instance filenames
-        \item Badly-generated random benchmark sets
-        \item Badly-generated non-random benchmark sets
-        \item Reuse of good benchmark instances from other problems in a way that makes them bad
-        \item Moving goalposts until you're benchmarking whose print statement is fastest
-        \item Multiplying other people's runtimes by mysterious scaling factors rather than re-running experiments
-        \item Entire systems built on top of not understanding the theory correctly
+        \item Buggy solvers.
+        \item Excessive parameter tuning.
+        \item Hard-coding parameters based upon instance filenames.
+        \item Badly-generated random benchmark sets.
+        \item Badly-generated non-random benchmark sets.
+        \item Reuse of good benchmark instances from other problems in a way that makes them bad.
+        \item Moving goalposts until you're benchmarking whose print statement is fastest.
+        \item Multiplying other people's runtimes by mysterious scaling factors rather than
+            re-running experiments.
+        \item Entire systems built on top of not understanding the theory correctly.
     \end{itemize}
 \end{frame}
 
@@ -1334,36 +1336,6 @@ e 3 10                   e 10 11
             time.
     \end{itemize}
 \end{frame}
-
-{
-    \usebackgroundtemplate{
-        \tikz[overlay, remember picture]
-        \node[at=(current page.south), anchor=south, inner
-        sep=0pt]{\includegraphics[keepaspectratio=true, width=\paperwidth]{background2.jpg}};
-    }
-
-    \begin{frame}[plain,noframenumbering]
-        \begin{tikzpicture}[remember picture, overlay]
-            \node at (current page.north west) {
-                \begin{tikzpicture}[remember picture, overlay]
-                    \fill [fill=uofguniversityblue, anchor=north west] (0, 0) rectangle (\paperwidth, -2.6cm);
-                \end{tikzpicture}
-            };
-
-            \node (logo) [anchor=north east, shift={(-0.6cm,-0.6cm)}] at (current page.north east) {
-                \includegraphics[keepaspectratio=true,scale=0.7]{UoG_keyline.pdf}
-            };
-
-            \node [anchor=north west, shift={(0.6cm,-0.8cm)}] at (current page.north west) {
-                \textcolor{white}{\url{https://ciaranm.github.io/}}
-            };
-
-            \node [anchor=north west, shift={(0.6cm,-1.4cm)}] at (current page.north west) {
-                    \textcolor{white}{\href{mailto:ciaran.mccreesh@glasgow.ac.uk}{\nolinkurl{ciaran.mccreesh@glasgow.ac.uk}}}
-            };
-        \end{tikzpicture}
-    \end{frame}
-}
 
 {
     \usebackgroundtemplate{
