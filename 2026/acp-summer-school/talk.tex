@@ -1848,6 +1848,33 @@ pbp> :undo
     \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Do the Derivation Before You Write the Code}
+    \texttt{:deassert} takes the first \proofrule{a} line in the proof, deletes it, and lets you
+    type what should have been there instead:
+
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+pbp> :deassert
+Line 14: \proofrule{a} x1eq0 ==> >= 1 : : all_different_hall : x2, x3, x4 in \{0, 1\} ;
+edit> \proofrule{pol} \prooflabel{@amo1_0} \prooflabel{@amo1_1} + \prooflabel{@atleast2} + \prooflabel{@atleast3} + \prooflabel{@atleast4} + ;
+  ConstraintId 55: 1 x2eq2 1 x3eq2 1 x4eq2 >= 1
+edit> :done
+    \end{Verbatim}
+
+    \begin{itemize}
+        \item<2->
+            \alertblue{Every exercise is this, and then the code that does it for you.} The hard
+            half is working the line out, and the solver is no help with that at all.
+        \item<3->
+            It prints \alertblue{what you derived}, which is the only way to tell a sum that is
+            right from one that is merely accepted. \texttt{:done} then replays the rest of the
+            proof on top, so you find out at once whether everything after it still follows.
+        \item<4->
+            Two \texttt{:deassert}s and that proof is \texttt{VERIFIED}, with the solver
+            untouched. Then go and write the propagator, knowing what it has to emit.
+    \end{itemize}
+    \proofsource{assertions}
+\end{frame}
+
 \begin{frame}[fragile]{Exercise 1: Table}
     \texttt{table\_int.py} removes a value when no tuple can support it any more, and asserts that
     it was allowed to. It was allowed to, and the reason is reverse unit propagation.
