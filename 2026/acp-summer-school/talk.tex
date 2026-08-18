@@ -1557,6 +1557,32 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
+\begin{frame}{Nothing Ever Gets Deleted}
+    Every constraint a proof derives joins the checker's database and stays there.
+    \toolname{Kindling}'s \texttt{too-small} refutation hands over $1065$ of them and takes back
+    none, on a search tree that is never more than twelve deep.
+
+    \begin{itemize}
+        \item<2->
+            \toolname{VeriPB} has a \proofrule{del} rule. \toolname{Glasgow} tags every constraint it
+            derives with the depth it derived it at, and when the search backtracks past that depth,
+            deletes the lot in one command. Doing that here would leave it holding around
+            \alertblue{thirty} constraints at a time instead of $1065$.
+        \item<3->
+            The checker is a solver too, and everything it is still holding is one more constraint
+            to propagate, at every step for the rest of the proof.
+        \item<4->
+            Deletion also makes you ask what is worth keeping. Look back at the proof with nothing
+            asserted: the all-different \proofrule{pol} is derived \alertblue{twice}, identically,
+            once in each branch---and it is unconditional, so like the \prooflabel{@atleast} lines
+            above it, it could have been derived once at the top and cited from both.
+        \item<5->
+            \toolname{Kindling} does neither, because at this size nobody notices. That is exactly
+            the criticism I am about to make of somebody else.
+    \end{itemize}
+    \proofsource{justified}
+\end{frame}
+
 \begin{frame}{What Else Can We Do?}
     \toolname{Glasgow} has thirty-seven constraints, and every inference every one of them makes is justified:
 
@@ -1660,6 +1686,10 @@ end pseudo-Boolean proof;
         \item
             In our vocabulary: put every \texttt{a} into the model file and leave it there. Then
             wonder why the checker ran out of memory.
+        \item
+            In fairness, \toolname{Kindling} never deletes either, and deserves the same complaint.
+            The difference is that ours are proof steps and not axioms, so there is a rule that can
+            take them back---and \toolname{Glasgow} uses it.
     \end{itemize}
 \end{frame}
 
