@@ -34,8 +34,10 @@ Everything except `table` and `linear` is the whole refutation of
     X1 + X2 + X3 + X4 <= 2
     X2 + X3 + X4 <= 1 + X1
 
-written by `kindling` on the `ash` branch, with the propagators' justifications
-turned down to whatever that slide is illustrating. The two encodings differ
+written by `kindling` with the propagators' justifications turned down to
+whatever that slide is illustrating: on the `ash` branch, except for
+`assertions`, which comes from `main`, where all-different still asserts and so
+still writes the hint naming the set that would not fit. The two encodings differ
 only in all-different: three pairwise constraints give nine two-variable
 at-most-ones and number the inequalities `@lin4` and `@lin5`, and the global one
 gives three three-variable at-most-ones and `@lin2` and `@lin3`.

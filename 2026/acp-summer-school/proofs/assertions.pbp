@@ -10,13 +10,13 @@ pseudo-Boolean proof version 3.0
 rup x1eq0 ==> 1 ~x2ge2 >= 1 ;
 rup x1eq0 ==> 1 ~x3ge2 >= 1 ;
 rup x1eq0 ==> 1 ~x4ge2 >= 1 ;
-a x1eq0 ==> >= 1 : : all_different_hall ;
+a x1eq0 ==> >= 1 : : all_different_hall : x2, x3, x4 in {0, 1} ;
 rup x1eq0 ==> >= 1 ;
 % decide x1 != 0
 rup ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
 rup ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
 rup ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
-a ~x1eq0 ==> >= 1 : : all_different_hall ;
+a ~x1eq0 ==> >= 1 : : all_different_hall : x2, x3, x4 in {0, 1} ;
 rup ~x1eq0 ==> >= 1 ;
 rup >= 1 ;
 output NONE;

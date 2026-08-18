@@ -998,12 +998,14 @@ pseudo-Boolean proof version 3.0
 \proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
 \proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
 \proofrule{rup} x1eq0 ==> 1 ~x4ge2 >= 1 ;
-\proofrule{a} x1eq0 ==> >= 1 : : all_different_hall ;
+\proofrule{a} x1eq0 ==> >= 1 : : all_different_hall
+    : x2, x3, x4 in \{0, 1\} ;
 \proofrule{rup} x1eq0 ==> >= 1 ;
 \proofrule{rup} ~x1eq0 ==> 1 ~x2ge2 >= 1 ;
 \proofrule{rup} ~x1eq0 ==> 1 ~x3ge2 >= 1 ;
 \proofrule{rup} ~x1eq0 ==> 1 ~x4ge2 >= 1 ;
-\proofrule{a} ~x1eq0 ==> >= 1 : : all_different_hall ;
+\proofrule{a} ~x1eq0 ==> >= 1 : : all_different_hall
+    : x2, x3, x4 in \{0, 1\} ;
 \proofrule{rup} ~x1eq0 ==> >= 1 ;
 \proofrule{rup} >= 1 ;
 output NONE;
@@ -1020,9 +1022,10 @@ end pseudo-Boolean proof;
                 The bounds are logged although nobody needed telling. A solver justifies every
                 inference, not the ones it thinks are hard.
             \item<4->
-                The annotations are for tools, so the solver can say what is left to do.
-                \texttt{REJECTED} means something is \alertred{wrong}; \texttt{UNDER ASSERTIONS}
-                means something is \alertblue{missing}.
+                The name is for tools, so the solver can say what is left to do; the free text is
+                for whoever writes the derivation. \texttt{REJECTED} means something is
+                \alertred{wrong}; \texttt{UNDER ASSERTIONS} means something is
+                \alertblue{missing}.
         \end{itemize}
     \end{minipage}
     \proofsource{assertions}
@@ -1688,7 +1691,8 @@ end pseudo-Boolean proof;
     \begin{itemize}
         \item
             The solver emits \proofrule{a} lines and nothing else, but fills in the \alertblue{reason}
-            and the hints, in the annotation fields we have spent all afternoon leaving blank.
+            and the hints, in the annotation fields where we have only been leaving a note to
+            ourselves.
         \item
             \alertblue{Trim first.} Elaborate the skeleton, throw away every inference the conclusion
             turned out not to need, and only then start working out justifications.
