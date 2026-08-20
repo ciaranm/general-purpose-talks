@@ -442,7 +442,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
     \toolname{VeriPB} writes it for you: \texttt{b ==> \ldots} and \texttt{b <== \ldots} normalise to
     precisely that constraint. Several literals on the left of \texttt{==>} is a conjunction, each
-    contributing its own $M \overline{b}_i$, and $\Leftrightarrow$ is just both directions.
+    contributing its own $M \overline{b}_i$, and \texttt{<==>} is just both directions --- one line
+    standing for two constraints, so it carries a label for each of them.
 
     \bigskip
 
@@ -761,34 +762,35 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \begin{frame}[fragile]{That Is the Entire Encoding}
     For $X_1 \in \{0,1\}$, $X_2, X_3, X_4 \in \{0,1,2\}$, pairwise different, with
-    $X_1 + X_2 + X_3 + X_4 \le 2$ and $X_2 + X_3 + X_4 \le 1 + X_1$:
+    $X_1 + X_2 + X_3 + X_4 \le 2$ and $X_2 + X_3 + X_4 \le 1 + X_1$. All of it:
 
-    \begin{minipage}[t]{0.46\framewidth}
-        \begin{semiverbatim}\linespread{0.82}\scriptsize
-\prooflabel{@x1ge1_up} 1 x1b0 1 ~x1ge1 >= 1 ;
-\prooflabel{@x1ge1_dn} 1 ~x1b0 1 x1ge1 >= 1 ;
-\prooflabel{@x1eq0_up0} 1 ~x1eq0 1 ~x1ge1 >= 1 ;
-\prooflabel{@x1eq0_dn} 1 x1eq0 1 x1ge1 >= 1 ;
-\prooflabel{@x1eq1_up0} 1 ~x1eq1 1 x1ge1 >= 1 ;
-\prooflabel{@x1eq1_dn} 1 x1eq1 1 ~x1ge1 >= 1 ;
+    \begin{minipage}[t]{0.49\framewidth}
+        \begin{semiverbatim}\linespread{1.05}\tiny
+\prooflabel{@x1ge1_up} \prooflabel{@x1ge1_dn} x1ge1 <==> 1 x1b0 >= 1 ;
+\prooflabel{@x1eq0_up} \prooflabel{@x1eq0_dn} x1eq0 <==> 1 ~x1ge1 >= 1 ;
+\prooflabel{@x1eq1_up} \prooflabel{@x1eq1_dn} x1eq1 <==> 1 x1ge1 >= 1 ;
 \prooflabel{@x2_ub} 2 x2b1 1 x2b0 <= 2 ;
-\prooflabel{@x2ge1_up} 2 x2b1 1 x2b0 1 ~x2ge1 >= 1 ;
-\prooflabel{@x2ge1_dn} 2 ~x2b1 1 ~x2b0 3 x2ge1 >= 3 ;
-\prooflabel{@x2ge2_up} 2 x2b1 1 x2b0 2 ~x2ge2 >= 2 ;
-\prooflabel{@x2ge2_dn} 2 ~x2b1 1 ~x2b0 2 x2ge2 >= 2 ;
-\prooflabel{@x2eq0_up0} 1 ~x2eq0 1 ~x2ge1 >= 1 ;
-\prooflabel{@x2eq0_dn} 1 x2eq0 1 x2ge1 >= 1 ;
-\prooflabel{@x2eq1_up0} 1 ~x2eq1 1 x2ge1 >= 1 ;
-\prooflabel{@x2eq1_up1} 1 ~x2eq1 1 ~x2ge2 >= 1 ;
-\prooflabel{@x2eq1_dn} 1 x2eq1 1 ~x2ge1 1 x2ge2 >= 1 ;
-\prooflabel{@x2eq2_up0} 1 ~x2eq2 1 x2ge2 >= 1 ;
-\prooflabel{@x2eq2_dn} 1 x2eq2 1 ~x2ge2 >= 1 ;
+\prooflabel{@x2ge1_up} \prooflabel{@x2ge1_dn} x2ge1 <==> 2 x2b1 1 x2b0 >= 1 ;
+\prooflabel{@x2ge2_up} \prooflabel{@x2ge2_dn} x2ge2 <==> 2 x2b1 1 x2b0 >= 2 ;
+\prooflabel{@x2eq0_up} \prooflabel{@x2eq0_dn} x2eq0 <==> 1 ~x2ge1 >= 1 ;
+\prooflabel{@x2eq1_up} \prooflabel{@x2eq1_dn} x2eq1 <==> 1 x2ge1 1 ~x2ge2 >= 2 ;
+\prooflabel{@x2eq2_up} \prooflabel{@x2eq2_dn} x2eq2 <==> 1 x2ge2 >= 1 ;
+\prooflabel{@x3_ub} 2 x3b1 1 x3b0 <= 2 ;
+\prooflabel{@x3ge1_up} \prooflabel{@x3ge1_dn} x3ge1 <==> 2 x3b1 1 x3b0 >= 1 ;
+\prooflabel{@x3ge2_up} \prooflabel{@x3ge2_dn} x3ge2 <==> 2 x3b1 1 x3b0 >= 2 ;
+\prooflabel{@x3eq0_up} \prooflabel{@x3eq0_dn} x3eq0 <==> 1 ~x3ge1 >= 1 ;
+\prooflabel{@x3eq1_up} \prooflabel{@x3eq1_dn} x3eq1 <==> 1 x3ge1 1 ~x3ge2 >= 2 ;
+\prooflabel{@x3eq2_up} \prooflabel{@x3eq2_dn} x3eq2 <==> 1 x3ge2 >= 1 ;
         \end{semiverbatim}
     \end{minipage}\hfill
-    \begin{minipage}[t]{0.50\framewidth}
-        \begin{semiverbatim}\linespread{0.82}\scriptsize
-\textrm{\emph{... and twelve more each for x3, x4}}
-
+    \begin{minipage}[t]{0.49\framewidth}
+        \begin{semiverbatim}\linespread{1.05}\tiny
+\prooflabel{@x4_ub} 2 x4b1 1 x4b0 <= 2 ;
+\prooflabel{@x4ge1_up} \prooflabel{@x4ge1_dn} x4ge1 <==> 2 x4b1 1 x4b0 >= 1 ;
+\prooflabel{@x4ge2_up} \prooflabel{@x4ge2_dn} x4ge2 <==> 2 x4b1 1 x4b0 >= 2 ;
+\prooflabel{@x4eq0_up} \prooflabel{@x4eq0_dn} x4eq0 <==> 1 ~x4ge1 >= 1 ;
+\prooflabel{@x4eq1_up} \prooflabel{@x4eq1_dn} x4eq1 <==> 1 x4ge1 1 ~x4ge2 >= 2 ;
+\prooflabel{@x4eq2_up} \prooflabel{@x4eq2_dn} x4eq2 <==> 1 x4ge2 >= 1 ;
 \prooflabel{@amo1_0} 1 x2eq0 1 x3eq0 <= 1 ;
 \prooflabel{@amo1_1} 1 x2eq1 1 x3eq1 <= 1 ;
 \prooflabel{@amo1_2} 1 x2eq2 1 x3eq2 <= 1 ;
@@ -803,10 +805,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \prooflabel{@lin5} -1 x1b0 2 x2b1 1 x2b0
       2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 1 ;
         \end{semiverbatim}
-
-        \onslide<2->{Fifty-three constraints, forty-two of them only saying what the variables
-        mean. Eleven lines are the problem.}
     \end{minipage}
+
+    \onslide<2->{Fifty constraints on thirty-two lines. Twenty-one of the lines only say what the
+    variables mean; eleven are the problem.}
     \proofsource{encoding}
 \end{frame}
 
@@ -968,7 +970,7 @@ Error: Checking error at debugging.pbp:13, not implied by RUP
 \uncover<2->{
 Propagation check failed! The propagation had the following trail:
     x1eq0    (1 x1eq0 >= 1)
-    ~x1b0    (1 ~x1b0 1 x1ge1 >= 1)
+    ~x1b0    (1 x1ge1 1 ~x1b0 >= 1)
     ~x2b1    (1 x1b0 2 ~x2b1 1 ~x2b0 2 ~x3b1 1 ~x3b0 2 ~x4b1 1 ~x4b0 >= 8)
     ~x3b1 ~x4b1        \textrm{\emph{(the same constraint)}}
     ~x2ge2   (2 x2b1 1 x2b0 2 ~x2ge2 >= 2)
@@ -1938,7 +1940,14 @@ python3 -m kindling too-small --prove /tmp/t --check
 
     The reference handles positive coefficients. A negative one needs the same sum with
     \alertblue{one thing} changed, because a term that counts downwards needs its variable bounded
-    from the other side. Look at \texttt{channelling}, and at the two constraints every variable has:
+    from the other side. Look at \texttt{channelling}, and at the line defining every variable's
+    order literals:
+
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+\prooflabel{@x1ge3_up} \prooflabel{@x1ge3_dn} x1ge3 <==> 4 x1b2 2 x1b1 1 x1b0 >= 3 ;
+    \end{Verbatim}
+
+    One line, two constraints, a label for each. What you add is what \toolname{VeriPB} stored:
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
 \prooflabel{@x1ge3_up} 4 x1b2 2 x1b1 1 x1b0 3 ~x1ge3 >= 3 ;
