@@ -442,7 +442,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
     \toolname{VeriPB} writes it for you: \texttt{b ==> \ldots} and \texttt{b <== \ldots} normalise to
     precisely that constraint. Several literals on the left of \texttt{==>} is a conjunction, each
-    contributing its own $M \overline{b}_i$, and \texttt{<==>} is just both directions --- one line
+    contributing its own $M \overline{b}_i$, and \texttt{<==>} is just both directions---one line
     standing for two constraints, so it carries a label for each of them.
 
     \bigskip
@@ -599,7 +599,9 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             slack. This is a big problem for CNF-based solvers.
     \end{itemize}
 
-    \uncover{\scriptsize Stated properly in Matthew McIlree's PhD thesis, chapter 3. If anyone is
+    \medskip
+
+    {\scriptsize Stated properly in Matthew McIlree's PhD thesis, chapter 3. If anyone is
     really good at Lean and wants to try formalising this, please talk to me.}
 \end{frame}
 
@@ -631,7 +633,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
     \medskip
 
-    {\centering\small\url{https://github.com/ciaranm/glasgow-constraint-solver}}
+    \begin{center}\small\url{https://github.com/ciaranm/glasgow-constraint-solver}\end{center}
 \end{frame}
 
 \begin{frame}{\toolname{Kindling}: a Vibe-Coded Solver, with Proof Logging, for Teaching}
@@ -647,6 +649,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         \item
             Written entirely by Claude---design, proofs, tests---and it steals heavily
             from the \toolname{Glasgow Constraint Solver}.
+        \item
+            Controversial argument: you can trust it because it produces proofs.
     \end{itemize}
     \end{minipage}\hfill
     \begin{minipage}[t]{0.26\framewidth}
@@ -658,7 +662,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
     \medskip
 
-    {\centering\small\url{https://github.com/ciaranm/kindling}}
+    \begin{center}\small\url{https://github.com/ciaranm/kindling}\end{center}
 \end{frame}
 
 \section{Encoding CP Constraints}
@@ -760,55 +764,59 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{That Is the Entire Encoding}
-    For $X_1 \in \{0,1\}$, $X_2, X_3, X_4 \in \{0,1,2\}$, pairwise different, with
-    $X_1 + X_2 + X_3 + X_4 \le 2$ and $X_2 + X_3 + X_4 \le 1 + X_1$. All of it:
+\begin{frame}[fragile]{A Full OPB Encoding}
+    For $X_1 \in \{0,1\}$, $X_2, X_3, X_4 \in \{0,1,2\}$, all-different$(X_2, X_3)$,
+    all-different$(X_2, X_4)$, all-different$(X_3, X_4)$ with
+    $X_1 + X_2 + X_3 + X_4 \le 2$ and $X_2 + X_3 + X_4 \le 1 + X_1$:
 
     \begin{minipage}[t]{0.49\framewidth}
         \begin{semiverbatim}\linespread{1.05}\tiny
 \prooflabel{@x1ge1_up} \prooflabel{@x1ge1_dn} x1ge1 <==> 1 x1b0 >= 1 ;
 \prooflabel{@x1eq0_up} \prooflabel{@x1eq0_dn} x1eq0 <==> 1 ~x1ge1 >= 1 ;
 \prooflabel{@x1eq1_up} \prooflabel{@x1eq1_dn} x1eq1 <==> 1 x1ge1 >= 1 ;
+
 \prooflabel{@x2_ub} 2 x2b1 1 x2b0 <= 2 ;
 \prooflabel{@x2ge1_up} \prooflabel{@x2ge1_dn} x2ge1 <==> 2 x2b1 1 x2b0 >= 1 ;
 \prooflabel{@x2ge2_up} \prooflabel{@x2ge2_dn} x2ge2 <==> 2 x2b1 1 x2b0 >= 2 ;
 \prooflabel{@x2eq0_up} \prooflabel{@x2eq0_dn} x2eq0 <==> 1 ~x2ge1 >= 1 ;
 \prooflabel{@x2eq1_up} \prooflabel{@x2eq1_dn} x2eq1 <==> 1 x2ge1 1 ~x2ge2 >= 2 ;
 \prooflabel{@x2eq2_up} \prooflabel{@x2eq2_dn} x2eq2 <==> 1 x2ge2 >= 1 ;
+
 \prooflabel{@x3_ub} 2 x3b1 1 x3b0 <= 2 ;
 \prooflabel{@x3ge1_up} \prooflabel{@x3ge1_dn} x3ge1 <==> 2 x3b1 1 x3b0 >= 1 ;
 \prooflabel{@x3ge2_up} \prooflabel{@x3ge2_dn} x3ge2 <==> 2 x3b1 1 x3b0 >= 2 ;
 \prooflabel{@x3eq0_up} \prooflabel{@x3eq0_dn} x3eq0 <==> 1 ~x3ge1 >= 1 ;
 \prooflabel{@x3eq1_up} \prooflabel{@x3eq1_dn} x3eq1 <==> 1 x3ge1 1 ~x3ge2 >= 2 ;
 \prooflabel{@x3eq2_up} \prooflabel{@x3eq2_dn} x3eq2 <==> 1 x3ge2 >= 1 ;
-        \end{semiverbatim}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.49\framewidth}
-        \begin{semiverbatim}\linespread{1.05}\tiny
+
 \prooflabel{@x4_ub} 2 x4b1 1 x4b0 <= 2 ;
 \prooflabel{@x4ge1_up} \prooflabel{@x4ge1_dn} x4ge1 <==> 2 x4b1 1 x4b0 >= 1 ;
 \prooflabel{@x4ge2_up} \prooflabel{@x4ge2_dn} x4ge2 <==> 2 x4b1 1 x4b0 >= 2 ;
 \prooflabel{@x4eq0_up} \prooflabel{@x4eq0_dn} x4eq0 <==> 1 ~x4ge1 >= 1 ;
 \prooflabel{@x4eq1_up} \prooflabel{@x4eq1_dn} x4eq1 <==> 1 x4ge1 1 ~x4ge2 >= 2 ;
 \prooflabel{@x4eq2_up} \prooflabel{@x4eq2_dn} x4eq2 <==> 1 x4ge2 >= 1 ;
+        \end{semiverbatim}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.49\framewidth}
+        \begin{semiverbatim}\linespread{1.05}\scriptsize
 \prooflabel{@amo1_0} 1 x2eq0 1 x3eq0 <= 1 ;
 \prooflabel{@amo1_1} 1 x2eq1 1 x3eq1 <= 1 ;
 \prooflabel{@amo1_2} 1 x2eq2 1 x3eq2 <= 1 ;
+
 \prooflabel{@amo2_0} 1 x2eq0 1 x4eq0 <= 1 ;
 \prooflabel{@amo2_1} 1 x2eq1 1 x4eq1 <= 1 ;
 \prooflabel{@amo2_2} 1 x2eq2 1 x4eq2 <= 1 ;
+
 \prooflabel{@amo3_0} 1 x3eq0 1 x4eq0 <= 1 ;
 \prooflabel{@amo3_1} 1 x3eq1 1 x4eq1 <= 1 ;
 \prooflabel{@amo3_2} 1 x3eq2 1 x4eq2 <= 1 ;
+
 \prooflabel{@lin4} 1 x1b0 2 x2b1 1 x2b0
       2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 2 ;
 \prooflabel{@lin5} -1 x1b0 2 x2b1 1 x2b0
       2 x3b1 1 x3b0 2 x4b1 1 x4b0 <= 1 ;
         \end{semiverbatim}
     \end{minipage}
-
-    \onslide<2->{Fifty constraints on thirty-two lines. Twenty-one of the lines only say what the
-    variables mean; eleven are the problem.}
     \proofsource{encoding}
 \end{frame}
 
@@ -822,10 +830,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \newcommand{\deadend}{\textcolor{uofgpillarbox}{\Lightning}}
 
 \begin{frame}[fragile]{Backtracking Search}
-    \begin{minipage}[t]{0.44\framewidth}
-        $X_1 \in \{0,1\}$ and $X_2, X_3, X_4 \in \{0,1,2\}$, with
+    \begin{minipage}[t]{0.46\framewidth}
+        $X_1 \in \{0,1\}$ and $X_2, X_3, X_4 \in \{0,1,2\}$, all-different$(X_2, X_3)$,
+        all-different$(X_2, X_4)$, \mbox{all-different}$(X_3, X_4)$, and
         \begin{align*}
-            &X_2 \ne X_3, \quad X_2 \ne X_4, \quad X_3 \ne X_4 \\
             &X_1 + X_2 + X_3 + X_4 \le 2 \\
             &X_2 + X_3 + X_4 \le 1 + X_1
         \end{align*}
@@ -858,33 +866,32 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
         {\scriptsize solid is the guess $= 0$, dotted is $\ne 0$}
     \end{minipage}\hfill
-    \begin{minipage}[t]{0.52\framewidth}
+    \begin{minipage}[t]{0.44\framewidth}
         \begin{semiverbatim}\footnotesize
-pseudo-Boolean proof version 3.0
-\uncover<2->{\proofrule{rup} x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<3->{\proofrule{rup} x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
-\uncover<4->{\proofrule{rup} x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<5->{\proofrule{rup} x1eq0 ~x2eq0 ==> >= 1 ;}
-\uncover<6->{\proofrule{rup} x1eq0 ==> >= 1 ;}
-\uncover<7->{\proofrule{rup} ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<7->{\proofrule{rup} ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
-\uncover<7->{\proofrule{rup} ~x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<7->{\proofrule{rup} ~x1eq0 ~x2eq0 ==> >= 1 ;}
-\uncover<7->{\proofrule{rup} ~x1eq0 ==> >= 1 ;}
-\uncover<8->{\proofrule{rup} >= 1 ;}
-\uncover<9->{output NONE;}
-\uncover<9->{conclusion UNSAT;}
-\uncover<9->{end pseudo-Boolean proof;}
+\uncover<2->{pseudo-Boolean proof version 3.0}
+\uncover<3->{\proofrule{rup} x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<4->{\proofrule{rup} x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<5->{\proofrule{rup} x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<6->{\proofrule{rup} x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} x1eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} ~x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} ~x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} ~x1eq0 ==> >= 1 ;}
+\uncover<9->{\proofrule{rup} >= 1 ;}
+\uncover<10->{output NONE;}
+\uncover<10->{conclusion UNSAT;}
+\uncover<10->{end pseudo-Boolean proof;}
         \end{semiverbatim}
     \end{minipage}
     \proofsource{backtracking}
 \end{frame}
 
 \begin{frame}[fragile]{Propagations Aren't Necessarily RUP}
-    Now say $\operatorname{all\_different}(X_2, X_3, X_4)$ instead of three not-equals: same
-    problem, better propagator, which fails as soon as those three are stuck in two values. It is a
-    smaller encoding too, since the nine pairwise at-most-ones collapse into three three-way ones,
-    which renumbers the inequalities to \prooflabel{@lin2} and \prooflabel{@lin3}.
+    Now say $X_1 \in \{0,1\}$ and $X_2, X_3, X_4 \in \{0,1,2\}$, all-different$(X_2, X_3, X_4)$,
+    $X_1 + X_2 + X_3 + X_4 \le 2$, $X_2 + X_3 + X_4 \le 1 + X_1$ instead: same problem, better
+    representation, smaller search tree.
 
     \begin{minipage}[t]{0.36\framewidth}
         \vspace{0.5em}
@@ -910,25 +917,23 @@ end pseudo-Boolean proof;
     \begin{minipage}[t]{0.60\framewidth}
         \begin{itemize}
             \item<2->
-                Ten guesses became two, and eleven \proofrule{rup} lines became three.
+                Failure detected as soon as $X_2$, $X_3$ and $X_4$ only have two values between
+                them.
             \item<3->
-                And those three are \alertred{\texttt{REJECTED}}. Which step is the problem, and
-                why, is not something the file will tell you.
+                Ten guesses became two, and eleven \proofrule{rup} lines became three.
             \item<4->
-                A better propagator searches less and claims more, and the difference is exactly
-                what somebody now has to justify. Decompose your globals and the checker will
-                follow you anywhere --- which is not a recommendation.
+                However, this proof no longer verifies!
         \end{itemize}
     \end{minipage}
     \proofsource{not-rup}
 \end{frame}
 
-\begin{frame}[fragile]{Justifying Every Propagation}
-    So put the propagations in the file too. Each one claims that if the guesses hold then the bound
+\begin{frame}[fragile]{Justifying Propagations as Well as Backtracks?}
+    Next attempt: put propagations in the file too. Each one claims that if the guesses hold then the bound
     holds, and each one claims it as \proofrule{rup}:
 
     \begin{minipage}[t]{0.48\framewidth}
-        \begin{semiverbatim}\linespread{0.82}\scriptsize
+        \begin{semiverbatim}
 pseudo-Boolean proof version 3.0
 \proofrule{rup} x1eq0 ==> 1 ~x2ge2 >= 1 ;
 \proofrule{rup} x1eq0 ==> 1 ~x3ge2 >= 1 ;
@@ -946,16 +951,8 @@ end pseudo-Boolean proof;
     \end{minipage}\hfill
     \begin{minipage}[t]{0.48\framewidth}
         \begin{itemize}
-            \item<3->
-                Unit propagation \alertblue{can} redo all six bounds, since deciding $X_1$ forces a
-                bit of each of $X_2$, $X_3$, $X_4$.
-            \item<4->
-                That the three of them then do not fit in two values, it \alertred{cannot}: nothing
-                is unit, and counting is a cutting planes argument.
-            \item<5->
-                So the rejected line is one the \alertblue{search} wrote, and all-different
-                contributed nothing at all --- a propagator that kills a node has no claim of its
-                own to make. The one thing that cannot justify itself is the one thing not there.
+            \item<2-> It gets further, but that's still not enough.
+            \item<3-> Hall set reasoning just isn't a reverse unit property fact.
         \end{itemize}
     \end{minipage}
     \proofsource{everything-rup}
@@ -979,14 +976,10 @@ Propagation check failed! The propagation had the following trail:
 
     \begin{itemize}
         \item<3->
-            It names where we \alertblue{claimed} something, which is rarely where the problem is:
-            all-different, which is what cannot justify itself, is not mentioned anywhere.
+            Tells us where we made an unsupported claim, but not why. Sometimes this is easy to
+            trace back to a cause, sometimes not so much.
         \item<4->
-            The trail is the checker's best effort: it assumed our decision, went down to the bits,
-            used the inequality to rule out the twos, and came back up with
-            $X_2, X_3, X_4 \le 1$.
-        \item<5->
-            Then it stopped: nothing else is unit. The counting step is ours to supply.
+            The trail tells us what happened. Sometimes this is helpful, sometimes not so much.
     \end{itemize}
     \proofsource{debugging}
 \end{frame}
@@ -1018,22 +1011,27 @@ end pseudo-Boolean proof;
     \begin{minipage}[t]{0.44\framewidth}
         \begin{itemize}
             \item<2->
-                \texttt{UNDER ASSERTIONS}, not \texttt{VERIFIED}: fine for development, not a
-                proof.
+                Passes \texttt{UNDER ASSERTIONS}, not \texttt{VERIFIED}: fine for development, not a
+                complete proof.
             \item<3->
-                The bounds are logged although nobody needed telling. A solver justifies every
-                inference, not the ones it thinks are hard.
-            \item<4->
-                The name is for tools, so the solver can say what is left to do; the free text is
-                for whoever writes the derivation. \texttt{REJECTED} means something is
-                \alertred{wrong}; \texttt{UNDER ASSERTIONS} means something is
-                \alertblue{missing}.
+                The annotations are for human or external tool use.
         \end{itemize}
     \end{minipage}
     \proofsource{assertions}
 \end{frame}
 
 \section{Propagation}
+
+\begin{frame}{What We Have So Far}
+    \begin{itemize}
+        \item Output a backtrack tree using \proofrule{rup} steps.
+        \item Also output propagator inferences using \proofrule{rup} steps.
+        \item When that's not enough, cheat and use assertions.
+        \item<2->
+            Final step: replace these assertions with proper proof steps. We'll need to go
+            propagator by propagator, and inference by inference.
+    \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{Justifying Table Constraint Inferences}
     A value with no supporting tuple left. The propagator found that with an algorithm; the proof
@@ -1121,8 +1119,8 @@ end pseudo-Boolean proof;
     and $3$s become $1$s.}
     \onslide<6->{Now the \proofrule{rup} finishes on its own: assume all three literals, and what is
     left reads $0 \ge 1$.}
-    \onslide<7->{Back in the tree the bounds went through as \proofrule{rup} alone; this one will
-    not, and nothing you can see says which is which. So a propagator never guesses.}
+    \onslide<7->{In our search example we got away with using \proofrule{rup} alone; we were lucky, and
+    usually this doesn't work.}
     \proofsource{linear}
 \end{frame}
 
@@ -1465,8 +1463,8 @@ end pseudo-Boolean proof;
                 two slides ago, over at-least-ones that say what the literals mean rather than what
                 the model said, and so are derived once at the top and used twice.
             \item<3->
-                Six more \proofrule{pol} lines are new. We had been claiming those bounds bare and
-                getting away with it; a finished propagator does not rely on that.
+                Six more \proofrule{pol} lines are new. We had been claiming linear inferences
+                through \proofrule{rup} only and getting away with it.
             \item<4->
                 \alertgreen{\texttt{VERIFIED}}.
         \end{itemize}
@@ -1505,7 +1503,7 @@ end pseudo-Boolean proof;
 
 \begin{frame}[fragile]{Assumptions Don't Matter}
     Every derivation in this section was worked out as if nothing had been guessed. Inside the tree,
-    everything is conditional on the guesses above it---and that is not a second problem to solve.
+    everything is conditional on the guesses above it, but it turns out this isn't an issue.
 
     \medskip
 
@@ -1527,10 +1525,6 @@ end pseudo-Boolean proof;
             For \proofrule{pol}, do nothing whatsoever: add two conditional constraints and their
             conditions add too, divide and the condition divides with it. The assumptions come along
             for free.
-        \item<5->
-            So a propagator works out what to say from the constraints alone, and never thinks about
-            where in the tree it is. Every \proofrule{pol} here was written bare; only the
-            \proofrule{rup} using it knows there is a search going on.
     \end{itemize}
 
     \uncover{\scriptsize Matthew McIlree's thesis again, chapter 2, where the division and
@@ -1545,8 +1539,7 @@ end pseudo-Boolean proof;
     \begin{itemize}
         \item<2->
             A real solver could state a \alertblue{reason}: the handful of literals the propagator actually
-            looked at. On \texttt{too-small}, the same refutation costs $4558$ literals with guesses
-            and $2895$ with reasons.
+            looked at.
         \item<3->
             That clause is the same object a lazy clause generation solver has to produce to explain
             a propagation.
@@ -1560,27 +1553,21 @@ end pseudo-Boolean proof;
 \end{frame}
 
 \begin{frame}{Nothing Ever Gets Deleted}
-    Every constraint a proof derives joins the checker's database and stays there.
-    \toolname{Kindling}'s \texttt{too-small} refutation hands over $1065$ of them and takes back
-    none, on a search tree that is never more than twelve deep.
+    In \toolname{Kindling}, every constraint a proof derives joins the checker's database and stays there.
 
     \begin{itemize}
-        \item<2->
+        \item
             \toolname{VeriPB} has a \proofrule{del} rule. \toolname{Glasgow} tags every constraint it
             derives with the depth it derived it at, and when the search backtracks past that depth,
             deletes the lot in one command. Doing that here would leave it holding around
-            \alertblue{thirty} constraints at a time instead of $1065$.
-        \item<3->
-            The checker is a solver too, and everything it is still holding is one more constraint
-            to propagate, at every step for the rest of the proof.
-        \item<4->
+        \item
+            As well as saving memory, \proofrule{rup} and \proofrule{red} can be a lot faster over a
+            small active database.
+        \item
             Deletion also makes you ask what is worth keeping. Look back at the proof with nothing
             asserted: the all-different \proofrule{pol} is derived \alertblue{twice}, identically,
             once in each branch---and it is unconditional, so like the \prooflabel{@atleast} lines
             above it, it could have been derived once at the top and cited from both.
-        \item<5->
-            \toolname{Kindling} does neither, because at this size nobody notices. That is exactly
-            the criticism I am about to make of somebody else.
     \end{itemize}
     \proofsource{justified}
 \end{frame}
@@ -1620,21 +1607,20 @@ end pseudo-Boolean proof;
             efficiently, not by trying it. The justification says ``had you guessed this, it would
             not have worked``.
         \item
-            \alertblue{Case analysis.} Enumerate what is left and knock it over. Free: it is
-            what \proofrule{rup} does.
+            \alertblue{Case analysis.} If we can show something holds under a complete set of cases,
+            it holds generally.
         \item
-            \alertblue{Linear arithmetic.} Add constraints, scale them, round them off. Linear, Abs, and
-            every bound that has to cross between the bits and the order literals.
+            \alertblue{Linear arithmetic.} Add constraints, scale them, round them off. Linear, Abs.
         \item
             \alertblue{Counting.} Pigeonhole, and recovering an at-most-one from pairwise
             conflicts. All-different's Hall sets, GCC, NValue, Among.
         \item
             \alertblue{Naming things.} Introduce a flag standing for a condition and argue about
-            that instead. Reification, cumulative's before and after flags, smart tables.
+            that instead. Reification, Cumulative's before and after flags, Smart Table.
         \item
             \alertblue{Dynamic programming.} A flag per state, an implication per transition:
-            replay the computation rather than arguing about its answer. Regular, knapsack,
-            decision diagrams.
+            replay the computation rather than arguing about its answer. Regular, Knapsack,
+            Decision Diagrams.
         \item
             \alertblue{Orderings and reachability.} A rank witness, or a transitive closure. Sort,
             Inverse, Circuit.
@@ -1647,7 +1633,7 @@ end pseudo-Boolean proof;
 \end{frame}
 
 \begin{frame}{Multiplication: Doable, But Not Pretty}
-    Multiplication, division and modulus are all certified. Nobody enjoyed it.
+    Multiplication, division and modulus are also possible. It's fairly horrible, though.
 
     \begin{itemize}
         \item
@@ -1656,14 +1642,10 @@ end pseudo-Boolean proof;
             linear, so neither of the two things that rescue everything else is available.
         \item
             What comes out is bit-level case analysis and a long, specific derivation per
-            propagation rule, rather than one recipe you could explain in a slide. This one took a
-            chapter.
+            propagation rule, rather than one recipe you could explain in a slide.
         \item
-            We do not know whether that ugliness is \alertblue{inherent}. No lower bound says a
-            short certificate cannot exist; nobody has found one.
-        \item
-            Which is where every one of these has started. Parity looked impossible until 2021, and
-            then it was four ingredients and only one of them was hard.
+            We do not know whether that ugliness is \alertblue{inherent}. We don't have a proof that
+            we can't do a lot better.
     \end{itemize}
 \end{frame}
 
@@ -1686,12 +1668,9 @@ end pseudo-Boolean proof;
             A certified inference checker per constraint then rules on whether those axioms were
             allowed.
         \item
-            In our vocabulary: put every \texttt{a} into the model file and leave it there. Then
-            wonder why the checker ran out of memory.
-        \item
-            In fairness, \toolname{Kindling} never deletes either, and deserves the same complaint.
-            The difference is that ours are proof steps and not axioms, so there is a rule that can
-            take them back---and \toolname{Glasgow} uses it.
+            In our vocabulary: put every \proofrule{a} into the model file and leave it there. Then
+            wonder why the checker ran out of memory. (Also, do it using CNF, which makes the
+            variable encoding facts even worse.)
     \end{itemize}
 \end{frame}
 
@@ -1709,33 +1688,26 @@ end pseudo-Boolean proof;
             In our vocabulary: assert the lot, cheaply, and work out afterwards which of those
             assertions you actually have to pay for.
         \item
-            Somewhere, something still has to know what a \texttt{cumulative} is. We put it in the
-            solver's derivation, where a checker that has never heard of scheduling can read it.
-            They put it between the solver and the checker. Which you prefer depends on what you
-            think happens when somebody invents a new global constraint.
+            Support for new constraints is \emph{extremely} expensive.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Stealing the Best Bits}
-    The right answer is probably all three at once. This one is Matthew McIlree's, written down in
-    the conclusion of his thesis and nowhere else, and he is building it inside Huub: a lazy clause
-    generation solver which is not ours either.
+    Matthew McIlree's view on what the future is:
 
     \begin{itemize}
         \item
             The solver emits \proofrule{a} lines and nothing else, but fills in the \alertblue{reason}
-            and the hints, in the annotation fields where we have only been leaving a note to
-            ourselves.
+            and the hints in the annotation fields.
         \item
             \alertblue{Trim first.} Elaborate the skeleton, throw away every inference the conclusion
             turned out not to need, and only then start working out justifications.
         \item
             Justify \alertblue{outside} the solver. Every derivation in this talk needs only the
             reason, plus occasionally something small like an automaton's state, so a justifier can
-            do it afterwards rather than every solver doing it for itself. His is lifted from the
-            \toolname{Glasgow} solver.
+            do it afterwards rather than every solver doing it for itself.
         \item
-            And when nothing in the library fits: fall back on a decomposition, an LP relaxation, or
+            When nothing in the library fits: fall back on a decomposition, an LP relaxation, or
             handing the goal to a proof logging pseudo-Boolean or SAT solver to find the argument
             for you.
     \end{itemize}
@@ -1749,85 +1721,145 @@ end pseudo-Boolean proof;
     about four hundred.
 
     \begin{itemize}
-        \item<2->
+        \item
             That is getting harder to say with a straight face. Scheduling was the large hole, and
             it is mostly filled: time-tabling, edge finding, energetic reasoning, not-first and
             not-last, over variable durations, demands and capacities.
-        \item<3->
+        \item
             None of those needed anything added to the proof vocabulary. What they needed was
             somebody to sit down and work out the argument, which is a different kind of problem
             from an open one.
-        \item<4->
+        \item
             The techniques generalise. Anything that can be written as a smart table or MDD is
             already justifiable, which quietly covers a good fraction of the catalogue without
             anyone doing it one at a time.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Open Problems: Everything That Is Not an Integer}
+\begin{frame}{Open Problems: Everything That Is Not Finite Domain Integers}
     \begin{itemize}
-        \item<1->
+        \item
             \alertblue{Set variables.} Can represent sets by lots of Booleans, but solvers have more
             efficient alternatives.
-        \item<2->
+        \item
             \alertblue{Unbounded integers.} Our encoding opens by asking how many bits a variable
             needs, and a variable with no bounds has no answer.
-        \item<3->
+        \item
             \alertblue{Floating point.} Even the semantics are hairy.
-        \item<4->
+        \item
             \alertblue{Strings.} Again, needs a size bound, which can be hard to trust.
     \end{itemize}
 
-    \uncover<5->{The pattern is that we have proof logging for the parts of constraint programming
+    \uncover{The pattern is that we have proof logging for the parts of constraint programming
     that look like integers, and that is not all of constraint programming.}
 \end{frame}
 
-\begin{frame}{Open Problems: The Gap at the Top}
-    Remember the second slide, and the arrow labelled \emph{verified input}.
-
+\begin{frame}{Open Problems: Efficiency and Scalability}
+    Two problems make it hard to apply this to some industrial instances:
     \begin{itemize}
-        \item<2->
+        \item
+            \alertblue{Encoding size.} Our encoding procedures involve a lot of ``copy-paste''
+            loops. A cubic encoding gets annoying quickly.
+        \item
+            \alertblue{Argument size.} The same thing can happen with some justifications. Here even
+            quadratic can be annoying on a frequently-firing propagator.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Open Problems: The Gap at the Top}
+    \begin{onlyenv}<1>
+    \begin{center}
+        \begin{tikzpicture}
+            \node (solver) [ inner xsep=4em, inner ysep=2.5em, draw, rounded corners=3pt] { Solver };
+            \node (elaborator) [ right=2cm of solver.north east, anchor=north west, inner
+            xsep=0.25em, draw, rounded corners=3pt, minimum height=12em, text width=5em, text centered] {
+                \only<1>{Elaborator, Justifier, and Trimmer} };
+            \node (verifiedchecker) [ right=2cm of elaborator.north east, anchor=north west, inner
+                xsep=0.25em, draw, rounded corners=3pt, minimum height=8em, text width=4em, text
+                centered, yshift=-2cm, visible on=<1>] { Verified Checker };
+
+            \node (print) [anchor=south, above=0cm of solver.south] { added print statements };
+            \draw [dotted] (solver.west|-print.north) -- (solver.east|-print.north);
+
+            \draw [->, thick] (solver.east) -- (solver.east -| elaborator.west) coordinate [midway]
+            (solutionmid) node [above, midway] { Answer };
+
+            \draw [->, thick, rounded corners=3pt] (solver.south) -- (solver.south |- elaborator.west) -- (elaborator.west) coordinate [midway] (proofmid);
+
+            \coordinate (prooflabel) at (proofmid-|solutionmid); \node [above=0cm of prooflabel] { Proof };
+
+            \coordinate [right=2cm of verifiedchecker.east] (verified);
+            \draw [->, thick, visible on=<1>] (verifiedchecker.east) -- (verified)
+                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} }
+                node [below, midway, text centered, text width=5em] { Trusted Answer in Domain Language };
+
+            \coordinate [left=1.5cm of solver.west] (input);
+            \draw [->, thick] (input) -- (solver.west) coordinate [midway] (inputmid) node [above, midway] { Input };
+
+            \coordinate (verifiedcheckertopleft) at ($(verifiedchecker.west)+($(0cm,1.2cm)$)$);
+            \draw [->, thick, visible on=<1>] (elaborator.east |- verifiedcheckertopleft) --
+            (verifiedcheckertopleft) node [above, midway, text width=4em, text centered] { Answer };
+            \draw [->, thick, visible on=<1>] (elaborator.east |- verifiedchecker.west) -- (verifiedchecker.west) node [above, midway, text width=4em, text centered] { Kernel Proof };
+
+            \coordinate (elaboratorbotleft) at ($(elaborator.west)+($(elaborator.west)-(solver.east-|elaborator.west)$)$);
+            \coordinate (verifiedcheckerbotleft) at ($(verifiedchecker.west)+($(0cm,-1.2cm)$)$);
+
+            \coordinate (elaboratortopright) at ($(elaborator.east)+($(verifiedcheckertopleft)-(verifiedchecker.west)$)$);
+            \draw [->, thick] (elaboratortopright) -- (elaboratortopright-|verifiedchecker.west)
+                node [above, midway] { \textcolor{uofglawn}{\ding{51}} or \textcolor{uofgpillarbox}{\ding{55}} };
+
+            \coordinate (solverstart) at ($(solver.south)!0.75!(solver.south west)$);
+            \coordinate (checkerbotleft) at ($(elaborator.west)+($(elaborator.west)-(solver.east-|elaborator.west)$)$);
+            \draw [->, thick, rounded corners=3pt] (solverstart) -- (solverstart |- checkerbotleft) -- (checkerbotleft)
+            coordinate [midway] (altinputmid);
+
+            \coordinate (encinputlabel) at (altinputmid-|solutionmid);
+            \node [above=0cm of encinputlabel, xshift=-0.5cm] { Encoded Input };
+
+            \draw [->, thick, rounded corners=3pt, visible on=<1>] ($(inputmid)+(-0.2,0)$) --
+            (inputmid) -- (inputmid |- verifiedcheckerbotleft) -- (verifiedcheckerbotleft)
+            coordinate [midway] (verinputmid);
+
+            \coordinate (verinputlabel) at (verinputmid-|solutionmid);
+            \node [above=0cm of verinputlabel, xshift=-0.5cm, visible on=<1>] { Verified Input };
+        \end{tikzpicture}
+    \end{center}
+    \end{onlyenv}\begin{onlyenv}<2->
+    \begin{itemize}
+        \item
             We can check the proof. We can also verify that the pseudo-Boolean model says the same
             thing as the solver's own input format.
-        \item<3->
+        \item
             Nobody writes their model in the solver's own input format. They write
-            \toolname{MiniZinc}, and
-            something flattens it.
-        \item<4->
+            \toolname{MiniZinc} or \toolname{CPMpy}, and something flattens it.
+        \item
             A flattener is a \alertblue{compiler}. It reformulates, it decomposes, it introduces
             variables, it is thousands of lines long, and it has not been verified.
-        \item<5->
+        \item
             So today, \enquote{verified} honestly means \emph{verified from the point at which we
             started paying attention}.
     \end{itemize}
+\end{onlyenv}
 \end{frame}
 
 \begin{frame}{The Biggest Open Problem}
-    Everything on the last three slides is work. Somebody has to do it, and it will get done.
-
-    \medskip
-
-    \uncover<2->{This one is not work. It is an argument.}
-
     \begin{itemize}
-        \item<3->
-            A solver says \emph{unsatisfiable}, and we believe it. It says \emph{optimal}, and we
-            put that number in a paper, or a timetable, or a hospital roster.
-        \item<4->
-            The SAT community settled this over a decade ago. If you want to enter the competition,
-            your solver produces a proof, and nobody argues about it any more.
-        \item<5->
-            Constraint programming has not settled it. Neither has almost anything else in
-            computer science.
+        \item Constraint programming solvers are being used autonomously to make important decisions
+            about lives and livelihoods.
+        \item <2->
+            You can't do useful scientific comparisons if solvers can randomly cheat.
+        \item <3->
+            Once you know how to do it, proof logging speeds up development.
+        \item <4->
+            The SAT community has already done this. Bugs used to be a big problem. Now, proofs
+            are mandatory, and bugs are (mostly) not a problem. We all know CP is better than SAT,
+            so what's our excuse?
     \end{itemize}
-
-    \medskip
-
-    \uncover<6->{You are the people who will write the next generation of solvers. Please make them
-    show their working.}
 \end{frame}
 
 \section{Exercises}
+
+\sectionpage
 
 \begin{frame}[fragile]{Installing \toolname{Kindling}}
     \begin{Verbatim}[fontsize=\small]
