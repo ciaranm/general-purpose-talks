@@ -824,8 +824,10 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \tikzset{
     treenode/.style={inner sep=1pt},
-    takesit/.style={solid, thick},
-    losesit/.style={dotted, thick},
+    takesit/.style={solid, thick, draw=black},
+    losesit/.style={dotted, thick, draw=black},
+    walked/.style={draw=uofgcobalt},
+    walkednode/.style={text=uofgcobalt},
 }
 \newcommand{\deadend}{\textcolor{uofgpillarbox}{\Lightning}}
 
@@ -846,13 +848,13 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
                 level 2/.style={level distance=0.65cm, sibling distance=1.3cm},
                 level 3/.style={level distance=0.65cm, sibling distance=0.7cm}]
                 \node [treenode] {$X_1$}
-                    child { node [treenode] {$X_2$}
-                        child { node [treenode] {$X_3$}
-                            child { node {\deadend} edge from parent [takesit] }
+                    child { node [treenode, alt=<2-4>{walkednode}{}] {$X_2$}
+                        child { node [treenode, alt=<3-4>{walkednode}{}] {$X_3$}
+                            child { node {\deadend} edge from parent [takesit, alt=<4>{walked}{}] }
                             child { node {\deadend} edge from parent [losesit] }
-                            edge from parent [takesit] }
+                            edge from parent [takesit, alt=<3-4>{walked}{}] }
                         child { node {\deadend} edge from parent [losesit] }
-                        edge from parent [takesit] }
+                        edge from parent [takesit, alt=<2-4>{walked}{}] }
                     child { node [treenode] {$X_2$}
                         child { node [treenode] {$X_3$}
                             child { node {\deadend} edge from parent [takesit] }
@@ -867,23 +869,51 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
         {\scriptsize solid is the guess $= 0$, dotted is $\ne 0$}
     \end{minipage}\hfill
     \begin{minipage}[t]{0.44\framewidth}
+        % Overlays 1--4 walk the leftmost branch, one guess per step, showing what
+        % little this solver infers before it hits its first conflict. The proof
+        % then replaces it from overlay 5 on.
+        \only<1-4>{%
+            \footnotesize\raggedright
+
+            Going down the leftmost branch:
+
+            \bigskip
+
+            \uncover<2->{\alertblue{guess $X_1 = 0$}\\
+                \hspace*{1em}$X_2 + X_3 + X_4 \le 1 + X_1$ now\\
+                \hspace*{1em}reads $\le 1$, so $X_2, X_3, X_4 \le 1$}
+
+            \bigskip
+
+            \uncover<3->{\alertblue{guess $X_2 = 0$}\\
+                \hspace*{1em}nothing: a $\ne$ constraint here\\
+                \hspace*{1em}only looks once both of its\\
+                \hspace*{1em}variables are fixed}
+
+            \bigskip
+
+            \uncover<4->{\alertblue{guess $X_3 = 0$}\\
+                \hspace*{1em}$X_2 = X_3 = 0$, so all-different\\
+                \hspace*{1em}$(X_2, X_3)$ \alertred{fails}: backtrack}}%
+        \begin{onlyenv}<5->
         \begin{semiverbatim}\footnotesize
-\uncover<2->{pseudo-Boolean proof version 3.0}
-\uncover<3->{\proofrule{rup} x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<4->{\proofrule{rup} x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
-\uncover<5->{\proofrule{rup} x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<6->{\proofrule{rup} x1eq0 ~x2eq0 ==> >= 1 ;}
-\uncover<7->{\proofrule{rup} x1eq0 ==> >= 1 ;}
-\uncover<8->{\proofrule{rup} ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
-\uncover<8->{\proofrule{rup} ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
-\uncover<8->{\proofrule{rup} ~x1eq0 x2eq0 ==> >= 1 ;}
-\uncover<8->{\proofrule{rup} ~x1eq0 ~x2eq0 ==> >= 1 ;}
-\uncover<8->{\proofrule{rup} ~x1eq0 ==> >= 1 ;}
-\uncover<9->{\proofrule{rup} >= 1 ;}
-\uncover<10->{output NONE;}
-\uncover<10->{conclusion UNSAT;}
-\uncover<10->{end pseudo-Boolean proof;}
+\uncover<5->{pseudo-Boolean proof version 3.0}
+\uncover<6->{\proofrule{rup} x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<7->{\proofrule{rup} x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<8->{\proofrule{rup} x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<9->{\proofrule{rup} x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<10->{\proofrule{rup} x1eq0 ==> >= 1 ;}
+\uncover<11->{\proofrule{rup} ~x1eq0 x2eq0 x3eq0 ==> >= 1 ;}
+\uncover<11->{\proofrule{rup} ~x1eq0 x2eq0 ~x3eq0 ==> >= 1 ;}
+\uncover<11->{\proofrule{rup} ~x1eq0 x2eq0 ==> >= 1 ;}
+\uncover<11->{\proofrule{rup} ~x1eq0 ~x2eq0 ==> >= 1 ;}
+\uncover<11->{\proofrule{rup} ~x1eq0 ==> >= 1 ;}
+\uncover<12->{\proofrule{rup} >= 1 ;}
+\uncover<13->{output NONE;}
+\uncover<13->{conclusion UNSAT;}
+\uncover<13->{end pseudo-Boolean proof;}
         \end{semiverbatim}
+        \end{onlyenv}
     \end{minipage}
     \proofsource{backtracking}
 \end{frame}
@@ -917,8 +947,9 @@ end pseudo-Boolean proof;
     \begin{minipage}[t]{0.60\framewidth}
         \begin{itemize}
             \item<2->
-                Failure detected as soon as $X_2$, $X_3$ and $X_4$ only have two values between
-                them.
+                Either guess on $X_1$ still leaves $X_2, X_3, X_4 \le 1$, but now all-different
+                sees three variables sharing only two values---a Hall set violation---and fails
+                on the spot. $X_2$ and $X_3$ never get guessed at all.
             \item<3->
                 Ten guesses became two, and eleven \proofrule{rup} lines became three.
             \item<4->
