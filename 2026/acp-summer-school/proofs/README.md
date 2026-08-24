@@ -42,6 +42,7 @@ only in all-different: three pairwise constraints give nine two-variable
 at-most-ones and number the inequalities `@lin4` and `@lin5`, and the global one
 gives three three-variable at-most-ones and `@lin2` and `@lin3`.
 
-`table` is `two-tables` and `linear` is a bare `X1 + X2 + X3 <= 9` over
+`table` is one `table_int` over `x1 in 0..2`, `x2 in 0..3`, `x3 in 0..5` with
+the three tuples on the slide, and `linear` is a bare `X1 + X2 + X3 <= 9` over
 `0..7`; both `.pbp` files are the one inference on the slide, so they end in
 `conclusion NONE`.

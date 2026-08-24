@@ -713,12 +713,12 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \end{frame}
 
 \begin{frame}{Table Constraints}
-    For $(X, Y, Z) \in [(1, 2, 3), (1, 3, 4), (2, 2, 5)]$:
+    For $(X_1, X_2, X_3) \in [(1, 2, 3), (1, 3, 4), (2, 2, 5)]$:
     \begin{align*}
         &t_1 + t_2 + t_3 \ge 1 \\
-        &t_1 \Rightarrow x_{=1} \wedge y_{=2} \wedge z_{=3} \\
-        &t_2 \Rightarrow x_{=1} \wedge y_{=3} \wedge z_{=4} \\
-        &t_3 \Rightarrow x_{=2} \wedge y_{=2} \wedge z_{=5}
+        &t_1 \Rightarrow x_{1{=}1} \wedge x_{2{=}2} \wedge x_{3{=}3} \\
+        &t_2 \Rightarrow x_{1{=}1} \wedge x_{2{=}3} \wedge x_{3{=}4} \\
+        &t_3 \Rightarrow x_{1{=}2} \wedge x_{2{=}2} \wedge x_{3{=}5}
     \end{align*}
 
     \bigskip
@@ -1065,24 +1065,36 @@ end pseudo-Boolean proof;
 \end{frame}
 
 \begin{frame}[fragile]{Justifying Table Constraint Inferences}
-    A value with no supporting tuple left. The propagator found that with an algorithm; the proof
-    simply claims that it is true:
+    The table from earlier, $(X_1, X_2, X_3) \in [(1, 2, 3), (1, 3, 4), (2, 2, 5)]$, encoded again:
+    \vspace*{-0.4em}
+    \begin{align*}
+        &t_1 + t_2 + t_3 \ge 1 \\
+        &t_1 \Rightarrow x_{1{=}1} \wedge x_{2{=}2} \wedge \alertred<4->{x_{3{=}3}} \\
+        &t_2 \Rightarrow x_{1{=}1} \wedge x_{2{=}3} \wedge \alertred<4->{x_{3{=}4}} \\
+        &t_3 \Rightarrow \alertred<3->{x_{1{=}2}} \wedge x_{2{=}2} \wedge x_{3{=}5}
+    \end{align*}
+    \vspace*{-1em}
 
-    \bigskip
+    Suppose search has guessed $X_1 = 1$. The propagator scans, finds that $X_3 = 5$ has no
+    supporting tuple left, and deletes it. The proof doesn't repeat the scan: it claims the outcome.
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
-\proofrule{rup} x1eq0 ==> 1 ~x2eq1 >= 1 ;
+\proofrule{rup} x1eq1 ==> 1 ~x3eq5 >= 1 ;
     \end{Verbatim}
 
-    \bigskip
-
+    \vspace*{-0.4em}
     \begin{itemize}
         \item<2->
-            If we've guessed $X_1 = 0$, then $X_2 \ne 1$.
+            The checker assumes the opposite, so $X_1 = 1$ and $X_3 = 5$ both hold.
         \item<3->
-            The checker assumes the opposite of that, so both $X_1 = 0$ and $X_2 = 1$, and the
-            selectors fall over one at a time. When the last one goes, the constraints saying some tuple is
-            in use has nothing left to satisfy it.
+            $x_{1{=}1}$ is $x_{1\ge1} \wedge \overline{x}_{1\ge2}$ and $x_{1{=}2}$ is $x_{1\ge2}$, so
+            $x_{1{=}2}$ is false and $t_3$ falls over.
+        \item<4->
+            $x_{3{=}5}$ gives $x_{3\ge5}$, and through the bits $x_{3\ge4}$: that kills
+            $x_{3{=}3}$ and $x_{3{=}4}$, and with them $t_1$ and $t_2$.
+        \item<5->
+            Nothing is left to satisfy $t_1 + t_2 + t_3 \ge 1$. That is the contradiction---and the
+            algorithm that found the inference appears nowhere in the proof.
     \end{itemize}
     \proofsource{table}
 \end{frame}
