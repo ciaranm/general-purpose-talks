@@ -197,8 +197,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 \newcommand<>{\alertred}[1]{{\color#2{uofgpillarbox}#1}}
 \newcommand<>{\alertblue}[1]{{\color#2{uofgcobalt}#1}}
 \newcommand<>{\alertgreen}[1]{{\color#2{uofglawn}#1}}
-\newcommand<>{\proofrule}[1]{{\color#2{uofglawn}#1}}
-\newcommand<>{\prooflabel}[1]{{\color#2{uofgpumpkin}#1}}
+\newcommand<>{\proofrule}[1]{{\color#2{uofgrose}#1}}
+\newcommand<>{\prooflabel}[1]{{\color#2{uofgburgundy}#1}}
 \newcommand<>{\toolname}[1]{{\color#2{uofgthistle}#1}}
 
 % The name of the .opb / .pbp pair under proofs/ that this frame is showing, so it
@@ -1064,25 +1064,23 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Justifying Table Constraint Inferences}
+\begin{frame}[fragile]{Justifying Table Constraint Inferences: \proofrule{rup} is Enough}
     The table from earlier, $(X_1, X_2, X_3) \in [(1, 2, 3), (1, 3, 4), (2, 2, 5)]$, encoded again:
     \vspace*{-0.4em}
     \begin{align*}
-        &t_1 + t_2 + t_3 \ge 1 \\
+        &t_1 + t_2 + t_3 \ge 1 &&
         &t_1 \Rightarrow x_{1{=}1} \wedge x_{2{=}2} \wedge \alertred<4->{x_{3{=}3}} \\
-        &t_2 \Rightarrow x_{1{=}1} \wedge x_{2{=}3} \wedge \alertred<4->{x_{3{=}4}} \\
+        &t_2 \Rightarrow x_{1{=}1} \wedge x_{2{=}3} \wedge \alertred<4->{x_{3{=}4}} &&
         &t_3 \Rightarrow \alertred<3->{x_{1{=}2}} \wedge x_{2{=}2} \wedge x_{3{=}5}
     \end{align*}
-    \vspace*{-1em}
 
     Suppose search has guessed $X_1 = 1$. The propagator scans, finds that $X_3 = 5$ has no
-    supporting tuple left, and deletes it. The proof doesn't repeat the scan: it claims the outcome.
+    supporting tuple left, and deletes it.
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
 \proofrule{rup} x1eq1 ==> 1 ~x3eq5 >= 1 ;
     \end{Verbatim}
 
-    \vspace*{-0.4em}
     \begin{itemize}
         \item<2->
             The checker assumes the opposite, so $X_1 = 1$ and $X_3 = 5$ both hold.
@@ -1090,11 +1088,10 @@ end pseudo-Boolean proof;
             $x_{1{=}1}$ is $x_{1\ge1} \wedge \overline{x}_{1\ge2}$ and $x_{1{=}2}$ is $x_{1\ge2}$, so
             $x_{1{=}2}$ is false and $t_3$ falls over.
         \item<4->
-            $x_{3{=}5}$ gives $x_{3\ge5}$, and through the bits $x_{3\ge4}$: that kills
-            $x_{3{=}3}$ and $x_{3{=}4}$, and with them $t_1$ and $t_2$.
+            $x_{3{=}5}$ gives $x_{3\ge5}$, which implies $x_{3\ge4}$: that kills
+            $x_{3{=}3}$ and $x_{3{=}4}$, and hence $t_1$ and $t_2$.
         \item<5->
-            Nothing is left to satisfy $t_1 + t_2 + t_3 \ge 1$. That is the contradiction---and the
-            algorithm that found the inference appears nowhere in the proof.
+            Nothing is left to satisfy $t_1 + t_2 + t_3 \ge 1$.
     \end{itemize}
     \proofsource{table}
 \end{frame}
@@ -1103,17 +1100,9 @@ end pseudo-Boolean proof;
 % taking up its space beforehand so that nothing moves as it builds
 \newcommand{\cell}[2]{\onslide<#1->{#2}}
 
-\begin{frame}[fragile]{Justifying Linear Inequalities}
+\begin{frame}[fragile]{Justifying Linear Inequalities using \proofrule{pol}}
     $X_1 + X_2 + X_3 \le 9$, and something has already established $X_2 \ge 3$ and $X_3 \ge 3$. So
     $X_1 \le 3$.
-
-    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
-\proofrule{pol} \prooflabel{@lin1} \prooflabel{@x2ge3_up} + \prooflabel{@x3ge3_up} + \prooflabel{@x1ge4_up} + ;
-\proofrule{rup} x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
-    \end{Verbatim}
-
-    Normalising flipped the $\le 9$ into a $\ge 12$ over negated bits, and every channelling
-    constraint brings the same bits back the other way up:
 
     {\footnotesize\setlength{\arraycolsep}{1.5pt}
     \begin{equation*}
@@ -1158,9 +1147,18 @@ end pseudo-Boolean proof;
     \end{equation*}}
 
     \onslide<5->{Each column is $c\,x + c\,\overline{x} = \alertblue{c}$, so the bits leave $21$
-    behind and only $1$ of the degree survives. \toolname{Kindling} adds \proofrule{s}: those $4$s
-    and $3$s become $1$s.}
-    \onslide<6->{Now the \proofrule{rup} finishes on its own: assume all three literals, and what is
+    behind and only $1$ of the degree survives.}
+
+    \medskip
+
+\begin{uncoverenv}<7->
+    \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+\proofrule{pol} \prooflabel{@lin1} \prooflabel{@x2ge3_up} + \prooflabel{@x3ge3_up} + \prooflabel{@x1ge4_up} + ;
+\proofrule{rup} x2ge3 x3ge3 ==> 1 ~x1ge4 >= 1 ;
+    \end{Verbatim}
+\end{uncoverenv}
+
+    \onslide<7->{Now the \proofrule{rup} works: assume all three literals, and what is
     left reads $0 \ge 1$.}
     \onslide<7->{In our search example we got away with using \proofrule{rup} alone; we were lucky, and
     usually this doesn't work.}
