@@ -460,6 +460,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \section{Encoding CP Variables}
 
+\sectionpage
+
 \begin{frame}{The Direct Encoding}
     An encoding has to \alertblue{mean} what the variable means, and it has to provide every literal a
     propagator might want to talk about.
@@ -667,6 +669,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \section{Encoding CP Constraints}
 
+\sectionpage
+
 \begin{frame}{Linear Inequalities}
     Substitute the bits, and there is nothing left to do. For $X, Y, Z \in \{0 \ldots 7\}$, the
     constraint $2X + 3Y - Z \le 12$ is
@@ -822,6 +826,8 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 
 \section{Proofs}
 
+\sectionpage
+
 \tikzset{
     treenode/.style={inner sep=1pt},
     takesit/.style={solid, thick, draw=black},
@@ -831,7 +837,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
 }
 \newcommand{\deadend}{\textcolor{uofgpillarbox}{\Lightning}}
 
-\begin{frame}[fragile]{Backtracking Search}
+\begin{frame}[fragile]{Backtracking Search (Checking Only)}
     \begin{minipage}[t]{0.46\framewidth}
         $X_1 \in \{0,1\}$ and $X_2, X_3, X_4 \in \{0,1,2\}$, all-different$(X_2, X_3)$,
         all-different$(X_2, X_4)$, \mbox{all-different}$(X_3, X_4)$, and
@@ -886,7 +892,7 @@ decorations.pathmorphing, shapes.misc, tikzmark, backgrounds, trees, overlay-bea
             \bigskip
 
             \uncover<3->{\alertblue{guess $X_2 = 0$}\\
-                \hspace*{1em}nothing: a $\ne$ constraint here\\
+                \hspace*{1em}nothing: all-different here\\
                 \hspace*{1em}only looks once both of its\\
                 \hspace*{1em}variables are fixed}
 
@@ -1052,6 +1058,8 @@ end pseudo-Boolean proof;
 \end{frame}
 
 \section{Propagation}
+
+\sectionpage
 
 \begin{frame}{What We Have So Far}
     \begin{itemize}
@@ -1468,7 +1476,7 @@ end pseudo-Boolean proof;
     \end{tabular}
 \end{frame}
 
-\begin{frame}[fragile]{The Same Proof, With Nothing Asserted}
+\begin{frame}[fragile]{A Complete Proof, With No Cheating}
     \begin{minipage}[t]{0.56\framewidth}
         \begin{semiverbatim}\linespread{0.82}\scriptsize
 pseudo-Boolean proof version 3.0
@@ -1593,7 +1601,7 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Nothing Ever Gets Deleted}
+\begin{frame}{Deletions}
     In \toolname{Kindling}, every constraint a proof derives joins the checker's database and stays there.
 
     \begin{itemize}
@@ -1613,7 +1621,7 @@ end pseudo-Boolean proof;
     \proofsource{justified}
 \end{frame}
 
-\begin{frame}{What Else Can We Do?}
+\begin{frame}{What Constraints Can We Do?}
     \toolname{Glasgow} has thirty-seven constraints, and every inference every one of them makes is justified:
 
     \smallskip
@@ -1641,7 +1649,7 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
-\begin{frame}{It Is the Same Handful of Tricks}
+\begin{frame}{\toolname{VeriPB} Justifications Bag of Tricks}
     \begin{itemize}
         \item
             \alertblue{Search you did not have to do.} A table propagator finds an unsupported value
@@ -1690,72 +1698,9 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
-\section{What Remains}
+\section{Omissions, Lies, and Future Work}
 
-\begin{frame}{Other Approaches: Assert Everything, Up Front}
-    Everybody working on this has the same problem---a propagator knows something the checker does
-    not---and differs only over who is trusted to close the gap. Both of the alternatives here
-    belong to people who are in this room, so they can tell you where the description is unfair.
-
-    \medskip
-
-    \begin{itemize}
-        \item
-            Gange, Chu and Stuckey, \emph{Certifying Optimality in Constraint Programming}: take a
-            lazy clause generation solver, write out the resolution proof it already had, and
-            introduce each propagator's explanations as \alertblue{axioms} saying what that
-            propagator does.
-        \item
-            A certified inference checker per constraint then rules on whether those axioms were
-            allowed.
-        \item
-            In our vocabulary: put every \proofrule{a} into the model file and leave it there. Then
-            wonder why the checker ran out of memory. (Also, do it using CNF, which makes the
-            variable encoding facts even worse.)
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Other Approaches: Assert Everything, Then Trim}
-    \begin{itemize}
-        \item
-            DRCP, and the Pumpkin solver: Flippo, Sidorov, Marijnissen, Smits and Demirovi\'c, CP
-            2024. At runtime the solver logs only a \alertblue{scaffold}: what it did, in terms
-            of literal constraints on domains, and not why.
-        \item
-            Afterwards a proof processor \alertblue{trims} the scaffold, throwing away everything the
-            answer turned out not to depend upon, and expands what is left into something a checker
-            will take.
-        \item
-            In our vocabulary: assert the lot, cheaply, and work out afterwards which of those
-            assertions you actually have to pay for.
-        \item
-            Support for new constraints is \emph{extremely} expensive.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Stealing the Best Bits}
-    Matthew McIlree's view on what the future is:
-
-    \begin{itemize}
-        \item
-            The solver emits \proofrule{a} lines and nothing else, but fills in the \alertblue{reason}
-            and the hints in the annotation fields.
-        \item
-            \alertblue{Trim first.} Elaborate the skeleton, throw away every inference the conclusion
-            turned out not to need, and only then start working out justifications.
-        \item
-            Justify \alertblue{outside} the solver. Every derivation in this talk needs only the
-            reason, plus occasionally something small like an automaton's state, so a justifier can
-            do it afterwards rather than every solver doing it for itself.
-        \item
-            When nothing in the library fits: fall back on a decomposition, an LP relaxation, or
-            handing the goal to a proof logging pseudo-Boolean or SAT solver to find the argument
-            for you.
-    \end{itemize}
-
-    Coming soon: a production-quality trimmer and justifier for \toolname{VeriPB} that can actually
-    do this.
-\end{frame}
+\sectionpage
 
 \begin{frame}{Open Problems: The Other Four Hundred Propagators}
     The joke used to be that we had done six constraints, and the global constraint catalogue had
@@ -1807,7 +1752,32 @@ end pseudo-Boolean proof;
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Open Problems: The Gap at the Top}
+\begin{frame}{Better Performance by Generating and Checking Less of the Proof?}
+    One potential approach, with ideas stolen from DRCP and the Pumpkin solver (Flippo, Sidorov,
+    Marijnissen, Smits and Demirovi\'c, CP 2024):
+
+    \begin{itemize}
+        \item
+            The solver emits \proofrule{a} lines and nothing else, but fills in the \alertblue{reason}
+            and the hints in the annotation fields.
+        \item
+            \alertblue{Trim first.} Elaborate the skeleton, throw away every inference the conclusion
+            turned out not to need, and only then start working out justifications.
+        \item
+            Justify \alertblue{outside} the solver. Every derivation in this talk needs only the
+            reason, plus occasionally something small like an automaton's state, so a justifier can
+            do it afterwards rather than every solver doing it for itself.
+        \item
+            When nothing in the library fits: fall back on a decomposition, an LP relaxation, or
+            handing the goal to a proof logging pseudo-Boolean or SAT solver to find the argument
+            for you.
+    \end{itemize}
+
+    Coming soon: a production-quality trimmer and justifier for \toolname{VeriPB} that can actually
+    do this.
+\end{frame}
+
+\begin{frame}[fragile]{Open Problems: The Encodings Gap}
     \begin{onlyenv}<1>
     \begin{center}
         \begin{tikzpicture}
@@ -1865,28 +1835,21 @@ end pseudo-Boolean proof;
             \node [above=0cm of verinputlabel, xshift=-0.5cm, visible on=<1>] { Verified Input };
         \end{tikzpicture}
     \end{center}
-    \end{onlyenv}\begin{onlyenv}<2->
+    \end{onlyenv}\begin{onlyenv}<2>
     \begin{itemize}
         \item
-            We can check the proof. We can also verify that the pseudo-Boolean model says the same
-            thing as the solver's own input format.
+            We need to get the OPB encoding from somewhere. We can create it from the solver's
+            input, but you need to trust the process.
         \item
             Nobody writes their model in the solver's own input format. They write
             \toolname{MiniZinc} or \toolname{CPMpy}, and something flattens it.
         \item
             A flattener is a \alertblue{compiler}. It reformulates, it decomposes, it introduces
             variables, it is thousands of lines long, and it has not been verified.
-        \item
-            So today, \enquote{verified} honestly means \emph{verified from the point at which we
-            started paying attention}.
     \end{itemize}
 \end{onlyenv}
-\end{frame}
-
-\begin{frame}[fragile]{Open Problems: The Verified Input Language}
-    That \enquote{verified input} arrow is a \texttt{.scp} file: s-expression CP, which the verified
-    checker reads for itself. SEND $+$ MORE $=$ MONEY, in full (reflowed---whitespace isn't
-    significant):
+\begin{onlyenv}<3->
+    Very recent work: s-expression CP, which the verified checker reads. SEND $+$ MORE $=$ MONEY:
 
     \begin{Verbatim}[fontsize=\scriptsize,commandchars=\\\{\}]
 (
@@ -1901,24 +1864,26 @@ end pseudo-Boolean proof;
     \end{Verbatim}
 
     \begin{itemize}
-        \item<2->
+        \item
             Every variable and every constraint, written out longhand. No loops, no conditionals, no
-            arrays, no parameters, no separate data file. This is not \toolname{MiniZinc}.
-        \item<3->
-            What it does have is \alertblue{meaning}: seventy-odd constraint types whose semantics
+            arrays, no parameters, no separate data file.
+        \item
+            What it does have is \alertblue{meaning}: forty-odd constraint types whose semantics
             are formalised inside the verified checker---all-different, cumulative, circuit, regular,
-            knapsack, smart table, and the rest.
-        \item<4->
+            knapsack, etc.
+        \item
             The checker re-derives the pseudo-Boolean encoding from this file, and the proof is
-            checked against \alertblue{that}. From here down, verified. Getting a real model to here,
-            not.
+            checked against \alertblue{that}. If you trust the SCP file, you can trust the output.
+        \item
+            Can compile MiniZinc to SCP, but not in a verified way.
     \end{itemize}
+\end{onlyenv}
 \end{frame}
 
-\begin{frame}{The Biggest Open Problem}
+\begin{frame}{Proof Logging World Domination Plans}
     \begin{itemize}
         \item Constraint programming solvers are being used autonomously to make important decisions
-            about lives and livelihoods.
+            about lives and livelihoods. Undetected wrong answers are a real problem.
         \item <2->
             You can't do useful scientific comparisons if solvers can randomly cheat.
         \item <3->
