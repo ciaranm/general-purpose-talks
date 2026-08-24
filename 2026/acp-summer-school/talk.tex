@@ -1883,6 +1883,38 @@ end pseudo-Boolean proof;
 \end{onlyenv}
 \end{frame}
 
+\begin{frame}[fragile]{Open Problems: The Verified Input Language}
+    That \enquote{verified input} arrow is a \texttt{.scp} file: s-expression CP, which the verified
+    checker reads for itself. SEND $+$ MORE $=$ MONEY, in full (reflowed---whitespace isn't
+    significant):
+
+    \begin{Verbatim}[fontsize=\scriptsize,commandchars=\\\{\}]
+(
+    (version 1)
+    (variables (s 1 9) (e 0 9) (n 0 9) (d 0 9) (m 1 9) (o 0 9) (r 0 9) (y 0 9))
+    (constraints
+        (money_a_d \alertblue{all_different} (s e n d m o r y))
+        (money_sum \alertblue{lin_equals} (1000 s 100 e 10 n 1 d 1000 m 100 o 10 r 1 e
+                               -10000 m -1000 o -100 n -10 e -1 y) 0))
+    (prob_type enumerate)
+)
+    \end{Verbatim}
+
+    \begin{itemize}
+        \item<2->
+            Every variable and every constraint, written out longhand. No loops, no conditionals, no
+            arrays, no parameters, no separate data file. This is not \toolname{MiniZinc}.
+        \item<3->
+            What it does have is \alertblue{meaning}: seventy-odd constraint types whose semantics
+            are formalised inside the verified checker---all-different, cumulative, circuit, regular,
+            knapsack, smart table, and the rest.
+        \item<4->
+            The checker re-derives the pseudo-Boolean encoding from this file, and the proof is
+            checked against \alertblue{that}. From here down, verified. Getting a real model to here,
+            not.
+    \end{itemize}
+\end{frame}
+
 \begin{frame}{The Biggest Open Problem}
     \begin{itemize}
         \item Constraint programming solvers are being used autonomously to make important decisions
