@@ -214,6 +214,49 @@ inner sep=0pt, font=\tiny}}
 \newcommand{\theproofsource}{}
 \newcommand{\proofsource}[1]{\gdef\theproofsource{#1}\ignorespaces}
 
+% {{{ shaded code blocks
+% Every Verbatim and semiverbatim block gets a nearly-white background. The block is
+% boxed and the padding zeroed, so the tint hugs the code exactly and the block takes
+% up no more room than it did before: the list glue that would have gone inside the
+% box is put outside it instead.
+\colorlet{codebackground}{uofgsandstone!10}
+
+\makeatletter
+\newsavebox{\cm@codebox}
+
+\newenvironment{cm@shadedcode}{%
+    \par
+    \if@minipage\else\addvspace{\topsep}\fi
+    \edef\cm@envirname{\@currenvir}%
+    \noindent
+    \begin{lrbox}{\cm@codebox}%
+    \begin{minipage}[t]{\linewidth}%
+    \let\@currenvir\cm@envirname
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+}{%
+    \let\par\@@par
+    \end{minipage}%
+    \end{lrbox}%
+    {\setlength{\fboxsep}{0pt}\colorbox{codebackground}{\usebox{\cm@codebox}}}%
+    \par\addvspace{\topsep}%
+}
+
+\let\cm@orig@semiverbatim\semiverbatim
+\let\endcm@orig@semiverbatim\endsemiverbatim
+\renewenvironment{semiverbatim}
+    {\cm@shadedcode\cm@orig@semiverbatim}
+    {\endcm@orig@semiverbatim\endcm@shadedcode}
+
+\let\cm@orig@Verbatim\Verbatim
+\let\endcm@orig@Verbatim\endVerbatim
+\renewenvironment{Verbatim}
+    {\cm@shadedcode\cm@orig@Verbatim}
+    {\endcm@orig@Verbatim\endcm@shadedcode}
+\makeatother
+
+% }}}
+
 \author{Ciaran McCreesh}
 \title{Proof Logging for Constraint Programming}
 
