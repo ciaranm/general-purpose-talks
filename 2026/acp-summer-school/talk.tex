@@ -204,6 +204,7 @@ inner sep=0pt, font=\tiny}}
 \newcommand<>{\alertred}[1]{{\color#2{uofgpillarbox}#1}}
 \newcommand<>{\alertblue}[1]{{\color#2{uofgcobalt}#1}}
 \newcommand<>{\alertgreen}[1]{{\color#2{uofglawn}#1}}
+\newcommand<>{\alertassumed}[1]{{\color#2{uofgrust}#1}}
 \newcommand<>{\proofrule}[1]{{\color#2{uofgrose}#1}}
 \newcommand<>{\prooflabel}[1]{{\color#2{uofgpumpkin}#1}}
 \newcommand<>{\toolname}[1]{{\color#2{uofgthistle}#1}}
@@ -1777,6 +1778,358 @@ end pseudo-Boolean proof;
 
     \uncover{\scriptsize Matthew McIlree's thesis again, chapter 2, where the division and
     saturation are done properly.}
+\end{frame}
+
+\begin{frame}[t]{Justifying All-Different Failures, With Assumptions}
+  Same argument, same \proofrule{pol}, except the \alertassumed{values the guesses took away} are
+  still written down.
+
+  \smallskip
+
+  {\footnotesize\setlength{\tabcolsep}{0pt}%
+  \begin{tabular}%
+    {r@{\hspace*{0mm}}c@{\hspace*{1mm}}c@{\hspace*{1mm}}c@{\hspace*{1mm}}c@{\hspace*{1mm}}%
+    c@{\hspace*{1mm}}r@{\hspace*{2mm}}%
+    r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}%
+    r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{0.7mm}}r@{\hspace*{2mm}}%
+    l@{\hspace*{1.2mm}}l}
+      $V \in \{$
+    &
+      $1$
+    &
+      \alertassumed{$2$}
+    &
+      \alertassumed{$3$}
+    &
+      $4$
+    &
+      $5$
+    &
+      $\}$
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+      \% \alertassumed{Guesses took these away}
+    \\
+
+      $\alertblue<2->{W} \in \{$
+    &
+      $1$
+    &
+      $2$
+    &
+      $3$
+    &
+      \alertassumed{$4$}
+    &
+      \alertassumed{$5$}
+    &
+      $\}$
+    &
+      \cell{3}{$w_{{=}1}$}
+    &
+      \cell{3}{$+$}
+    &
+      \cell{3}{$w_{{=}2}$}
+    &
+      \cell{3}{$+$}
+    &
+      \cell{3}{$w_{{=}3}$}
+    &
+      \cell{3}{$+$}
+    &
+      \cell{3}{$\alertassumed{w_{{=}4}}$}
+    &
+      \cell{3}{$+$}
+    &
+      \cell{3}{$\alertassumed{w_{{=}5}}$}
+    &
+      \cell{3}{$\ge\phantom{-} 1$}
+    &
+      \cell{3}{\% $W$ takes some value}
+    \\
+
+      $\alertblue<2->{X} \in \{$
+    &
+      \alertassumed{$1$}
+    &
+      $2$
+    &
+      $3$
+    &
+      \alertassumed{$4$}
+    &
+      \alertassumed{$5$}
+    &
+      $\}$
+    &
+      \cell{4}{$\alertassumed{x_{{=}1}}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$x_{{=}2}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$x_{{=}3}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{x_{{=}4}}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{x_{{=}5}}$}
+    &
+      \cell{4}{$\ge\phantom{-} 1$}
+    &
+      \cell{4}{\% $X$ takes some value}
+    \\
+
+      $\alertblue<2->{Y} \in \{$
+    &
+      $1$
+    &
+      \alertassumed{$2$}
+    &
+      $3$
+    &
+      \alertassumed{$4$}
+    &
+      \alertassumed{$5$}
+    &
+      $\}$
+    &
+      \cell{4}{$y_{{=}1}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{y_{{=}2}}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$y_{{=}3}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{y_{{=}4}}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{y_{{=}5}}$}
+    &
+      \cell{4}{$\ge\phantom{-} 1$}
+    &
+      \cell{4}{\% $Y$ takes some value}
+    \\
+
+      $\alertblue<2->{Z} \in \{$
+    &
+      $1$
+    &
+      \alertassumed{$2$}
+    &
+      $3$
+    &
+      \alertassumed{$4$}
+    &
+      \alertassumed{$5$}
+    &
+      $\}$
+    &
+      \cell{4}{$z_{{=}1}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{z_{{=}2}}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$z_{{=}3}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{z_{{=}4}}$}
+    &
+      \cell{4}{$+$}
+    &
+      \cell{4}{$\alertassumed{z_{{=}5}}$}
+    &
+      \cell{4}{$\ge\phantom{-} 1$}
+    &
+      \cell{4}{\% $Z$ takes some value}
+    \\[0.3cm]
+
+
+    &
+      \cell{5}{$\rightarrow$}
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+      \cell{5}{$-v_{{=}1}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-w_{{=}1}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$\alertassumed{-x_{{=}1}}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-y_{{=}1}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-z_{{=}1}$}
+    &
+      \cell{5}{$\ge -1$}
+    &
+      \cell{5}{\% At most one variable $=1$}
+    \\
+
+
+    &
+
+    &
+      \cell{5}{$\rightarrow$}
+    &
+
+    &
+
+    &
+
+    &
+
+    &
+      \cell{5}{$\alertassumed{-v_{{=}2}}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-w_{{=}2}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-x_{{=}2}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$\alertassumed{-y_{{=}2}}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$\alertassumed{-z_{{=}2}}$}
+    &
+      \cell{5}{$\ge -1$}
+    &
+      \cell{5}{\% At most one variable $=2$}
+    \\
+
+
+    &
+
+    &
+
+    &
+      \cell{5}{$\rightarrow$}
+    &
+
+    &
+
+    &
+
+    &
+      \cell{5}{$\alertassumed{-v_{{=}3}}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-w_{{=}3}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-x_{{=}3}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-y_{{=}3}$}
+    &
+      \cell{5}{$+$}
+    &
+      \cell{5}{$-z_{{=}3}$}
+    &
+      \cell{5}{$\ge -1$}
+    &
+      \cell{5}{\% At most one variable $=3$}
+    \\[0.3cm]
+
+    \end{tabular}
+
+    \smallskip
+
+    % The sum is eleven terms wide, so it goes below the table rather than in it: no room
+    % for the domains on the left and the commentary on the right as well.
+    \setlength{\tabcolsep}{0pt}%
+    \begin{tabular}{l@{\hspace*{1.5mm}}l@{\hspace*{2mm}}l@{\hspace*{1mm}}l}
+      \cell{6}{$\alertassumed{w_{{=}4} + w_{{=}5} + x_{{=}4} + x_{{=}5}
+        + y_{{=}4} + y_{{=}5} + z_{{=}4} + z_{{=}5}}$}
+    &
+      \cell{6}{$-\,v_{{=}1} - \alertassumed{v_{{=}2}} - \alertassumed{v_{{=}3}}$}
+    &
+      \cell{6}{$\ge\phantom{-} 1$}
+    &
+      \cell{6}{\% Sum all constraints so far}
+    \\
+
+    &
+      \cell{7}{$\phantom{-\,}v_{{=}1} + \alertassumed{v_{{=}2}} + \alertassumed{v_{{=}3}}$}
+    &
+      \cell{7}{$\ge\phantom{-} 0$}
+    &
+      \cell{7}{\% Each $v_{{=}i}$ non-negative}
+    \\[0.3cm]
+
+      \cell{8}{$\alertassumed{w_{{=}4} + w_{{=}5} + x_{{=}4} + x_{{=}5}
+        + y_{{=}4} + y_{{=}5} + z_{{=}4} + z_{{=}5}}$}
+    &
+    &
+      \cell{8}{$\ge\phantom{-} 1$}
+    &
+      \cell{8}{\% Sum above two constraints}
+    \\
+    \end{tabular}}
+
+    \smallskip
+
+    \onslide<8->{Nothing in the \proofrule{pol} knew about assumptions: the guesses the failure
+    didn't need have cancelled themselves out, and what is left is false under the ones that remain,
+    so it reads $0 \ge 1$.}
 \end{frame}
 
 \begin{frame}{Reasons, Explanations, and Lazy Clause Generation}
