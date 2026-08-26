@@ -219,6 +219,28 @@ inner sep=0pt, font=\tiny}}
 
 \begin{document}
 
+\begin{nearlyplainframe}[t]{Code for the Exercises}
+    \begin{center}
+        ~\hfill\qrcode[height=2.8cm]{https://github.com/ciaranm/kindling}\hfill
+        \qrcode[height=2.8cm]{https://gitlab.com/MIAOresearch/software/VeriPB}\hfill
+        \qrcode[height=2.8cm]{https://github.com/ciaranm/veripb-repl}\hfill~
+    \end{center}
+
+    \medskip
+
+    \small
+
+    Kindling Solver, see README.md and files in \texttt{slides-proofs/}:
+    \begin{center}\small\url{https://github.com/ciaranm/kindling}\end{center}
+
+    VeriPB (official version), see README.md and try to run \texttt{veripb justified.opb justified.pbp}:
+    \begin{center}\small\url{https://gitlab.com/MIAOresearch/software/VeriPB}\end{center}
+
+    VeriPB (experimental interactive mode, probably Linux and Mac only), see README.md and then
+    use \texttt{cargo run -p veripb-repl -m path-to-veripb-repl/Cargo.toml}:
+    \begin{center}\small\url{https://github.com/ciaranm/veripb-repl}\end{center}
+\end{nearlyplainframe}
+
 {
     \usebackgroundtemplate{
         \tikz[overlay, remember picture]
@@ -1024,7 +1046,7 @@ inner sep=0pt, font=\tiny}}
     \proofsource{backtracking}
 \end{frame}
 
-\begin{frame}[fragile]{Propagations Aren't Necessarily RUP}
+\begin{frame}[fragile]{Constraint Propagation is Too Clever}
     Now say $X_1 \in \{0,1\}$ and $X_2, X_3, X_4 \in \{0,1,2\}$, all-different$(X_2, X_3, X_4)$,
     $X_1 + X_2 + X_3 + X_4 \le 2$, $X_2 + X_3 + X_4 \le 1 + X_1$ instead: same problem, better
     representation, smaller search tree.
@@ -2084,6 +2106,28 @@ end pseudo-Boolean proof;
     and for Hall sets---and then \texttt{-{}-bug}, to break a propagator on purpose.\par}
 \end{frame}
 
+\begin{nearlyplainframe}[t]{Code for the Exercises}
+    \begin{center}
+        ~\hfill\qrcode[height=2.8cm]{https://github.com/ciaranm/kindling}\hfill
+        \qrcode[height=2.8cm]{https://gitlab.com/MIAOresearch/software/VeriPB}\hfill
+        \qrcode[height=2.8cm]{https://github.com/ciaranm/veripb-repl}\hfill~
+    \end{center}
+
+    \medskip
+
+    \small
+
+    Kindling Solver, see README.md and files in \texttt{slides-proofs/}:
+    \begin{center}\small\url{https://github.com/ciaranm/kindling}\end{center}
+
+    VeriPB (official version), see README.md and try to run \texttt{veripb justified.opb justified.pbp}:
+    \begin{center}\small\url{https://gitlab.com/MIAOresearch/software/VeriPB}\end{center}
+
+    VeriPB (experimental interactive mode, probably Linux and Mac only), see README.md and then
+    use \texttt{cargo run -p veripb-repl -m path-to-veripb-repl/Cargo.toml}:
+    \begin{center}\small\url{https://github.com/ciaranm/veripb-repl}\end{center}
+\end{nearlyplainframe}
+
 \begin{frame}[fragile]{Installing \toolname{Kindling}}
     \begin{Verbatim}[fontsize=\small]
 git clone https://github.com/ciaranm/kindling.git
@@ -2111,6 +2155,8 @@ python3 -m unittest discover -s tests -t .
 \end{frame}
 
 \begin{frame}[fragile]{\toolname{VeriPB}'s Brand New Experimental Interactive Mode}
+    \texttt{cargo run -p veripb-repl -m path-to-veripb-repl/Cargo.toml}
+
     Type a line, and find out what it did:
 
     \begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
