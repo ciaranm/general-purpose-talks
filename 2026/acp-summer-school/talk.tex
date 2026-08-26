@@ -2175,7 +2175,7 @@ end pseudo-Boolean proof;
     \begin{Verbatim}[fontsize=\small]
 git clone https://github.com/ciaranm/kindling.git
 cd kindling
-python3 -m kindling pigeonhole --prove /tmp/ph --check
+python3 -m kindling pigeonhole --prove pigeonholeproof --check
 python3 -m unittest discover -s tests -t .
     \end{Verbatim}
 
@@ -2267,8 +2267,8 @@ edit> :done
     in \texttt{int\_lin\_le}: replace its \texttt{Pol(...)} with \texttt{Rup()}, and run}
 
     \begin{Verbatim}[fontsize=\small]
-python3 -m kindling tight-sum --prove /tmp/t --check
-python3 -m kindling too-small --prove /tmp/t --check
+python3 -m kindling tight-sum --prove tight-sum-proof --check
+python3 -m kindling too-small --prove too-small-proof --check
     \end{Verbatim}
 
     \uncover<3->{One of those still verifies and the other does not. Work out why before you move
@@ -2337,7 +2337,7 @@ python3 -m kindling too-small --prove /tmp/t --check
     Now the point of all of it. \texttt{-{}-bug} breaks a propagator on purpose:
 
     \begin{Verbatim}[fontsize=\small]
-python3 -m kindling puzzle --bug table-forgets-a-tuple --prove /tmp/p --check
+python3 -m kindling puzzle --bug table-forgets-a-tuple --prove bug --check
     \end{Verbatim}
 
     Run all four bugs against \texttt{puzzle}, \texttt{latin}, \texttt{tight-sum} and
