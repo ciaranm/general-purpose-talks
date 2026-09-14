@@ -1376,6 +1376,56 @@ Still relying upon assertions, but ``these vertices form a colour class'' is eas
 \end{onlyenv}
 \end{frame}
 
+\begin{frame}{Cutting Planes Proofs 1: Linear Inequalities}
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Model axioms}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}
+        \centering From the input
+    \end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Addition}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \AxiomC{$\sum_i b_i \ell_i \ge B$}
+        \BinaryInfC{$\sum_i (a_i + b_i) \ell_i \ge A + B$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Multiplication}}\\
+        for any $c \in \mathbb{N^+}$
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \UnaryInfC{$\sum_i { c a_i \ell_i } \ge c A$}
+    \end{prooftree}\end{minipage}
+\end{frame}
+
+\begin{frame}{Cutting Planes Proofs 2: 0-1 Variables}
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Literal axioms}}
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{~}
+        \UnaryInfC{$\ell_i \ge 0$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Division}}\\
+        for any $c \in \mathbb{N^+}$ \\
+        assumes normalised form
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \UnaryInfC{$\sum_i {\left\lceil \frac{a_i}{c} \right\rceil} \ell_i \ge \left\lceil \frac{A}{c} \right\rceil$}
+    \end{prooftree}\end{minipage}\bigskip
+
+    \begin{minipage}[c]{0.35\framewidth}
+        \textcolor{uofgcobalt}{\textbf{Saturation}}\\
+        assumes normalised form
+    \end{minipage}\hfill\begin{minipage}[c]{0.60\framewidth}\begin{prooftree}
+        \AxiomC{$\sum_i a_i \ell_i \ge A$}
+        \UnaryInfC{$\sum_i \operatorname{min}\left(a_i, A\right) \ell_i \ge A$}
+    \end{prooftree}\end{minipage}
+\end{frame}
+
 \begin{frame}[fragile]{Recovering At-Most-One Constraints}
 \begin{onlyenv}<1-6>
     We can lazily recover at-most-one constraints for each colour class!
@@ -1485,6 +1535,7 @@ s VERIFIED BOUNDS 8 <= obj <= 8
 
 \begin{frame}{What We Can Do}
     \begin{itemize}
+        \item Decision, optimisation, enumeration, and (some kinds of counting).
         \item SAT with advanced techniques including parity reasoning and symmetry breaking.
         \item MaxSAT preprocessing and solving using core-guided search, implicit hitting set,
             solution-improving search,
@@ -1497,7 +1548,8 @@ s VERIFIED BOUNDS 8 <= obj <= 8
         \item Classical planning.
         \item Constraint programming for a full set of global constraints, including
             all-different, smart extensional, Hamiltonian circuit, scheduling, multiplication,
-            \ldots.
+            \ldots, fully verified from a \alertblue{human-readable problem description} to a
+            \alertblue{human-readable solution}.
     \end{itemize}
 \end{frame}
 
