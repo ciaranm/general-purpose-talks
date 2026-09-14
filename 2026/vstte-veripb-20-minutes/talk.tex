@@ -1533,7 +1533,8 @@ s VERIFIED BOUNDS 8 <= obj <= 8
     \end{itemize}
 \end{frame}
 
-\begin{frame}{What We Can Do}
+\begin{frame}[fragile]{What We Can Do}
+\begin{onlyenv}<1>
     \begin{itemize}
         \item Decision, optimisation, enumeration, and (some kinds of counting).
         \item SAT with advanced techniques including parity reasoning and symmetry breaking.
@@ -1551,6 +1552,25 @@ s VERIFIED BOUNDS 8 <= obj <= 8
             \ldots, fully verified from a \alertblue{human-readable problem description} to a
             \alertblue{human-readable solution}.
     \end{itemize}
+\end{onlyenv}\begin{onlyenv}<2>
+\begin{Verbatim}
+  ( (version 1)
+    (variables (x 0 10) (y 0 10) (z 0 10) (p 0 100))
+    (constraints
+        (c1 lin_equals (2 x 1 y) 12)
+        (c2 multiply x y p)
+        (c3 all_different (x y z))
+        (c4 divide y x z))
+    (prob_type (maximize p))
+  )
+
+  $ ./solve_and_verify.sh demo
+  p=16 x=2 y=8 z=4
+  p=18 x=3 y=6 z=2
+
+  s VERIFIED BOUNDS 18 <= OBJ <= 18
+\end{Verbatim}
+\end{onlyenv}
 \end{frame}
 
 \begin{frame}{How To Get Started}
